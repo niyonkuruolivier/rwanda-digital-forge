@@ -112,9 +112,13 @@ function Landing() {
         <div className="container-px mx-auto py-20 md:py-28 grid md:grid-cols-2 gap-10 items-center">
           <div>
             <span className="inline-block text-xs tracking-[0.25em] uppercase bg-white/10 border border-white/20 px-3 py-1 rounded-full">Digital Agency • Kigali</span>
-            <h1 className="mt-6 text-4xl md:text-6xl font-bold leading-[1.05] text-balance">
-              Transforming ICT & digital brands across <span className="text-[var(--sky)]">Africa</span>
+            <h1 className="mt-6 text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight">
+              <span className="block">Creators</span>
+              <span className="block text-[var(--sky)]">Rwanda</span>
             </h1>
+            <p className="mt-4 text-lg md:text-xl text-white/80 max-w-md text-balance">
+              Transforming ICT & digital brands across Africa
+            </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#services" className="inline-flex items-center gap-2 bg-[var(--sky)] text-[var(--navy)] font-semibold px-5 py-3 rounded-md hover:brightness-110">
                 Explore Services <ArrowRight className="w-4 h-4" />
