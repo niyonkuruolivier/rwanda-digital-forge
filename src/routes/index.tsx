@@ -13,8 +13,40 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Creators Rwanda — Digital Agency | Web, Hosting & Brand" },
-      { name: "description", content: "Creators Rwanda is a Kigali-based digital agency delivering web development, domains, hosting, business profiles and social media management across Africa." },
+      { title: "Website Development in Rwanda | Web Design & Hosting Kigali — Creators Rwanda" },
+      { name: "description", content: "Top website development company in Rwanda. Affordable web design, .rw domain registration, hosting & digital marketing in Kigali. Bundles from 85,000 RWF/year." },
+      { name: "keywords", content: "website development Rwanda, web design Kigali, web developer Rwanda, hosting Rwanda, .rw domain, digital marketing Rwanda, SEO Rwanda, ecommerce Rwanda, Creators Rwanda" },
+      { name: "geo.region", content: "RW" },
+      { name: "geo.placename", content: "Kigali" },
+      { name: "author", content: "Creators Rwanda" },
+      { property: "og:title", content: "Website Development in Rwanda | Creators Rwanda" },
+      { property: "og:description", content: "Rwanda's trusted digital agency for web development, hosting, .rw domains, branding & social media management. Based in Kigali." },
+      { property: "og:url", content: "https://rwanda-digital-forge.lovable.app/" },
+      { property: "og:locale", content: "en_RW" },
+      { property: "og:site_name", content: "Creators Rwanda" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://rwanda-digital-forge.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "@id": "https://rwanda-digital-forge.lovable.app/#business",
+          name: "Creators Rwanda",
+          description: "Digital agency in Rwanda offering website development, domain registration, hosting, branding and social media management.",
+          url: "https://rwanda-digital-forge.lovable.app/",
+          telephone: "+250784254890",
+          email: "Info@creatorsrwanda.com",
+          image: "https://rwanda-digital-forge.lovable.app/og.jpg",
+          address: { "@type": "PostalAddress", addressLocality: "Kigali", addressCountry: "RW" },
+          areaServed: [{ "@type": "Country", name: "Rwanda" }, { "@type": "Place", name: "East Africa" }],
+          priceRange: "RWF 85,000+",
+          sameAs: ["https://wa.me/250784254890"],
+        }),
+      },
     ],
   }),
   component: Landing,
