@@ -42,11 +42,6 @@ const services = [
   { icon: Rocket, title: "Digital Transformation", desc: "End-to-end digitization for serious businesses." },
 ];
 
-const plans = [
-  { name: "Starter", price: "5", features: ["10 GB SSD Storage", "100 GB Bandwidth", "Free SSL", "5 Email Accounts", "Email Support"] },
-  { name: "Business", price: "12", featured: true, features: ["50 GB SSD Storage", "Unlimited Bandwidth", "Free SSL + CDN", "25 Email Accounts", "Priority Support"] },
-  { name: "Premium", price: "29", features: ["200 GB SSD Storage", "Unlimited Bandwidth", "Free SSL + CDN", "Unlimited Email", "24/7 Dedicated"] },
-];
 
 const stats = [
   { n: "120+", l: "Projects" },
@@ -93,7 +88,6 @@ function Landing() {
             <a href="#about" className="hover:text-[var(--sky)]">About</a>
             <a href="#services" className="hover:text-[var(--sky)]">Services</a>
             <a href="#domains" className="hover:text-[var(--sky)]">Domains</a>
-            <a href="#hosting" className="hover:text-[var(--sky)]">Hosting</a>
             <a href="#contact" className="hover:text-[var(--sky)]">Contact</a>
           </nav>
           <div className="hidden md:block">
@@ -108,7 +102,7 @@ function Landing() {
         {open && (
           <div className="md:hidden border-t bg-background">
             <div className="container-px py-4 flex flex-col gap-3 text-sm">
-              {["About","Services","Domains","Hosting","Contact"].map(x => (
+              {["About","Services","Domains","Contact"].map(x => (
                 <a key={x} href={`#${x.toLowerCase()}`} onClick={() => setOpen(false)} className="py-1">{x}</a>
               ))}
             </div>
@@ -252,36 +246,6 @@ function Landing() {
         </div>
       </section>
 
-      {/* Hosting */}
-      <section id="hosting" className="bg-[var(--navy)] text-white py-20 md:py-28">
-        <div className="container-px mx-auto">
-          <div className="max-w-2xl">
-            <span className="text-xs tracking-[0.25em] uppercase text-[var(--sky)] font-semibold">Hosting Plans</span>
-            <h2 className="mt-3 text-3xl md:text-4xl font-bold">Fast, secure, reliable hosting</h2>
-          </div>
-          <div className="mt-12 grid md:grid-cols-3 gap-5">
-            {plans.map((p) => (
-              <div key={p.name} className={`rounded-2xl p-7 border ${p.featured ? "bg-[var(--sky)] text-[var(--navy)] border-transparent shadow-elegant scale-[1.02]" : "bg-white/5 border-white/10"}`}>
-                <div className="text-sm uppercase tracking-widest font-semibold opacity-80">{p.name}</div>
-                <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-5xl font-display font-bold">${p.price}</span>
-                  <span className="opacity-70">/mo</span>
-                </div>
-                <ul className="mt-6 space-y-3 text-sm">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 mt-0.5 shrink-0" /> {f}
-                    </li>
-                  ))}
-                </ul>
-                <a href="#contact" className={`mt-7 inline-flex justify-center w-full py-3 rounded-md font-semibold ${p.featured ? "bg-[var(--navy)] text-white" : "bg-[var(--sky)] text-[var(--navy)]"}`}>
-                  Choose {p.name}
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Contact */}
       <section id="contact" className="container-px mx-auto py-20 md:py-28 grid md:grid-cols-2 gap-12">
