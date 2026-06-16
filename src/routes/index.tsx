@@ -111,8 +111,8 @@ function Landing() {
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
         <div className="container-px mx-auto flex items-center justify-between py-4">
           <a href="#" className="flex items-center gap-1">
-            <img src={logoAsset.url} alt="CreatorsRwanda" className="h-11 w-auto" />
-            <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-[var(--navy)] bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
+            <img src={logoAsset.url} alt="CreatorsRwanda" className="h-14 w-auto" />
+            <span className="font-extrabold text-3xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-[var(--navy)] bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
           </a>
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
             <a href="#about" className="hover:text-[var(--sky)]">About</a>
