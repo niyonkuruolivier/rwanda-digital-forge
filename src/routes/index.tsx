@@ -353,9 +353,9 @@ function Landing() {
       <footer className="bg-[var(--navy)] text-white/80">
         <div className="container-px mx-auto py-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <div className="flex items-center gap-2">
-              <img src={logoAsset.url} alt="CreatorsRwanda" className="h-11 w-auto" />
-              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-blue-300 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
+            <div className="flex items-center gap-2 min-w-0">
+              <img src={logoAsset.url} alt="CreatorsRwanda" className="h-9 md:h-11 w-auto shrink-0" />
+              <span className="font-extrabold text-lg md:text-xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-blue-300 bg-clip-text text-transparent truncate" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
             </div>
             <p className="mt-4 text-sm leading-relaxed">Digital agency building powerful brands and infrastructure for Africa's next generation.</p>
           </div>
