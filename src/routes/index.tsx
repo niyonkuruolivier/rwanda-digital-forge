@@ -110,9 +110,9 @@ function Landing() {
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
         <div className="container-px mx-auto flex items-center justify-between py-4">
-          <a href="#" className="flex items-center gap-1">
-            <img src={logoAsset.url} alt="CreatorsRwanda" className="h-14 w-auto" />
-            <span className="font-extrabold text-3xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-[var(--navy)] bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
+          <a href="#" className="flex items-center gap-1 min-w-0">
+            <img src={logoAsset.url} alt="CreatorsRwanda" className="h-10 md:h-14 w-auto shrink-0" />
+            <span className="font-extrabold text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-[var(--navy)] bg-clip-text text-transparent truncate" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
           </a>
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
             <a href="#about" className="hover:text-[var(--sky)]">About</a>
@@ -337,7 +337,7 @@ function Landing() {
           }}
           className="rounded-2xl border bg-card p-7 shadow-card space-y-4"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input name="name" required placeholder="Full name" />
             <Input name="email" required type="email" placeholder="Email address" />
           </div>
@@ -353,9 +353,9 @@ function Landing() {
       <footer className="bg-[var(--navy)] text-white/80">
         <div className="container-px mx-auto py-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <div className="flex items-center gap-2">
-              <img src={logoAsset.url} alt="CreatorsRwanda" className="h-11 w-auto" />
-              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-blue-300 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
+            <div className="flex items-center gap-2 min-w-0">
+              <img src={logoAsset.url} alt="CreatorsRwanda" className="h-9 md:h-11 w-auto shrink-0" />
+              <span className="font-extrabold text-lg md:text-xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-blue-300 bg-clip-text text-transparent truncate" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
             </div>
             <p className="mt-4 text-sm leading-relaxed">Digital agency building powerful brands and infrastructure for Africa's next generation.</p>
           </div>
