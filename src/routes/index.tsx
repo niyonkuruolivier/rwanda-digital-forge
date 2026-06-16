@@ -3,19 +3,17 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import logo from "@/assets/creators-logo.png.asset.json";
 import {
   Globe, Server, Search, Share2, Megaphone, Sparkles, Briefcase, LineChart,
-  Rocket, MessageCircle, Mail, Phone, ArrowRight, Check, Star, Menu, X
+  Rocket, MessageCircle, Mail, Phone, ArrowUpRight, Plus, Menu, X, Terminal
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Creators Rwanda — Building Powerful Digital Brands" },
-      { name: "description", content: "Professional websites, domain registration, hosting, business profiles, and social media management for modern businesses." },
+      { title: "Creators Rwanda — Digital Studio for Bold Brands" },
+      { name: "description", content: "An independent digital studio crafting websites, brands, hosting, and social systems for ambitious businesses across Africa." },
     ],
   }),
   component: Landing,
@@ -26,59 +24,59 @@ const PHONE = "+250 784 254 890";
 const EMAIL = "Info@creatorsrwanda.com";
 
 const services = [
-  { icon: Globe, title: "Website Development", desc: "Fast, conversion-focused websites engineered for growth." },
-  { icon: Search, title: "Domain Registration", desc: "Secure your brand with .com, .rw, .africa and more." },
-  { icon: Server, title: "Web Hosting", desc: "Reliable, scalable hosting with SSL and daily backups." },
-  { icon: Briefcase, title: "Business Profile Creation", desc: "Polished company profiles that win trust." },
-  { icon: Sparkles, title: "Google Business Optimization", desc: "Rank higher and get found on Maps and Search." },
-  { icon: Share2, title: "Social Media Management", desc: "Strategy, content, and growth — handled monthly." },
-  { icon: Megaphone, title: "Social Media Branding", desc: "Cohesive visual identity across every platform." },
-  { icon: LineChart, title: "Digital Marketing", desc: "Targeted ads and campaigns that deliver ROI." },
-  { icon: Sparkles, title: "Content Creation Support", desc: "Photo, video, and copy that move your brand." },
-  { icon: Rocket, title: "Digital Transformation", desc: "End-to-end digitization for modern businesses." },
+  { n: "01", icon: Globe, title: "Website Development", desc: "Fast, conversion-engineered sites built on modern stacks." },
+  { n: "02", icon: Search, title: "Domain Registration", desc: "Secure .com, .rw, .africa and more in minutes." },
+  { n: "03", icon: Server, title: "Web Hosting", desc: "Reliable, SSD-backed hosting with SSL & daily backups." },
+  { n: "04", icon: Briefcase, title: "Business Profiles", desc: "Editorial company profiles that earn trust." },
+  { n: "05", icon: Sparkles, title: "Google Business", desc: "Maps optimization, reviews, and local search wins." },
+  { n: "06", icon: Share2, title: "Social Media Management", desc: "Strategy, content, and growth — handled monthly." },
+  { n: "07", icon: Megaphone, title: "Brand Identity", desc: "Cohesive visual systems across every platform." },
+  { n: "08", icon: LineChart, title: "Digital Marketing", desc: "Targeted ads and campaigns that ship ROI." },
+  { n: "09", icon: Sparkles, title: "Content Production", desc: "Photo, video, and copy that move your brand." },
+  { n: "10", icon: Rocket, title: "Digital Transformation", desc: "End-to-end digitization for serious businesses." },
 ];
 
 const plans = [
-  { name: "Starter", price: "$5", period: "/mo", features: ["10 GB SSD Storage", "100 GB Bandwidth", "Free SSL", "5 Email Accounts", "Email Support"] },
-  { name: "Business", price: "$12", period: "/mo", featured: true, features: ["50 GB SSD Storage", "Unlimited Bandwidth", "Free SSL + CDN", "25 Email Accounts", "Priority Support"] },
-  { name: "Premium", price: "$29", period: "/mo", features: ["200 GB SSD Storage", "Unlimited Bandwidth", "Free SSL + CDN", "Unlimited Email", "24/7 Dedicated Support"] },
+  { name: "Starter", price: "5", features: ["10 GB SSD Storage", "100 GB Bandwidth", "Free SSL", "5 Email Accounts", "Email Support"] },
+  { name: "Business", price: "12", featured: true, features: ["50 GB SSD Storage", "Unlimited Bandwidth", "Free SSL + CDN", "25 Email Accounts", "Priority Support"] },
+  { name: "Premium", price: "29", features: ["200 GB SSD Storage", "Unlimited Bandwidth", "Free SSL + CDN", "Unlimited Email", "24/7 Dedicated"] },
 ];
 
 const process = [
-  { n: "01", t: "Consultation", d: "We listen to understand goals, audience, and constraints." },
-  { n: "02", t: "Planning", d: "Roadmap, sitemap, and a clear scope you can sign off on." },
+  { n: "01", t: "Listen", d: "We start with your business — goals, audience, constraints." },
+  { n: "02", t: "Plan", d: "A roadmap, scope, and timeline you can sign off on." },
   { n: "03", t: "Design", d: "Brand-aligned interfaces designed to convert." },
-  { n: "04", t: "Development", d: "Engineered with performance, SEO, and security baked in." },
+  { n: "04", t: "Build", d: "Engineered with performance, SEO, and security baked in." },
   { n: "05", t: "Launch", d: "Smooth deployment with QA and analytics in place." },
-  { n: "06", t: "Support", d: "Ongoing maintenance, monitoring, and growth." },
+  { n: "06", t: "Grow", d: "Ongoing partnership, monitoring, and iteration." },
 ];
 
 const testimonials = [
-  { name: "Jean P.", role: "CEO, Kigali Logistics", quote: "Creators Rwanda transformed our online presence. Inquiries doubled within a month." },
-  { name: "Aline U.", role: "Founder, Bloom Beauty", quote: "Beautiful website, flawless hosting, and social media that actually grows." },
-  { name: "Eric M.", role: "Director, EastAfrica Tours", quote: "Truly international quality — fast, professional, and reliable." },
+  { name: "Jean P.", role: "CEO — Kigali Logistics", quote: "Creators Rwanda transformed our online presence. Inquiries doubled within a month." },
+  { name: "Aline U.", role: "Founder — Bloom Beauty", quote: "Beautiful website, flawless hosting, and social media that actually grows." },
+  { name: "Eric M.", role: "Director — EastAfrica Tours", quote: "Truly international quality — fast, professional, and reliable." },
 ];
 
-const portfolio = [
-  { cat: "Website", title: "Logistics Platform", color: "from-zinc-900 to-zinc-700" },
-  { cat: "Business Profile", title: "Corporate Profile Suite", color: "from-zinc-800 to-zinc-600" },
-  { cat: "Social Media", title: "Beauty Brand Campaign", color: "from-zinc-900 to-zinc-700" },
-  { cat: "Website", title: "Tourism Booking Site", color: "from-zinc-800 to-zinc-600" },
-  { cat: "Social Media", title: "Restaurant Growth", color: "from-zinc-900 to-zinc-700" },
-  { cat: "Business Profile", title: "NGO Brand Kit", color: "from-zinc-800 to-zinc-600" },
+const work = [
+  { y: "2025", cat: "Website", title: "Logistics Platform" },
+  { y: "2025", cat: "Brand", title: "Corporate Profile Suite" },
+  { y: "2024", cat: "Social", title: "Beauty Brand Campaign" },
+  { y: "2024", cat: "Website", title: "Tourism Booking Site" },
+  { y: "2024", cat: "Social", title: "Restaurant Growth" },
+  { y: "2023", cat: "Brand", title: "NGO Brand Kit" },
 ];
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-brand selection:text-brand-foreground">
       <Nav />
       <Hero />
-      <Marquee />
-      <About />
+      <Ticker />
+      <Manifesto />
       <Services />
       <DomainChecker />
       <Hosting />
-      <Portfolio />
+      <Work />
       <Process />
       <Testimonials />
       <Contact />
@@ -91,24 +89,24 @@ function Landing() {
 function Nav() {
   const [open, setOpen] = useState(false);
   const links = [
-    ["About", "#about"], ["Services", "#services"], ["Domains", "#domains"],
-    ["Hosting", "#hosting"], ["Work", "#portfolio"], ["Contact", "#contact"],
+    ["Studio", "#manifesto"], ["Services", "#services"], ["Domains", "#domains"],
+    ["Hosting", "#hosting"], ["Work", "#work"], ["Contact", "#contact"],
   ] as const;
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="container-px mx-auto flex h-16 max-w-7xl items-center justify-between">
-        <a href="#top" className="flex items-center gap-2">
-          <img src={logo.url} alt="Creators Rwanda" className="h-8 w-8 object-contain" />
-          <span className="font-display text-lg font-semibold tracking-tight">Creators<span className="text-brand">.</span>Rwanda</span>
+    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
+      <div className="container-px mx-auto flex h-16 max-w-[1400px] items-center justify-between">
+        <a href="#top" className="flex items-center gap-2.5">
+          <img src={logo.url} alt="Creators Rwanda" className="h-8 w-8 object-contain invert" />
+          <span className="font-mono text-xs uppercase tracking-[0.25em]">Creators / Rwanda</span>
         </a>
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-7 md:flex">
           {links.map(([l, h]) => (
-            <a key={h} href={h} className="text-sm text-muted-foreground transition hover:text-foreground">{l}</a>
+            <a key={h} href={h} className="font-mono text-xs uppercase tracking-widest text-muted-foreground transition hover:text-brand">{l}</a>
           ))}
         </nav>
-        <div className="hidden md:block">
-          <Button asChild className="rounded-full"><a href="#contact">Get Started <ArrowRight className="ml-1 h-4 w-4" /></a></Button>
-        </div>
+        <a href="#contact" className="hidden md:inline-flex items-center gap-2 border border-brand bg-brand px-4 py-2 font-mono text-xs uppercase tracking-widest text-brand-foreground transition hover:bg-transparent hover:text-brand">
+          Start a project <ArrowUpRight className="h-3.5 w-3.5" />
+        </a>
         <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
           {open ? <X /> : <Menu />}
         </button>
@@ -117,9 +115,9 @@ function Nav() {
         <div className="border-t border-border bg-background md:hidden">
           <div className="container-px mx-auto flex flex-col gap-4 py-4">
             {links.map(([l, h]) => (
-              <a key={h} href={h} onClick={() => setOpen(false)} className="text-sm">{l}</a>
+              <a key={h} href={h} onClick={() => setOpen(false)} className="font-mono text-xs uppercase tracking-widest">{l}</a>
             ))}
-            <Button asChild className="rounded-full"><a href="#contact">Get Started</a></Button>
+            <a href="#contact" onClick={() => setOpen(false)} className="bg-brand px-4 py-2 text-center font-mono text-xs uppercase tracking-widest text-brand-foreground">Start a project</a>
           </div>
         </div>
       )}
@@ -130,42 +128,61 @@ function Nav() {
 function Hero() {
   return (
     <section id="top" className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_50%_0%,color-mix(in_oklab,var(--brand)_18%,transparent)_0%,transparent_70%)]" />
-      <div className="container-px mx-auto max-w-7xl py-24 md:py-36">
-        <Badge variant="outline" className="rounded-full border-border/80 bg-background px-3 py-1 text-xs">
-          <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-brand" /> Trusted digital partner
-        </Badge>
-        <h1 className="text-balance mt-6 max-w-4xl text-5xl font-semibold leading-[1.05] md:text-7xl">
-          Building Powerful <span className="italic text-brand">Digital Brands</span> for Modern Businesses
-        </h1>
-        <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
-          Creators Rwanda helps businesses grow through professional websites, domain registration,
-          business profiles, and strategic social media management.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Button asChild size="lg" className="rounded-full"><a href="#contact">Get Started <ArrowRight className="ml-1 h-4 w-4" /></a></Button>
-          <Button asChild size="lg" variant="outline" className="rounded-full"><a href="#contact">Request Quote</a></Button>
-        </div>
-        <div className="mt-16 grid grid-cols-2 gap-8 border-t border-border pt-10 md:grid-cols-4">
-          {[["120+", "Projects shipped"], ["98%", "Client retention"], ["6yr", "Industry expertise"], ["24/7", "Support coverage"]].map(([k, v]) => (
-            <div key={k}>
-              <div className="font-display text-3xl font-semibold md:text-4xl">{k}</div>
-              <div className="mt-1 text-sm text-muted-foreground">{v}</div>
+      <div
+        className="absolute inset-0 -z-10 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+        }}
+      />
+      <div className="container-px mx-auto max-w-[1400px] py-20 md:py-32">
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+            <span>[ EST. 2019 — KIGALI, RW ]</span>
+            <span className="hidden sm:inline">N° 001 / DIGITAL STUDIO</span>
+          </div>
+
+          <h1 className="col-span-12 mt-10 font-display text-[14vw] leading-[0.92] tracking-tight md:text-[10rem]">
+            <span className="block">Bold brands.</span>
+            <span className="block italic text-brand">Built with care.</span>
+          </h1>
+
+          <div className="col-span-12 mt-10 grid grid-cols-12 gap-6 border-t border-border pt-10">
+            <p className="col-span-12 md:col-span-5 font-display text-2xl italic text-muted-foreground md:text-3xl">
+              An independent digital studio for ambitious businesses — websites, hosting, brand systems, and social growth.
+            </p>
+            <div className="col-span-12 md:col-span-4 md:col-start-9 flex flex-col gap-4">
+              <a href="#contact" className="group flex items-center justify-between border border-brand bg-brand px-6 py-5 font-mono text-sm uppercase tracking-widest text-brand-foreground transition hover:bg-transparent hover:text-brand">
+                Book a call <ArrowUpRight className="h-5 w-5 transition group-hover:rotate-45" />
+              </a>
+              <a href="#services" className="group flex items-center justify-between border border-border px-6 py-5 font-mono text-sm uppercase tracking-widest transition hover:border-foreground">
+                Explore services <Plus className="h-5 w-5 transition group-hover:rotate-90" />
+              </a>
             </div>
-          ))}
+          </div>
+
+          <div className="col-span-12 mt-16 grid grid-cols-2 gap-x-6 gap-y-10 border-t border-border pt-10 md:grid-cols-4">
+            {[["120+", "Projects shipped"], ["98%", "Client retention"], ["6yr", "Studio expertise"], ["24/7", "Support coverage"]].map(([k, v]) => (
+              <div key={k}>
+                <div className="font-display text-5xl md:text-6xl">{k}</div>
+                <div className="mt-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{v}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function Marquee() {
+function Ticker() {
   const items = ["Websites", "Domains", "Hosting", "SEO", "Branding", "Social Media", "Google Business", "Content", "Ads"];
   return (
-    <div className="overflow-hidden border-b border-border bg-foreground py-5 text-background">
-      <div className="flex animate-[marquee_30s_linear_infinite] gap-12 whitespace-nowrap">
-        {[...items, ...items, ...items].map((i, idx) => (
-          <span key={idx} className="font-display text-sm uppercase tracking-[0.3em] opacity-80">{i} <span className="text-brand">●</span></span>
+    <div className="overflow-hidden border-b border-border bg-brand py-4 text-brand-foreground">
+      <div className="flex animate-[marquee_35s_linear_infinite] gap-10 whitespace-nowrap">
+        {[...items, ...items, ...items, ...items].map((i, idx) => (
+          <span key={idx} className="font-display text-2xl italic">{i} <span className="mx-2">✺</span></span>
         ))}
       </div>
       <style>{`@keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }`}</style>
@@ -173,27 +190,23 @@ function Marquee() {
   );
 }
 
-function About() {
+function Manifesto() {
   return (
-    <section id="about" className="container-px mx-auto max-w-7xl py-24">
-      <div className="grid gap-12 md:grid-cols-2 md:gap-20">
-        <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">About</p>
-          <h2 className="mt-4 text-4xl font-semibold md:text-5xl">An agency built for the businesses shaping tomorrow.</h2>
-        </div>
-        <div className="space-y-6 text-lg text-muted-foreground">
-          <p>
-            We're a senior team of designers, engineers, and marketers who care about craft, results, and the people we work with.
-            From the first conversation to long-term partnership, we build digital experiences that move the needle.
-          </p>
-          <p>
-            Our mission is simple: give every modern business a digital presence as ambitious as their goals — beautifully designed,
-            engineered to perform, and supported by a team that picks up the phone.
-          </p>
-          <div className="flex flex-wrap gap-2 pt-2">
-            {["Strategic", "Senior team", "Outcome-driven", "Locally rooted", "Globally minded"].map(t => (
-              <Badge key={t} variant="secondary" className="rounded-full">{t}</Badge>
-            ))}
+    <section id="manifesto" className="border-b border-border">
+      <div className="container-px mx-auto max-w-[1400px] py-24 md:py-32">
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 md:col-span-3 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+            ( 01 ) — The Studio
+          </div>
+          <div className="col-span-12 md:col-span-9">
+            <p className="font-display text-3xl leading-[1.15] md:text-5xl">
+              We are a senior team of designers, engineers, and marketers who care about <span className="italic text-brand">craft, results,</span> and the people we work with. From the first conversation to long-term partnership, we build digital experiences <span className="italic">that move the needle.</span>
+            </p>
+            <div className="mt-12 flex flex-wrap gap-2">
+              {["Strategic", "Senior team", "Outcome-driven", "Locally rooted", "Globally minded"].map(t => (
+                <span key={t} className="border border-border px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest">{t}</span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -203,24 +216,31 @@ function About() {
 
 function Services() {
   return (
-    <section id="services" className="border-y border-border bg-secondary/40">
-      <div className="container-px mx-auto max-w-7xl py-24">
-        <div className="flex items-end justify-between gap-8">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Services</p>
-            <h2 className="mt-4 max-w-2xl text-4xl font-semibold md:text-5xl">Everything your brand needs, under one roof.</h2>
+    <section id="services" className="border-b border-border">
+      <div className="container-px mx-auto max-w-[1400px] py-24 md:py-32">
+        <div className="grid grid-cols-12 gap-6 mb-16">
+          <div className="col-span-12 md:col-span-3 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+            ( 02 ) — Services
           </div>
+          <h2 className="col-span-12 md:col-span-9 font-display text-5xl md:text-7xl leading-[0.95]">
+            Everything your brand <br /><span className="italic text-brand">needs</span>, under one roof.
+          </h2>
         </div>
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
-          {services.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="group relative bg-background p-8 transition hover:bg-foreground hover:text-background">
-              <Icon className="h-7 w-7 text-brand" />
-              <h3 className="mt-6 text-xl font-semibold">{title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground group-hover:text-background/70">{desc}</p>
-              <ArrowRight className="absolute right-6 top-6 h-4 w-4 -translate-x-2 opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100" />
-            </div>
+        <ul className="border-t border-border">
+          {services.map(({ n, icon: Icon, title, desc }) => (
+            <li key={title} className="group grid grid-cols-12 items-center gap-6 border-b border-border py-8 transition hover:bg-brand hover:text-brand-foreground">
+              <div className="col-span-2 md:col-span-1 font-mono text-xs tracking-widest text-muted-foreground group-hover:text-brand-foreground/70">{n}</div>
+              <div className="col-span-10 md:col-span-4 flex items-center gap-4">
+                <Icon className="h-5 w-5" />
+                <span className="font-display text-2xl md:text-3xl">{title}</span>
+              </div>
+              <div className="col-span-12 md:col-span-6 text-sm text-muted-foreground group-hover:text-brand-foreground/80 md:pl-8">{desc}</div>
+              <div className="hidden md:flex md:col-span-1 justify-end">
+                <ArrowUpRight className="h-5 w-5 -translate-x-2 opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100" />
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
@@ -239,86 +259,98 @@ function DomainChecker() {
     if (!name) return;
     setLoading(true);
     setTimeout(() => {
-      const out = exts.map(ext => ({
-        domain: name + ext,
-        available: Math.random() > 0.35,
-        price: prices[ext],
-      }));
-      setResult(out);
+      setResult(exts.map(ext => ({ domain: name + ext, available: Math.random() > 0.35, price: prices[ext] })));
       setLoading(false);
     }, 600);
   }
 
   return (
-    <section id="domains" className="container-px mx-auto max-w-7xl py-24">
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Domains</p>
-        <h2 className="mt-4 text-4xl font-semibold md:text-5xl">Find Your Perfect Domain</h2>
-        <p className="mt-4 text-muted-foreground">Search across .com, .net, .org, .rw, .co.rw, and .africa.</p>
-      </div>
-      <form onSubmit={check} className="mx-auto mt-10 flex max-w-2xl flex-col gap-3 sm:flex-row">
-        <Input
-          value={q} onChange={e => setQ(e.target.value)}
-          placeholder="yourbusinessname"
-          className="h-14 rounded-full border-border bg-background px-6 text-base"
-        />
-        <Button type="submit" size="lg" className="h-14 rounded-full px-8" disabled={loading}>
-          {loading ? "Checking..." : "Check Availability"}
-        </Button>
-      </form>
-      {result && (
-        <div className="mx-auto mt-10 max-w-3xl space-y-2">
-          {result.map(r => (
-            <div key={r.domain} className="flex items-center justify-between rounded-xl border border-border bg-background p-4">
-              <div className="flex items-center gap-3">
-                <span className={`h-2 w-2 rounded-full ${r.available ? "bg-brand" : "bg-muted-foreground/40"}`} />
-                <span className="font-medium">{r.domain}</span>
-                <Badge variant={r.available ? "default" : "secondary"} className="rounded-full">
-                  {r.available ? "Available" : "Taken"}
-                </Badge>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">{r.price}</span>
-                {r.available && <Button asChild size="sm" className="rounded-full"><a href="#contact">Register</a></Button>}
-              </div>
-            </div>
-          ))}
+    <section id="domains" className="border-b border-border">
+      <div className="container-px mx-auto max-w-[1400px] py-24 md:py-32">
+        <div className="grid grid-cols-12 gap-6 mb-12">
+          <div className="col-span-12 md:col-span-3 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+            ( 03 ) — Domains
+          </div>
+          <h2 className="col-span-12 md:col-span-9 font-display text-5xl md:text-7xl leading-[0.95]">
+            Claim your <span className="italic text-brand">name</span>.
+          </h2>
         </div>
-      )}
+
+        <div className="border border-border bg-card">
+          <div className="flex items-center justify-between border-b border-border px-5 py-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+            <span className="flex items-center gap-2"><Terminal className="h-3.5 w-3.5" /> domain-lookup.sh</span>
+            <span className="hidden sm:inline">.com · .net · .org · .rw · .co.rw · .africa</span>
+          </div>
+          <form onSubmit={check} className="flex flex-col gap-0 sm:flex-row">
+            <span className="border-b sm:border-b-0 sm:border-r border-border px-5 py-5 font-mono text-sm text-brand">~ $</span>
+            <Input
+              value={q} onChange={e => setQ(e.target.value)}
+              placeholder="yourbusinessname"
+              className="h-auto flex-1 rounded-none border-0 border-b sm:border-b-0 border-border bg-transparent px-5 py-5 font-mono text-base focus-visible:ring-0"
+            />
+            <Button type="submit" className="h-auto rounded-none bg-brand px-8 py-5 font-mono text-xs uppercase tracking-widest text-brand-foreground hover:bg-brand/90" disabled={loading}>
+              {loading ? "Searching…" : "Run lookup"}
+            </Button>
+          </form>
+        </div>
+
+        {result && (
+          <div className="mt-6 border border-border">
+            {result.map((r, i) => (
+              <div key={r.domain} className={`grid grid-cols-12 items-center gap-4 px-5 py-4 ${i !== result.length - 1 ? "border-b border-border" : ""}`}>
+                <div className="col-span-12 sm:col-span-6 flex items-center gap-3">
+                  <span className={`h-2 w-2 rounded-full ${r.available ? "bg-brand" : "bg-muted-foreground/40"}`} />
+                  <span className="font-mono">{r.domain}</span>
+                </div>
+                <div className="col-span-6 sm:col-span-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {r.available ? "Available" : "Taken"}
+                </div>
+                <div className="col-span-3 sm:col-span-2 font-mono text-sm">{r.price}</div>
+                <div className="col-span-3 sm:col-span-2 text-right">
+                  {r.available && <a href="#contact" className="font-mono text-xs uppercase tracking-widest text-brand hover:underline">Register →</a>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
 
 function Hosting() {
   return (
-    <section id="hosting" className="border-y border-border bg-secondary/40">
-      <div className="container-px mx-auto max-w-7xl py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Hosting</p>
-          <h2 className="mt-4 text-4xl font-semibold md:text-5xl">Hosting plans that scale with you.</h2>
+    <section id="hosting" className="border-b border-border">
+      <div className="container-px mx-auto max-w-[1400px] py-24 md:py-32">
+        <div className="grid grid-cols-12 gap-6 mb-16">
+          <div className="col-span-12 md:col-span-3 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+            ( 04 ) — Hosting
+          </div>
+          <h2 className="col-span-12 md:col-span-9 font-display text-5xl md:text-7xl leading-[0.95]">
+            Plans that <span className="italic text-brand">scale</span> with you.
+          </h2>
         </div>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {plans.map(p => (
-            <Card key={p.name} className={`relative flex flex-col gap-6 border-border p-8 ${p.featured ? "bg-foreground text-background" : "bg-background"}`}>
-              {p.featured && <Badge className="absolute -top-3 right-6 rounded-full bg-brand text-brand-foreground">Most Popular</Badge>}
-              <div>
-                <h3 className="font-display text-2xl font-semibold">{p.name}</h3>
-                <div className="mt-3 flex items-baseline gap-1">
-                  <span className="font-display text-5xl font-semibold">{p.price}</span>
-                  <span className={p.featured ? "text-background/60" : "text-muted-foreground"}>{p.period}</span>
-                </div>
+        <div className="grid grid-cols-1 border border-border md:grid-cols-3">
+          {plans.map((p, i) => (
+            <div key={p.name} className={`flex flex-col gap-8 p-8 md:p-10 ${i !== plans.length - 1 ? "border-b md:border-b-0 md:border-r border-border" : ""} ${p.featured ? "bg-brand text-brand-foreground" : ""}`}>
+              <div className="flex items-start justify-between">
+                <h3 className="font-display text-3xl">{p.name}</h3>
+                {p.featured && <span className="border border-brand-foreground px-2 py-1 font-mono text-[10px] uppercase tracking-widest">Popular</span>}
               </div>
-              <ul className="space-y-3 text-sm">
+              <div className="font-display text-7xl leading-none">
+                ${p.price}<span className={`font-sans text-base ${p.featured ? "text-brand-foreground/70" : "text-muted-foreground"}`}>/mo</span>
+              </div>
+              <ul className="space-y-2.5 font-mono text-xs uppercase tracking-wider">
                 {p.features.map(f => (
-                  <li key={f} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-brand" /> {f}
+                  <li key={f} className="flex items-start gap-2">
+                    <span className={p.featured ? "text-brand-foreground" : "text-brand"}>+</span> {f}
                   </li>
                 ))}
               </ul>
-              <Button asChild className={`mt-auto rounded-full ${p.featured ? "bg-brand text-brand-foreground hover:bg-brand/90" : ""}`}>
-                <a href="#contact">Choose {p.name}</a>
-              </Button>
-            </Card>
+              <a href="#contact" className={`mt-auto flex items-center justify-between border px-5 py-4 font-mono text-xs uppercase tracking-widest transition ${p.featured ? "border-brand-foreground bg-brand-foreground text-brand hover:bg-transparent hover:text-brand-foreground" : "border-border hover:border-brand hover:text-brand"}`}>
+                Choose {p.name} <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
           ))}
         </div>
       </div>
@@ -326,26 +358,32 @@ function Hosting() {
   );
 }
 
-function Portfolio() {
+function Work() {
   return (
-    <section id="portfolio" className="container-px mx-auto max-w-7xl py-24">
-      <div className="flex items-end justify-between gap-8">
-        <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Selected Work</p>
-          <h2 className="mt-4 max-w-2xl text-4xl font-semibold md:text-5xl">Brands we've helped grow.</h2>
-        </div>
-      </div>
-      <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {portfolio.map((p, i) => (
-          <div key={i} className="group relative aspect-[4/5] overflow-hidden rounded-2xl">
-            <div className={`absolute inset-0 bg-gradient-to-br ${p.color} transition group-hover:scale-105`} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <Badge className="rounded-full bg-brand text-brand-foreground">{p.cat}</Badge>
-              <h3 className="mt-3 text-xl font-semibold">{p.title}</h3>
-            </div>
+    <section id="work" className="border-b border-border">
+      <div className="container-px mx-auto max-w-[1400px] py-24 md:py-32">
+        <div className="grid grid-cols-12 gap-6 mb-16">
+          <div className="col-span-12 md:col-span-3 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+            ( 05 ) — Selected Work
           </div>
-        ))}
+          <h2 className="col-span-12 md:col-span-9 font-display text-5xl md:text-7xl leading-[0.95]">
+            Brands we've helped <span className="italic text-brand">grow</span>.
+          </h2>
+        </div>
+        <ul className="border-t border-border">
+          {work.map((p, i) => (
+            <li key={i} className="group grid grid-cols-12 items-center gap-4 border-b border-border py-6 transition hover:pl-4">
+              <div className="col-span-2 font-mono text-xs text-muted-foreground">{p.y}</div>
+              <div className="col-span-6 font-display text-2xl md:text-4xl">
+                {p.title}
+              </div>
+              <div className="col-span-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{p.cat}</div>
+              <div className="col-span-1 flex justify-end">
+                <ArrowUpRight className="h-5 w-5 text-muted-foreground transition group-hover:text-brand" />
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
@@ -353,18 +391,22 @@ function Portfolio() {
 
 function Process() {
   return (
-    <section className="border-y border-border bg-foreground text-background">
-      <div className="container-px mx-auto max-w-7xl py-24">
-        <div className="max-w-2xl">
-          <p className="text-sm uppercase tracking-[0.3em] text-background/60">Process</p>
-          <h2 className="mt-4 text-4xl font-semibold md:text-5xl">A clear path from idea to launch.</h2>
+    <section className="border-b border-border">
+      <div className="container-px mx-auto max-w-[1400px] py-24 md:py-32">
+        <div className="grid grid-cols-12 gap-6 mb-16">
+          <div className="col-span-12 md:col-span-3 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+            ( 06 ) — Process
+          </div>
+          <h2 className="col-span-12 md:col-span-9 font-display text-5xl md:text-7xl leading-[0.95]">
+            A clear path from <span className="italic text-brand">idea</span> to launch.
+          </h2>
         </div>
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-background/10 md:grid-cols-2 lg:grid-cols-3">
-          {process.map(s => (
-            <div key={s.n} className="bg-foreground p-8">
-              <div className="font-display text-5xl font-semibold text-brand">{s.n}</div>
-              <h3 className="mt-4 text-xl font-semibold">{s.t}</h3>
-              <p className="mt-2 text-sm text-background/70">{s.d}</p>
+        <div className="grid grid-cols-1 border border-border md:grid-cols-3">
+          {process.map((s, i) => (
+            <div key={s.n} className={`p-8 md:p-10 ${i < 3 ? "md:border-b" : ""} ${i % 3 !== 2 ? "md:border-r" : ""} ${i !== process.length - 1 ? "border-b md:border-b-inherit" : ""} border-border`}>
+              <div className="font-display text-6xl text-brand">{s.n}</div>
+              <h3 className="mt-6 font-display text-2xl">{s.t}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
             </div>
           ))}
         </div>
@@ -375,24 +417,29 @@ function Process() {
 
 function Testimonials() {
   return (
-    <section className="container-px mx-auto max-w-7xl py-24">
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Testimonials</p>
-        <h2 className="mt-4 text-4xl font-semibold md:text-5xl">Loved by ambitious teams.</h2>
-      </div>
-      <div className="mt-12 grid gap-6 md:grid-cols-3">
-        {testimonials.map(t => (
-          <Card key={t.name} className="border-border bg-background p-8">
-            <div className="flex gap-1 text-brand">
-              {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-            </div>
-            <p className="mt-4 text-lg leading-relaxed">"{t.quote}"</p>
-            <div className="mt-6">
-              <div className="font-semibold">{t.name}</div>
-              <div className="text-sm text-muted-foreground">{t.role}</div>
-            </div>
-          </Card>
-        ))}
+    <section className="border-b border-border">
+      <div className="container-px mx-auto max-w-[1400px] py-24 md:py-32">
+        <div className="grid grid-cols-12 gap-6 mb-16">
+          <div className="col-span-12 md:col-span-3 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+            ( 07 ) — Words
+          </div>
+          <h2 className="col-span-12 md:col-span-9 font-display text-5xl md:text-7xl leading-[0.95]">
+            Loved by <span className="italic text-brand">ambitious</span> teams.
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 gap-px bg-border md:grid-cols-3">
+          {testimonials.map(t => (
+            <figure key={t.name} className="flex flex-col justify-between gap-8 bg-background p-8 md:p-10">
+              <blockquote className="font-display text-2xl italic leading-snug">
+                <span className="text-brand">"</span>{t.quote}<span className="text-brand">"</span>
+              </blockquote>
+              <figcaption className="font-mono text-[11px] uppercase tracking-widest">
+                <div>{t.name}</div>
+                <div className="text-muted-foreground">{t.role}</div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -400,47 +447,46 @@ function Testimonials() {
 
 function Contact() {
   const [sent, setSent] = useState(false);
-  const services_list = ["Website Development", "Domain Registration", "Web Hosting", "Business Profile", "Google Business Optimization", "Social Media Management", "Digital Marketing", "Other"];
+  const services_list = ["Website Development", "Domain Registration", "Web Hosting", "Business Profile", "Google Business", "Social Media", "Digital Marketing", "Other"];
   return (
-    <section id="contact" className="border-t border-border bg-secondary/40">
-      <div className="container-px mx-auto max-w-7xl py-24">
-        <div className="grid gap-12 md:grid-cols-2 md:gap-20">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Contact</p>
-            <h2 className="mt-4 text-4xl font-semibold md:text-5xl">Let's build something remarkable.</h2>
+    <section id="contact" className="border-b border-border">
+      <div className="container-px mx-auto max-w-[1400px] py-24 md:py-32">
+        <div className="grid grid-cols-12 gap-10">
+          <div className="col-span-12 md:col-span-5">
+            <div className="font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">( 08 ) — Contact</div>
+            <h2 className="mt-6 font-display text-5xl md:text-7xl leading-[0.95]">
+              Let's build something <span className="italic text-brand">remarkable</span>.
+            </h2>
             <p className="mt-6 text-muted-foreground">Tell us about your business. We'll reply within one business day.</p>
-            <div className="mt-10 space-y-4">
-              <a href={`mailto:${EMAIL}`} className="flex items-center gap-3 text-sm hover:text-brand"><Mail className="h-4 w-4" /> {EMAIL}</a>
-              <a href={`tel:+250784254890`} className="flex items-center gap-3 text-sm hover:text-brand"><Phone className="h-4 w-4" /> {PHONE}</a>
-              <a href={WHATSAPP} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-sm hover:text-brand"><MessageCircle className="h-4 w-4" /> WhatsApp Support</a>
+            <div className="mt-12 space-y-4 font-mono text-sm">
+              <a href={`mailto:${EMAIL}`} className="flex items-center gap-3 hover:text-brand"><Mail className="h-4 w-4" /> {EMAIL}</a>
+              <a href="tel:+250784254890" className="flex items-center gap-3 hover:text-brand"><Phone className="h-4 w-4" /> {PHONE}</a>
+              <a href={WHATSAPP} target="_blank" rel="noreferrer" className="flex items-center gap-3 hover:text-brand"><MessageCircle className="h-4 w-4" /> WhatsApp Support</a>
             </div>
           </div>
-          <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-4 rounded-2xl border border-border bg-background p-8">
-            {sent ? (
-              <div className="flex h-full flex-col items-center justify-center py-12 text-center">
-                <div className="rounded-full bg-brand/10 p-4"><Check className="h-8 w-8 text-brand" /></div>
-                <h3 className="mt-4 text-2xl font-semibold">Message sent</h3>
-                <p className="mt-2 text-muted-foreground">We'll get back to you shortly.</p>
-              </div>
-            ) : (
-              <>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <Input required placeholder="Full name" />
-                  <Input required type="email" placeholder="Email" />
-                  <Input placeholder="Phone" />
-                  <Input placeholder="Business name" />
-                </div>
-                <select required className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                  <option value="">Service needed</option>
-                  {services_list.map(s => <option key={s}>{s}</option>)}
-                </select>
-                <Textarea required placeholder="Tell us about your project" rows={5} />
-                <div className="flex flex-wrap gap-3">
-                  <Button type="submit" size="lg" className="rounded-full">Send Message</Button>
-                  <Button type="submit" size="lg" variant="outline" className="rounded-full">Request Quote</Button>
-                </div>
-              </>
-            )}
+
+          <form
+            onSubmit={(e) => { e.preventDefault(); setSent(true); setTimeout(() => setSent(false), 4000); }}
+            className="col-span-12 md:col-span-7 space-y-6 border border-border p-8 md:p-10"
+          >
+            <div className="grid gap-6 md:grid-cols-2">
+              <Field label="Name"><Input required className="rounded-none border-0 border-b border-border bg-transparent px-0 focus-visible:ring-0" /></Field>
+              <Field label="Email"><Input type="email" required className="rounded-none border-0 border-b border-border bg-transparent px-0 focus-visible:ring-0" /></Field>
+              <Field label="Company"><Input className="rounded-none border-0 border-b border-border bg-transparent px-0 focus-visible:ring-0" /></Field>
+              <Field label="Phone"><Input className="rounded-none border-0 border-b border-border bg-transparent px-0 focus-visible:ring-0" /></Field>
+            </div>
+            <Field label="Service">
+              <select required className="w-full rounded-none border-0 border-b border-border bg-transparent py-2 font-sans text-sm focus:outline-none">
+                <option value="" className="bg-background">Select a service</option>
+                {services_list.map(s => <option key={s} value={s} className="bg-background">{s}</option>)}
+              </select>
+            </Field>
+            <Field label="Project details">
+              <Textarea required rows={5} className="rounded-none border border-border bg-transparent focus-visible:ring-0" />
+            </Field>
+            <button type="submit" className="group flex w-full items-center justify-between border border-brand bg-brand px-6 py-5 font-mono text-sm uppercase tracking-widest text-brand-foreground transition hover:bg-transparent hover:text-brand">
+              {sent ? "Message sent — thank you" : "Send message"} <ArrowUpRight className="h-5 w-5 transition group-hover:rotate-45" />
+            </button>
           </form>
         </div>
       </div>
@@ -448,39 +494,30 @@ function Contact() {
   );
 }
 
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{label}</span>
+      {children}
+    </label>
+  );
+}
+
 function Footer() {
   return (
-    <footer className="bg-foreground text-background">
-      <div className="container-px mx-auto max-w-7xl py-16">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2">
-              <img src={logo.url} alt="Creators Rwanda" className="h-9 w-9 object-contain" />
-              <span className="font-display text-lg font-semibold">Creators<span className="text-brand">.</span>Rwanda</span>
-            </div>
-            <p className="mt-4 max-w-sm text-sm text-background/70">Building powerful digital brands for modern businesses across Rwanda and beyond.</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-background/60">Services</h4>
-            <ul className="mt-4 space-y-2 text-sm text-background/80">
-              <li>Website Development</li><li>Domain Registration</li><li>Web Hosting</li>
-              <li>Social Media Management</li><li>Digital Marketing</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-background/60">Contact</h4>
-            <ul className="mt-4 space-y-2 text-sm text-background/80">
-              <li><a className="hover:text-brand" href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
-              <li><a className="hover:text-brand" href="tel:+250784254890">{PHONE}</a></li>
-              <li><a className="hover:text-brand" href={WHATSAPP} target="_blank" rel="noreferrer">WhatsApp Support</a></li>
-            </ul>
-          </div>
+    <footer className="bg-background">
+      <div className="container-px mx-auto max-w-[1400px] py-16">
+        <div className="font-display text-[18vw] leading-none md:text-[14rem]">
+          Creators<span className="italic text-brand">.</span>
         </div>
-        <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-background/10 pt-8 text-xs text-background/60 md:flex-row md:items-center">
-          <p>© 2026 Creators Rwanda. All Rights Reserved.</p>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-brand">Privacy</a>
-            <a href="#" className="hover:text-brand">Terms</a>
+        <div className="mt-10 flex flex-col gap-6 border-t border-border pt-8 md:flex-row md:items-center md:justify-between">
+          <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+            © {new Date().getFullYear()} Creators Rwanda — Kigali, RW
+          </div>
+          <div className="flex flex-wrap gap-6 font-mono text-[11px] uppercase tracking-widest">
+            <a href={`mailto:${EMAIL}`} className="hover:text-brand">{EMAIL}</a>
+            <a href="tel:+250784254890" className="hover:text-brand">{PHONE}</a>
+            <a href={WHATSAPP} target="_blank" rel="noreferrer" className="hover:text-brand">WhatsApp</a>
           </div>
         </div>
       </div>
@@ -490,9 +527,10 @@ function Footer() {
 
 function WhatsAppFab() {
   return (
-    <a href={WHATSAPP} target="_blank" rel="noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-brand-foreground shadow-elegant transition hover:scale-110"
-      aria-label="WhatsApp">
+    <a
+      href={WHATSAPP} target="_blank" rel="noreferrer" aria-label="WhatsApp"
+      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-brand-foreground shadow-[0_10px_40px_-10px_var(--brand)] transition hover:scale-105"
+    >
       <MessageCircle className="h-6 w-6" />
     </a>
   );
