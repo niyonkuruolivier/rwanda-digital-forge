@@ -79,7 +79,7 @@ function Landing() {
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
         <div className="container-px mx-auto flex items-center justify-between py-4">
           <a href="#" className="flex items-center gap-2">
-            <img src={logoAsset.url} alt="CreatorsRwanda" className="h-9 w-auto" />
+            <img src={logoAsset.url} alt="CreatorsRwanda" className="h-11 w-auto" />
           </a>
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
             <a href="#about" className="hover:text-[var(--sky)]">About</a>
@@ -317,7 +317,7 @@ function Landing() {
         <div className="container-px mx-auto py-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <div className="flex items-center gap-2">
-              <img src={logoAsset.url} alt="CreatorsRwanda" className="h-9 w-auto" />
+              <img src={logoAsset.url} alt="CreatorsRwanda" className="h-11 w-auto" />
             </div>
             <p className="mt-4 text-sm leading-relaxed">Digital agency building powerful brands and infrastructure for Africa's next generation.</p>
           </div>
