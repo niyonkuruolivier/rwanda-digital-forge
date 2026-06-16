@@ -337,7 +337,7 @@ function Landing() {
           }}
           className="rounded-2xl border bg-card p-7 shadow-card space-y-4"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input name="name" required placeholder="Full name" />
             <Input name="email" required type="email" placeholder="Email address" />
           </div>
