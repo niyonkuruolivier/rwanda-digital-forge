@@ -78,7 +78,7 @@ function Landing() {
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
         <div className="container-px mx-auto flex items-center justify-between py-4">
-          <a href="#" className="flex items-center gap-2">
+          <a href="#" className="flex items-center gap-1">
             <img src={logoAsset.url} alt="CreatorsRwanda" className="h-11 w-auto" />
             <span className="font-bold text-lg tracking-tight">Creators Rwanda</span>
           </a>
