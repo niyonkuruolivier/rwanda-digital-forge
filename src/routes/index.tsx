@@ -70,7 +70,7 @@ function Landing() {
       {/* Promo bar */}
       <div className="bg-[var(--navy)] text-white text-xs md:text-sm">
         <div className="container-px mx-auto flex items-center justify-between py-2">
-          <span className="truncate">Save up to 40% on Web & Hosting bundles — starting from RWF 12,150/year</span>
+          <span className="truncate">Save up to 40% on Web & Hosting bundles — starting from RWF 85,000/year</span>
           <a href="#contact" className="ml-4 shrink-0 bg-[var(--sky)] text-[var(--navy)] font-semibold px-3 py-1 rounded-md hover:brightness-110 transition">Get Started</a>
         </div>
       </div>
