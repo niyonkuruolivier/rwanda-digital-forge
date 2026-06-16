@@ -118,9 +118,6 @@ function Landing() {
             <h1 className="mt-6 text-4xl md:text-6xl font-bold leading-[1.05] text-balance">
               Transforming ICT & digital brands across <span className="text-[var(--sky)]">Africa</span>
             </h1>
-            <p className="mt-5 text-white/80 text-lg max-w-xl">
-              Creators Rwanda builds powerful digital systems — websites, hosting, domains and brand experiences — for ambitious businesses ready to scale.
-            </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#services" className="inline-flex items-center gap-2 bg-[var(--sky)] text-[var(--navy)] font-semibold px-5 py-3 rounded-md hover:brightness-110">
                 Explore Services <ArrowRight className="w-4 h-4" />
