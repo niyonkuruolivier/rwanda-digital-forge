@@ -210,6 +210,33 @@ function Landing() {
         </div>
       </section>
 
+      {/* Partners */}
+      <section id="partners" className="container-px mx-auto py-20 md:py-28">
+        <div className="text-center max-w-2xl mx-auto">
+          <span className="text-xs tracking-[0.25em] uppercase text-[var(--sky)] font-semibold">Partners</span>
+          <h2 className="mt-3 text-3xl md:text-4xl font-bold text-[var(--navy)]">Partnership is in our DNA</h2>
+          <p className="mt-3 text-muted-foreground">See our featured partners below</p>
+        </div>
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          {[
+            { name: "Rwanda ICT Chamber", tag: "Technology" },
+            { name: "Kigali Innovation City", tag: "Innovation" },
+            { name: "African Tech Hub", tag: "Community" },
+            { name: "Cloudflare", tag: "Infrastructure" },
+            { name: "Namecheap", tag: "Domains" },
+            { name: "Meta", tag: "Social" },
+          ].map((p) => (
+            <div key={p.name} className="rounded-xl border bg-card p-6 text-center hover:shadow-card transition">
+              <div className="w-12 h-12 rounded-full bg-[var(--secondary)] mx-auto grid place-items-center text-[var(--navy)] font-display font-bold text-lg">
+                {p.name.charAt(0)}
+              </div>
+              <div className="mt-4 font-display font-semibold text-[var(--navy)] text-sm">{p.name}</div>
+              <div className="mt-1 text-xs text-muted-foreground">{p.tag}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Domains */}
       <section id="domains" className="container-px mx-auto py-20 md:py-28">
         <div className="max-w-2xl">
