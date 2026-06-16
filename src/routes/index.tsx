@@ -79,8 +79,7 @@ function Landing() {
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
         <div className="container-px mx-auto flex items-center justify-between py-4">
           <a href="#" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-hero grid place-items-center text-white font-display font-bold">C</div>
-            <div className="font-display font-bold text-[var(--navy)]">CreatorsRwanda</div>
+            <img src={logoAsset.url} alt="CreatorsRwanda" className="h-9 w-auto" />
           </a>
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
             <a href="#about" className="hover:text-[var(--sky)]">About</a>
@@ -291,8 +290,7 @@ function Landing() {
         <div className="container-px mx-auto py-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg bg-[var(--sky)] grid place-items-center text-[var(--navy)] font-display font-bold">C</div>
-              <div className="text-white font-display font-bold">CreatorsRwanda</div>
+              <img src={logoAsset.url} alt="CreatorsRwanda" className="h-9 w-auto" />
             </div>
             <p className="mt-4 text-sm leading-relaxed">Digital agency building powerful brands and infrastructure for Africa's next generation.</p>
           </div>
