@@ -355,7 +355,7 @@ function Landing() {
           <div>
             <div className="flex items-center gap-2">
               <img src={logoAsset.url} alt="CreatorsRwanda" className="h-11 w-auto" />
-              <span className="font-bold text-lg tracking-tight text-white">Creators Rwanda</span>
+              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-[var(--sky)] to-blue-300 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-display)' }}>Creators Rwanda</span>
             </div>
             <p className="mt-4 text-sm leading-relaxed">Digital agency building powerful brands and infrastructure for Africa's next generation.</p>
           </div>
