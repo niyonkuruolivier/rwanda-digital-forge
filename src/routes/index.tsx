@@ -79,10 +79,7 @@ function Landing() {
         <div className="container-px mx-auto flex items-center justify-between py-4">
           <a href="#" className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-lg bg-hero grid place-items-center text-white font-display font-bold">C</div>
-            <div className="leading-tight">
-              <div className="font-display font-bold text-[var(--navy)]">Creators<span className="text-[var(--sky)]">.</span></div>
-              <div className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">Rwanda</div>
-            </div>
+            <div className="font-display font-bold text-[var(--navy)]">CreatorsRwanda</div>
           </a>
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
             <a href="#about" className="hover:text-[var(--sky)]">About</a>
@@ -294,7 +291,7 @@ function Landing() {
           <div>
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-lg bg-[var(--sky)] grid place-items-center text-[var(--navy)] font-display font-bold">C</div>
-              <div className="text-white font-display font-bold">Creators Rwanda</div>
+              <div className="text-white font-display font-bold">CreatorsRwanda</div>
             </div>
             <p className="mt-4 text-sm leading-relaxed">Digital agency building powerful brands and infrastructure for Africa's next generation.</p>
           </div>
