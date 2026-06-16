@@ -263,17 +263,27 @@ function Landing() {
           </div>
         </div>
         <form
-          onSubmit={(e) => { e.preventDefault(); setSent(true); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const fd = new FormData(e.currentTarget);
+            const name = String(fd.get("name") ?? "");
+            const email = String(fd.get("email") ?? "");
+            const phone = String(fd.get("phone") ?? "");
+            const msg = String(fd.get("message") ?? "");
+            const text = `Hello Creators Rwanda,\n\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ""}\n\nProject:\n${msg}`;
+            window.open(`https://wa.me/250784254890?text=${encodeURIComponent(text)}`, "_blank");
+            setSent(true);
+          }}
           className="rounded-2xl border bg-card p-7 shadow-card space-y-4"
         >
           <div className="grid grid-cols-2 gap-4">
-            <Input required placeholder="Full name" />
-            <Input required type="email" placeholder="Email address" />
+            <Input name="name" required placeholder="Full name" />
+            <Input name="email" required type="email" placeholder="Email address" />
           </div>
-          <Input placeholder="Phone (optional)" />
-          <Textarea required placeholder="Tell us about your project" rows={5} />
+          <Input name="phone" placeholder="Phone (optional)" />
+          <Textarea name="message" required placeholder="Tell us about your project" rows={5} />
           <Button type="submit" className="w-full h-12 bg-[var(--navy)] hover:brightness-110">
-            {sent ? "Message sent ✓" : "Send message"}
+            {sent ? "Opening WhatsApp…" : "Send via WhatsApp"}
           </Button>
         </form>
       </section>
