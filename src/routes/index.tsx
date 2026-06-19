@@ -275,7 +275,7 @@ function Landing() {
       </section>
 
       {/* Domains */}
-      <section id="domains" className="container-px mx-auto py-20 md:py-28">
+      <section id="domains" className="container-px mx-auto pt-10 md:pt-14 pb-20 md:pb-28">
         <div className="max-w-2xl">
           <span className="text-xs tracking-[0.25em] uppercase text-[var(--sky)] font-semibold">Domains</span>
           <h2 className="mt-3 text-3xl md:text-4xl font-bold text-[var(--navy)]">Find the perfect domain</h2>
