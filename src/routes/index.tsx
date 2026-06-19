@@ -248,7 +248,7 @@ function Landing() {
       </section>
 
       {/* Partners */}
-      <section id="partners" className="container-px mx-auto py-20 md:py-28">
+      <section id="partners" className="container-px mx-auto pt-20 md:pt-28 pb-10 md:pb-14">
         <div className="text-center max-w-2xl mx-auto">
           <span className="text-xs tracking-[0.25em] uppercase text-[var(--sky)] font-semibold">Partners</span>
           <h2 className="mt-3 text-3xl md:text-4xl font-bold text-[var(--navy)]">Partnership is in our DNA</h2>
