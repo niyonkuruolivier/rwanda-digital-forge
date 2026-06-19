@@ -192,7 +192,7 @@ function Landing() {
       </section>
 
       {/* About */}
-      <section id="about" className="container-px mx-auto py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
+      <section id="about" className="container-px mx-auto pt-20 md:pt-28 pb-10 md:pb-14 grid md:grid-cols-2 gap-12 items-center">
         <div>
           <span className="text-xs tracking-[0.25em] uppercase text-[var(--sky)] font-semibold">About Us</span>
           <h2 className="mt-3 text-3xl md:text-4xl font-bold text-[var(--navy)] text-balance">
@@ -224,7 +224,7 @@ function Landing() {
       </section>
 
       {/* Services */}
-      <section id="services" className="bg-[var(--secondary)] py-20 md:py-28">
+      <section id="services" className="bg-[var(--secondary)] pt-10 md:pt-14 pb-20 md:pb-28">
         <div className="container-px mx-auto">
           <div className="max-w-2xl">
             <span className="text-xs tracking-[0.25em] uppercase text-[var(--sky)] font-semibold">Our Services</span>
