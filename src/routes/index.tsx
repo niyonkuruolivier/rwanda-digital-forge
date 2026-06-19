@@ -142,7 +142,7 @@ function Landing() {
 
       {/* Hero */}
       <section className="bg-hero text-white">
-        <div className="container-px mx-auto py-20 md:py-28 grid md:grid-cols-2 gap-10 items-center">
+        <div className="container-px mx-auto py-8 md:py-14 grid md:grid-cols-2 gap-10 items-center">
           <div>
             <span className="inline-block text-xs tracking-[0.25em] uppercase bg-white/10 border border-white/20 px-3 py-1 rounded-full">Digital Agency • Kigali</span>
             <h1 className="mt-6 text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight">
