@@ -224,7 +224,7 @@ function Landing() {
       </section>
 
       {/* Services */}
-      <section id="services" className="bg-[var(--secondary)] pt-10 md:pt-14 pb-20 md:pb-28">
+      <section id="services" className="bg-[var(--secondary)] pt-10 md:pt-14 pb-10 md:pb-14">
         <div className="container-px mx-auto">
           <div className="max-w-2xl">
             <span className="text-xs tracking-[0.25em] uppercase text-[var(--sky)] font-semibold">Our Services</span>
