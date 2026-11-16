@@ -5,7 +5,7 @@ import { useStore } from "@/lib/store";
 
 export function BackButton({ onPhoto = false }: { onPhoto?: boolean }) {
   const router = useRouter();
-  return <Button asChild variant={onPhoto ? "outline" : "ghost"} className={onPhoto ? "bg-card" : "px-2"}>
+  return <Button asChild variant="outline" className={onPhoto ? "bg-card" : "px-3"}>
     <Link to="/" onClick={(event) => {
       if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       if (router.history.canGoBack()) { event.preventDefault(); router.history.back(); }
