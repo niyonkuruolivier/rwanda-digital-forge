@@ -9,6 +9,7 @@ import { money } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { canVendorTrade } from "@/lib/admin";
 import { ProductGallery } from "@/components/market/ProductGallery";
+import { BackButton } from "@/components/market/BackButton";
 import { ShareButton } from "@/components/market/ShareButton";
 import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
 
@@ -43,7 +44,18 @@ function ProductPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-4 md:py-10">
       <div className="grid gap-6 md:grid-cols-2 md:gap-10">
-        <ProductGallery key={p.id} title={p.title} images={p.images} videoUrl={p.videoUrl} wished={wished} onToggleWish={() => toggleWish(p.id)} />
+        <ProductGallery
+          key={p.id}
+          title={p.title}
+          images={p.images}
+          videoUrl={p.videoUrl}
+          wished={wished}
+          onToggleWish={() => toggleWish(p.id)}
+          overlay={<>
+            <BackButton onPhoto />
+            <ShareButton size="sm" path={`/products/${p.id}`} title={`${p.title} — Murandasi Market`} text={money(p.price)} />
+          </>}
+        />
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{p.category}</p>
           <h1 className="mt-1 text-2xl font-extrabold text-heading md:text-3xl">{p.title}</h1>
@@ -90,7 +102,6 @@ function ProductPage() {
               <Button size="lg" variant="accent" disabled={!p.stock || blocked} onClick={buy} className="gap-2"><Zap className="h-4 w-4" /> Buy Now</Button>
             </div>
             {blocked && <p className="text-sm text-destructive">This store is unavailable for new purchases.</p>}
-            <ShareButton className="mt-1 justify-self-start" path={`/products/${p.id}`} title={`${p.title} — Murandasi Market`} text={money(p.price)} />
           </div>
         </div>
       </div>
