@@ -6,7 +6,17 @@ export async function agreementDocument(agreement: VendorAgreement, store: { nam
   const image = async (url: string, width: number, height: number, description: string) => {
     const response = await fetch(url);
     if (!response.ok) throw new Error("Could not load the company signature or stamp. Try again.");
-    return new Paragraph({ children: [new ImageRun({ type: "png", data: new Uint8Array(await response.arrayBuffer()), transformation: { width, height }, altText: { title: description, description, name: description } })] });
+    // Asset delivery may optimize PNG uploads to WebP; Word needs actual PNG bytes.
+    const bitmap = await createImageBitmap(await response.blob());
+    const canvas = document.createElement("canvas");
+    canvas.width = bitmap.width;
+    canvas.height = bitmap.height;
+    const context = canvas.getContext("2d");
+    if (!context) { bitmap.close(); throw new Error("Could not prepare the agreement images. Try again."); }
+    context.drawImage(bitmap, 0, 0);
+    bitmap.close();
+    const png = await new Promise<Blob>((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("Could not prepare the agreement images. Try again.")), "image/png"));
+    return new Paragraph({ children: [new ImageRun({ type: "png", data: new Uint8Array(await png.arrayBuffer()), transformation: { width, height }, altText: { title: description, description, name: description } })] });
   };
   const logo = company ? [await image(company.logo, 240, 80, "Murandasi company logo")] : [];
   const companySignature = company ? [new Paragraph({ heading: HeadingLevel.HEADING_2, text: "For Murandasi Market" }), await image(company.signature, 150, 84, "Signature of Niyonkuru Olivier"), paragraph(`${company.director} | ${company.title}`), paragraph(`Company contact: ${company.phone} | TIN: ${company.tin}`), await image(company.stamp, 100, 107, "Murandasi company stamp")] : [];

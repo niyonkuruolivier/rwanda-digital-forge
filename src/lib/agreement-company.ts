@@ -1,4 +1,4 @@
-import logo from "@/assets/agreement-logo.png.asset.json";
+import logo from "@/assets/murandasi-logo.png.asset.json";
 import stamp from "@/assets/company-stamp.png.asset.json";
 import signature from "@/assets/director-signature.png.asset.json";
 
