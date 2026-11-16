@@ -55,8 +55,9 @@ function ProductPage() {
             <BackButton onPhoto />
             <ShareButton size="sm" className="bg-card/60 shadow-md backdrop-blur" path={`/products/${p.id}`} title={`${p.title} — Murandasi Market`} text={money(p.price)} />
           </>}
+          mainClassName="md:aspect-[4/3] md:max-h-[68vh]"
         />
-        <div>
+        <div className="self-start md:sticky md:top-24">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{p.category}</p>
           <h1 className="mt-1 text-2xl font-extrabold text-heading md:text-3xl">{p.title}</h1>
           <div className="mt-4 flex flex-wrap items-baseline gap-3">

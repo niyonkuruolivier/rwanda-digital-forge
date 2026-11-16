@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ProductVideo } from "@/components/market/ProductVideo";
 import { detectProductVideo, productVideoThumbnail } from "@/lib/product-media";
 
-export function ProductGallery({ title, images, videoUrl, wished, onToggleWish, overlay }: { title: string; images: string[]; videoUrl?: string | undefined; wished: boolean; onToggleWish: () => void; overlay?: ReactNode }) {
+export function ProductGallery({ title, images, videoUrl, wished, onToggleWish, overlay, mainClassName }: { title: string; images: string[]; videoUrl?: string | undefined; wished: boolean; onToggleWish: () => void; overlay?: ReactNode; mainClassName?: string }) {
   const [selected, setSelected] = useState<number | "video">(0);
   const video = videoUrl ? detectProductVideo(videoUrl) : undefined;
   const showVideo = selected === "video" && video;
@@ -16,7 +16,7 @@ export function ProductGallery({ title, images, videoUrl, wished, onToggleWish, 
       : (productVideoThumbnail(video) ?? `/api/public/video-thumbnail?url=${encodeURIComponent(video.url)}`)
     : undefined;
   return <div className="min-w-0">
-    <div className="relative aspect-square w-full overflow-hidden rounded-lg border bg-card shadow-sm">
+    <div className={`relative aspect-square w-full overflow-hidden rounded-lg border bg-card shadow-sm ${mainClassName ?? ""}`}>
       {showVideo ? <ProductVideo url={video.url} title={title} gallery /> : <img src={images[typeof selected === "number" ? selected : 0] ?? images[0]} alt={`${title} — photo ${typeof selected === "number" ? selected + 1 : 1}`} className="h-full w-full object-cover" />}
       {overlay && <div className="absolute left-3 top-3 flex items-center gap-2">{overlay}</div>}
       {!showVideo && <Button variant="ghost" size="icon" onClick={onToggleWish} aria-label="Wishlist" className="absolute right-3 top-3 rounded-full bg-card/90 shadow-md backdrop-blur"><Heart className={`h-5 w-5 ${wished ? "fill-accent text-accent" : "text-muted-foreground"}`} /></Button>}

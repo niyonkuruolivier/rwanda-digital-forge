@@ -39,7 +39,7 @@ function Shop() {
         <DealStories />
         <h1 className="text-2xl font-bold">{q ? `Results for "${q}"` : category ?? "All products"}</h1>
         <p className="text-sm text-muted-foreground">{list.length} items</p>
-        <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 md:gap-5">{list.map((p) => <ProductCard key={p.id} product={p} compact />)}</div>
+        <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4 md:gap-5">{list.map((p) => <ProductCard key={p.id} product={p} compact />)}</div>
         {list.length === 0 && <div className="py-16 text-center"><p className="text-muted-foreground">No products match your search.</p><Button asChild variant="outline" className="mt-4"><Link to="/shop" search={{}}>Show all products</Link></Button></div>}
       </section>
     </div>
