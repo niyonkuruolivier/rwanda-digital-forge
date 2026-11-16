@@ -17,7 +17,7 @@ function Home() {
   const { products, vendors, categories, categoryImages } = useStore();
   const picks = homeProducts(products).slice(0, 8);
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-8 pt-2 md:pt-10">
+    <div className="mx-auto max-w-7xl px-4 pb-4 pt-2 md:pt-10">
       <DealStories />
       <section aria-labelledby="categories-title">
         <h1 id="categories-title" className="text-lg font-bold">What are you shopping for?</h1>
@@ -35,7 +35,7 @@ function Home() {
         <div className="flex items-center justify-between gap-3"><h2 id="picks-title" className="text-lg font-bold md:text-xl">Picked for you</h2><Button asChild variant="link" size="sm"><Link to="/shop" search={{}}>See all<ArrowRight /></Link></Button></div>
         <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-5">{picks.map((p) => <ProductCard key={p.id} product={p} />)}</div>
       </section>
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t pt-6"><div><h2 className="text-lg font-bold">Your store belongs here.</h2><p className="mt-1 text-sm text-muted-foreground">Bring your products to Murandasi Market.</p></div><Button asChild variant="outline"><Link to="/become-vendor">Start selling<ArrowRight /></Link></Button></div>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t pt-4"><div><h2 className="text-lg font-bold">Your store belongs here.</h2><p className="mt-1 text-sm text-muted-foreground">Bring your products to Murandasi Market.</p></div><Button asChild variant="outline"><Link to="/become-vendor">Start selling<ArrowRight /></Link></Button></div>
     </div>
   );
 }
