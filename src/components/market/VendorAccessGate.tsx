@@ -18,6 +18,7 @@ export function VendorAccessGate({ children }: { children: ReactNode }) {
   if (auth.ready && !auth.error && !store.accountAccessError && !store.accountAccessPending && !store.accountRestricted) return children;
   const restricted = store.accountRestricted;
   const suspended = store.accountRestriction?.status === "Suspended";
+  if (!restricted && !auth.error && !store.accountAccessError) return <main className="flex min-h-dvh items-center justify-center bg-background px-5 py-12"><img src={logo.url} alt="MURANDASI.COM" className="h-auto w-56 max-w-full object-contain" width={1920} height={640} /></main>;
   return <main className="flex min-h-dvh items-center justify-center bg-background px-5 py-12">
     <section className="w-full max-w-lg text-center" aria-live="polite">
       <img src={logo.url} alt="MURANDASI.COM" className="mx-auto mb-8 h-auto w-56 max-w-full object-contain" width={1920} height={640} />
