@@ -1,4 +1,5 @@
 # Separate authenticated accounts
+- [x] Rank homepage products by completed sold quantities independently of store stars; tested unpaid/refunded exclusions and verified best-seller first in the browser.
 - [x] Add deliberate visitor store ratings and average/count display; verify saved and changed ratings across visitors and homepage ordering by ratings, completed sales, then last-30-day sales.
 - [x] Restore the photo gallery with a video thumbnail beside the ordered photos; tapping switches between photos and the official video player.
 - [x] Show ordered photos followed immediately by video; one link field detects YouTube, Instagram posts/Reels and full TikTok video links. Verified the actual two-photo product followed by playing YouTube video on mobile without overflow; Instagram/TikTok official players render but sample playback was unavailable externally.

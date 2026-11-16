@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   const { products, vendors, orders, categories, categoryImages, ratingsPending, ratingsError } = useStore();
   const rankedVendors = rankStores(vendors, orders);
-  const picks = homeProducts(products).slice(0, 8);
+  const picks = homeProducts(products, orders).slice(0, 8);
   return (
     <div className="mx-auto max-w-7xl px-4 pb-4 pt-2 md:pt-10">
       <DealStories />
