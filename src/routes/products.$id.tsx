@@ -53,7 +53,7 @@ function ProductPage() {
           onToggleWish={() => toggleWish(p.id)}
           overlay={<>
             <BackButton onPhoto />
-            <ShareButton size="sm" path={`/products/${p.id}`} title={`${p.title} — Murandasi Market`} text={money(p.price)} />
+            <ShareButton size="sm" className="bg-card/60 shadow-md backdrop-blur" path={`/products/${p.id}`} title={`${p.title} — Murandasi Market`} text={money(p.price)} />
           </>}
         />
         <div>
