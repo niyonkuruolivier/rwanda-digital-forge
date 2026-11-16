@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { MapPin } from "lucide-react";
 import { BackButton } from "./BackButton";
+import { ReadMore } from "./ReadMore";
 import { ShareButton } from "./ShareButton";
 import type { Vendor } from "@/lib/data";
 import { Stars } from "./Stars";
@@ -23,7 +24,7 @@ export function StoreProfile({ vendor, actions }: { vendor: Vendor; actions?: Re
       <div className="flex flex-col gap-4 border-b py-6 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0 w-full md:flex-1">
           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground"><span className="flex items-center gap-1"><Stars value={vendor.rating} />{vendor.rating}</span><span>Seller since {vendor.joined}</span></div>
-          <p className="mt-3 max-w-2xl break-words">{vendor.bio}</p>
+          <ReadMore text={vendor.bio} className="mt-3 max-w-2xl" />
         </div>
         {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
       </div>

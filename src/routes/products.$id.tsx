@@ -11,6 +11,7 @@ import { canVendorTrade } from "@/lib/admin";
 import { ProductGallery } from "@/components/market/ProductGallery";
 import { BackButton } from "@/components/market/BackButton";
 import { ShareButton } from "@/components/market/ShareButton";
+import { ReadMore } from "@/components/market/ReadMore";
 import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
 
 export const Route = createFileRoute("/products/$id")({
@@ -73,7 +74,7 @@ function ProductPage() {
             <div className="flex-1"><p className="text-xs text-muted-foreground">Sold by</p><p className="font-semibold text-heading">{v.name}</p></div>
             <Store className="h-4 w-4 text-primary" />
           </Link>}
-          <p className="mt-4 leading-relaxed text-muted-foreground">{p.description}</p>
+          <ReadMore text={p.description} className="mt-4 text-muted-foreground" />
           {(p.options ?? []).map((o) => (
             <div key={o.name} className="mt-5">
               <p className="text-sm font-semibold text-heading">{o.name}{sel[o.name] && <span className="ml-2 font-normal text-muted-foreground">{sel[o.name]}</span>}</p>
