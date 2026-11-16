@@ -1,0 +1,9 @@
+ALTER TABLE public.product_categories ADD COLUMN image text NOT NULL DEFAULT '';
+GRANT UPDATE ON public.product_categories TO authenticated;
+CREATE POLICY "Administrator edits category pictures" ON public.product_categories FOR UPDATE TO authenticated USING(public.has_role(auth.uid(),'admin')) WITH CHECK(public.has_role(auth.uid(),'admin'));
+ALTER TABLE public.marketplace_content ADD COLUMN admin_removed boolean NOT NULL DEFAULT false;
+GRANT INSERT, UPDATE ON public.marketplace_content TO authenticated;
+CREATE POLICY "Administrator removes catalog posts" ON public.marketplace_content FOR INSERT TO authenticated WITH CHECK(public.has_role(auth.uid(),'admin') AND kind IN ('product','story') AND deleted AND admin_removed);
+CREATE POLICY "Administrator moderates catalog posts" ON public.marketplace_content FOR UPDATE TO authenticated USING(public.has_role(auth.uid(),'admin') AND kind IN ('product','story')) WITH CHECK(public.has_role(auth.uid(),'admin') AND kind IN ('product','story') AND deleted AND admin_removed);
+CREATE FUNCTION public.protect_removed_catalog_posts() RETURNS trigger LANGUAGE plpgsql SET search_path=public AS $$ BEGIN IF TG_OP='UPDATE' AND OLD.admin_removed AND NOT public.has_role(auth.uid(),'admin') THEN RAISE EXCEPTION 'This post was removed by an administrator'; END IF; IF NEW.admin_removed AND NOT public.has_role(auth.uid(),'admin') THEN RAISE EXCEPTION 'Administrator access required'; END IF; RETURN NEW; END; $$;
+CREATE TRIGGER protect_removed_catalog_posts BEFORE INSERT OR UPDATE ON public.marketplace_content FOR EACH ROW EXECUTE FUNCTION public.protect_removed_catalog_posts();

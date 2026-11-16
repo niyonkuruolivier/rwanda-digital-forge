@@ -1,399 +1,62 @@
-# Creators Rwanda Hub
-
-# COMPLETE WEBSITE & DASHBOARD PROMPT FOR CREATORS RWANDA
-
-Create a fully functional, production-ready, premium digital agency website and admin dashboard for **Creators Rwanda**.
-
-## COMPANY DETAILS
-
-Company Name: Creators Rwanda
-
-Industry: Digital Agency
-
-Email: [Info@creatorsrwanda.com](mailto:Info@creatorsrwanda.com)
-
-Phone & WhatsApp Support: +250 784 254 890
-
-## BRAND IDENTITY
-
-Color Scheme:
-
-* Black (#000000)
-* White (#FFFFFF)
-
-Design Style:
-
-* Modern
-* Premium
-* Minimalist
-* Corporate
-* International Agency Standard
-* Clean UI/UX
-* Mobile First
-* Fast Loading
-* SEO Optimized
-
-The website should look like a high-end international digital agency trusted by businesses worldwide.
-
----
-
-# SERVICES
-
-1. Website Development
-2. Domain Registration
-3. Web Hosting
-4. Business Profile Creation
-5. Google Business Profile Optimization
-6. Social Media Management
-7. Social Media Branding
-8. Digital Marketing
-9. Content Creation Support
-10. Business Digital Transformation
-
----
-
-# PUBLIC WEBSITE
-
-## Hero Section
-
-Headline:
-"Building Powerful Digital Brands for Modern Businesses"
-
-Subheadline:
-"Creators Rwanda helps businesses grow through professional websites, domain registration, business profiles, and strategic social media management."
-
-Buttons:
-
-* Get Started
-* Request Quote
-
----
-
-## About Us
-
-Professional company overview explaining Creators Rwanda's mission and expertise.
-
----
-
-## Services Section
-
-Modern service cards with icons and hover animations.
-
----
-
-## Domain Availability Checker
-
-Title:
-"Find Your Perfect Domain"
-
-Features:
-
-* Domain Search Input
-* Check Availability Button
-* Real-Time Search
-
-Supported Extensions:
-
-* .com
-* .net
-* .org
-* .rw
-* .co.rw
-* .africa
-
-Results:
-
-* Available Domains
-* Registration Prices
-* Register Button
-* Alternative Suggestions
-
----
-
-## Hosting Plans
-
-Create pricing cards:
-
-* Starter Plan
-* Business Plan
-* Premium Plan
-
-Each plan should include:
-
-* Storage
-* Bandwidth
-* SSL
-* Email Accounts
-* Support Level
-
----
-
-## Portfolio Section
-
-Display completed projects.
-
-Categories:
-
-* Websites
-* Business Profiles
-* Social Media Projects
-
----
-
-## Testimonials
-
-Professional client reviews slider.
-
----
-
-## Process Section
-
-1. Consultation
-2. Planning
-3. Design
-4. Development
-5. Launch
-6. Support
-
----
-
-## Contact Section
-
-Fields:
-
-* Name
-* Email
-* Phone
-* Business Name
-* Service Needed
-* Message
-
-Buttons:
-
-* Send Message
-* Request Quote
-
----
-
-## Footer
-
-Include:
-
-* Company Logo
-* Services
-* Contact Information
-* Social Media Links
-
-Display:
-
-Email: [Info@creatorsrwanda.com](mailto:Info@creatorsrwanda.com)
-
-Phone: +250 784 254 890
-
-WhatsApp Support Available
-
-Copyright:
-© 2026 Creators Rwanda. All Rights Reserved.
-
----
-
-# CLIENT DASHBOARD
-
-Create a secure client dashboard.
-
-Client Features:
-
-## Dashboard Home
-
-* Welcome Message
-* Recent Activities
-* Active Services
-* Notifications
-
-## My Domains
-
-* Registered Domains
-* Expiration Dates
-* Renewal Status
-* Domain Management
-
-## My Hosting
-
-* Hosting Plans
-* Usage Statistics
-* Renewal Dates
-
-## My Websites
-
-* Website Status
-* Development Progress
-* Maintenance Requests
-
-## Business Profiles
-
-* Active Profiles
-* Profile Performance
-
-## Social Media Management
-
-* Scheduled Posts
-* Monthly Reports
-* Growth Analytics
-
-## Invoices & Payments
-
-* Payment History
-* Download Invoices
-* Outstanding Payments
-
-## Support Tickets
-
-* Create Ticket
-* View Responses
-* Ticket Status
-
-## Account Settings
-
-* Profile Information
-* Change Password
-* Security Settings
-
----
-
-# ADMIN DASHBOARD
-
-Create a powerful admin panel.
-
-Admin Features:
-
-## Dashboard Overview
-
-* Total Clients
-* Revenue Statistics
-* Active Services
-* Recent Orders
-
-## Client Management
-
-* Add Client
-* Edit Client
-* Suspend Client
-* Delete Client
-
-## Domain Management
-
-* Domain Registrations
-* Renewals
-* Expiration Monitoring
-
-## Hosting Management
-
-* Hosting Accounts
-* Server Usage
-* Plan Management
-
-## Website Projects
-
-* Project Tracking
-* Progress Updates
-* Delivery Status
-
-## Social Media Management
-
-* Client Accounts
-* Content Scheduling
-* Reports
-
-## Business Profiles
-
-* Client Profiles
-* Optimization Tracking
-
-## Billing System
-
-* Invoices
-* Payments
-* Revenue Reports
-
-## Support System
-
-* Ticket Management
-* Client Communication
-
-## Content Management System (CMS)
-
-* Edit Website Content
-* Blog Management
-* Testimonials
-* Portfolio Projects
-
-## Analytics
-
-* Website Traffic
-* Leads
-* Sales
-* Conversions
-
----
-
-# AUTHENTICATION
-
-Create:
-
-* Login
-* Registration
-* Forgot Password
-* Email Verification
-* Two-Factor Authentication
-
-Roles:
-
-* Super Admin
-* Staff
-* Client
-
----
-
-# AUTOMATION
-
-Include:
-
-* WhatsApp Contact Button
-* Email Notifications
-* Invoice Notifications
-* Renewal Reminders
-* Domain Expiry Alerts
-* Hosting Expiry Alerts
-* Contact Form Notifications
-
----
-
-# TECHNICAL REQUIREMENTS
-
-* Responsive Design
-* Dark Premium Theme
-* Modern Animations
-* SEO Optimized
-* Secure Authentication
-* API Ready
-* Database Ready
-* Production Ready
-* Fast Loading
-* Scalable Architecture
-
----
-
-# FINAL GOAL
-
-Build a complete digital agency platform that allows Creators Rwanda to sell websites, domains, hosting, business profile services, and social media management while giving clients a professional dashboard and providing administrators with full business management capabilities.
+# Murandasi Marketplace
+
+Create a fully responsive, modern multi-vendor e-commerce marketplace web application named "Murandasi Market". The app should allow independent sellers/vendors to register, create their own store profiles, and post products, while shoppers can browse items from multiple vendors, add them to a single cart, and check out.
+
+### Design & Aesthetic Guidelines:
+- Match the clean, modern aesthetic of https://murandasi.lovable.app.
+- Color Palette:
+  - Primary (Brand): Deep Trust Blue / Rich Teal (#0F172A / #0D9488) for navigation headers, main CTAs, and key brand elements.
+  - Secondary (Accent): Vibrant Coral / Warm Orange (#F97316) for sale badges, discount tags, and highlight buttons.
+  - Background: Clean Off-White (#F8FAFC) for page background.
+  - Cards & Surfaces: Crisp White (#FFFFFF) for product cards, vendor boxes, and modal containers.
+  - Text: Dark Slate (#334155) for high-readability body text.
+- Typography: Clean sans-serif font family, clear heading hierarchy, subtle shadows (shadow-sm, shadow-md) for cards.
+
+### Core User Roles & Navigation:
+1. Shoppers / Buyers: Can browse, search, filter by category/vendor, add items from multiple vendors to one cart, and view individual vendor store pages.
+2. Vendors / Sellers: Can register for a vendor account, access a dedicated "Vendor Dashboard" to manage inventory, add new products, edit pricing/stock, and view incoming orders.
+3. Administrator: Platform oversight access.
+
+### Key Pages & Features to Build:
+
+1. Homepage:
+   - Sticky Header with Logo ("Murandasi Market"), Global Search bar with category dropdown, "Become a Vendor" button, Wishlist icon, and Cart icon with live item badge.
+   - Hero Banner showcasing trending marketplace collections with a prominent "Shop Now" and "Start Selling" CTA.
+   - Featured Categories grid (e.g., Electronics, Fashion, Home Decor, Art, Services).
+   - Trending Products grid with product cards showing Image, Title, Price, Vendor Name, Rating, and "Add to Cart" button.
+   - Top-Rated Vendors section highlighting individual stores.
+
+2. Vendor Storefront Page:
+   - Dedicated public page for each vendor showing their Store Banner, Logo, Bio, Vendor Rating, and a filtered product grid showing only items belonging to that specific vendor.
+
+3. Product Detail Page:
+   - High-resolution image gallery (main image + thumbnails).
+   - Product Title, Price, Stock Status, and Vendor attribution link (clicking takes user to the vendor's store).
+   - "Add to Cart" and "Buy Now" buttons, plus customer reviews and ratings section.
+
+4. Vendor Dashboard (Protected View for Sellers):
+   - Overview metrics cards: Total Sales, Total Revenue, Active Listings, Pending Orders.
+   - "Add New Product" modal/form: Input fields for Product Title, Category, Price, Stock Quantity, Image URL/Upload mock, and Description.
+   - Product Management Table: List of current products with options to edit or delete.
+   - Orders Management Tab: View orders placed by customers for their specific items, with status dropdown (Pending, Processing, Shipped, Delivered).
+
+5. Unified Cart & Checkout Flow:
+   - Slide-over or dedicated Cart Page grouping items clearly by Vendor.
+   - Subtotal calculation, platform service fee, and total amount.
+   - Mock Checkout form collecting shipping address and payment method (e.g., Mobile Money / Credit Card simulation) with a successful order confirmation screen.
+
+### Technical Implementation Details:
+- Use React, Tailwind CSS, and Lucide React icons.
+- Build clean, modular components for Product Cards, Navbar, Footer, Vendor Dashboard tables, and Cart drawers.
+- Implement robust mock state management (using React Context or local storage state) so users can realistically add/remove items from the cart, toggle between buyer view and vendor dashboard, and dynamically add new products to the marketplace feed.
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://rwanda-digital-forge.lovable.app
+**Live app**: https://murandasi-marketplace.lovable.app
 
 ## Build with Lovable
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/eb50af39-c3b7-45e8-8ede-650e278b268b).
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/10c03105-591d-4d3c-8271-3d16c3c3df66).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.

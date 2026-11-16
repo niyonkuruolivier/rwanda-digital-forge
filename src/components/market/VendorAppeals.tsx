@@ -1,0 +1,17 @@
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+
+export function VendorAppeals({ admin = false }: { admin?: boolean }) {
+  const auth = useAuth(); const [message, setMessage] = useState(""); const [saving, setSaving] = useState(false); const [error, setError] = useState(""); const [responses, setResponses] = useState<Record<string,string>>({});
+  const query = useQuery({ queryKey: ["vendor-appeals", auth.user?.id, admin], queryFn: async () => { const result = await supabase.from("vendor_appeals").select("*").order("created_at", { ascending: false }); if (result.error) throw result.error; return result.data; }, refetchInterval: 30000 });
+  const pending = query.data?.some((a) => a.status === "Pending");
+  return <section className="mt-6 border-t pt-6 text-left"><h2 className="text-lg font-bold">{admin ? "Vendor appeals" : "Appeal this decision"}</h2>
+    {!admin && !pending && !query.isPending && !query.isError && <form className="mt-3 space-y-3" onSubmit={async (event) => { event.preventDefault(); if (!auth.user) return; setSaving(true); setError(""); const result = await supabase.from("vendor_appeals").insert({ user_id: auth.user.id, vendor_id: auth.vendorId, message: message.trim() }); if (result.error) setError("Could not submit your appeal. Try again."); else { setMessage(""); await query.refetch(); } setSaving(false); }}><Textarea aria-label="Appeal message" placeholder="Explain why your account should be restored…" value={message} onChange={(e) => setMessage(e.target.value)} required maxLength={2000} /><Button disabled={saving || !message.trim()}>{saving ? "Submitting…" : "Submit appeal"}</Button></form>}
+    {query.isError && <Button variant="outline" onClick={() => query.refetch()}>Retry appeals</Button>}{error && <p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}
+    {query.data?.map((appeal) => <article key={appeal.id} className="border-b py-4"><p className="font-semibold">{appeal.status}{admin ? ` · ${appeal.vendor_id}` : ""}</p><p className="mt-2 whitespace-pre-wrap break-words text-sm">{appeal.message}</p>{appeal.response && <p className="mt-3 text-sm"><strong>Admin response: </strong>{appeal.response}</p>}{admin && appeal.status === "Pending" && <div className="mt-3 space-y-2"><Textarea aria-label={`Response to appeal ${appeal.id}`} placeholder="Response to vendor…" value={responses[appeal.id] ?? ""} maxLength={2000} onChange={(e) => setResponses((p) => ({ ...p, [appeal.id]: e.target.value }))} /><div className="flex gap-2">{(["Accepted", "Rejected"] as const).map((status) => <Button key={status} variant={status === "Accepted" ? "default" : "outline"} disabled={saving || !responses[appeal.id]?.trim()} onClick={async () => { setSaving(true); setError(""); const result = await supabase.rpc("review_vendor_appeal", { _id: appeal.id, _status: status, _response: responses[appeal.id] ?? "" }); if (result.error) setError("Could not review appeal."); else await query.refetch(); setSaving(false); }}>{status === "Accepted" ? "Accept & restore account" : "Reject appeal"}</Button>)}</div></div>}</article>)}
+  </section>;
+}

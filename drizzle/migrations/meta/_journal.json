@@ -1,0 +1,97 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794618624796,
+      "tag": "0000_account_profiles_and_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794618694087,
+      "tag": "0001_separate_vendor_applications",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794618842623,
+      "tag": "0002_restrict_auth_lifecycle_function",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794619681629,
+      "tag": "0003_automatic_vendor_approval",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794620395297,
+      "tag": "0004_vendor_review_reasons",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794620574804,
+      "tag": "0005_vendor_moderation_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794620876019,
+      "tag": "0006_timed_vendor_suspensions",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794621152567,
+      "tag": "0007_restricted_vendor_account_writes",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794621597547,
+      "tag": "0008_vendor_appeals_customer_feedback",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794621864438,
+      "tag": "0009_scope_feedback_reads",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794622493487,
+      "tag": "0010_shared_seller_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794622932059,
+      "tag": "0011_administrator_product_categories",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1794623561181,
+      "tag": "0012_category_covers_and_post_moderation",
+      "breakpoints": true
+    }
+  ]
+}

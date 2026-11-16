@@ -1,0 +1,5 @@
+CREATE OR REPLACE FUNCTION public.account_activity_allowed() RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$ SELECT NOT EXISTS (SELECT 1 FROM public.user_roles r JOIN public.vendor_moderation m ON m.vendor_id=r.vendor_id WHERE r.user_id=auth.uid() AND r.role='vendor' AND (m.status='Blocked' OR (m.status='Suspended' AND (m.suspended_until IS NULL OR m.suspended_until > now())))); $$;
+REVOKE ALL ON FUNCTION public.account_activity_allowed() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.account_activity_allowed() TO authenticated,service_role;
+CREATE POLICY "Restricted vendors cannot edit profiles" ON public.profiles AS RESTRICTIVE FOR UPDATE TO authenticated USING (public.account_activity_allowed()) WITH CHECK (public.account_activity_allowed());
+CREATE POLICY "Restricted vendors cannot submit applications" ON public.vendor_applications AS RESTRICTIVE FOR INSERT TO authenticated WITH CHECK (public.account_activity_allowed());
