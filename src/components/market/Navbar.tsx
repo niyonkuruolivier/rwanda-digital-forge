@@ -20,7 +20,7 @@ export function Navbar() {
   const accountPage = ["/auth", "/account", "/dashboard", "/admin", "/orders", "/become-vendor"].includes(pathname) || pathname.startsWith("/vendors/");
   const menu = (mobile = false) => (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild><Button variant={mobile ? "outline" : "ghost"} size={mobile ? "default" : "icon"} aria-label={mobile ? "More options" : "Account menu"} className={mobile ? "h-14 flex-col gap-1 px-3 text-[11px]" : ""}>{mobile ? <Menu className="size-5" /> : buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover" /> : <UserRound className="size-5" />}{mobile && "More"}</Button></DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild><Button variant="ghost" size={mobile ? "default" : "icon"} aria-label={mobile ? "More options" : "Account menu"} className={mobile ? "h-14 flex-col gap-1 px-3 text-[11px]" : ""}>{mobile ? <Menu className="size-5" /> : buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover" /> : <UserRound className="size-5" />}{mobile && "More"}</Button></DropdownMenuTrigger>
       <DropdownMenuContent align="end" side={mobile ? "top" : "bottom"} className="w-56">
         <DropdownMenuItem asChild><Link to="/account"><UserRound />My account</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
@@ -63,11 +63,11 @@ export function Navbar() {
           </div>
         </div>
       </header>
-      <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 flex justify-around gap-1 border-t bg-card px-2 pb-[env(safe-area-inset-bottom)] pt-1.5 md:hidden">
-        <Button asChild variant="outline" className={`${mobileClass} ${pathname === "/" ? "border-primary text-primary" : "text-muted-foreground"}`}><Link to="/" aria-current={pathname === "/" ? "page" : undefined}><Home />Home</Link></Button>
-        <Button asChild variant="outline" className={`${mobileClass} ${pathname === "/shop" ? "border-primary text-primary" : "text-muted-foreground"}`}><Link to="/shop" search={{}}><LayoutGrid />Shop</Link></Button>
-        <Button asChild variant="outline" className={`${mobileClass} text-muted-foreground`}><Link to="/wishlist"><Heart />Saved{wishlist.length > 0 ? ` (${wishlist.length})` : ""}</Link></Button>
-        <Button asChild variant="outline" className={`${mobileClass} text-muted-foreground`}><Link to="/cart"><ShoppingCart />Cart{cartCount > 0 ? ` (${cartCount})` : ""}</Link></Button>
+      <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t bg-card px-2 pb-[env(safe-area-inset-bottom)] pt-1 md:hidden">
+        <Button asChild variant={pathname === "/" ? "secondary" : "ghost"} className={`${mobileClass} ${pathname === "/" ? "text-primary" : "text-muted-foreground"}`}><Link to="/" aria-current={pathname === "/" ? "page" : undefined}><Home />Home</Link></Button>
+        <Button asChild variant={pathname === "/shop" ? "secondary" : "ghost"} className={`${mobileClass} ${pathname === "/shop" ? "text-primary" : "text-muted-foreground"}`}><Link to="/shop" search={{}}><LayoutGrid />Shop</Link></Button>
+        <Button asChild variant={pathname === "/wishlist" ? "secondary" : "ghost"} className={`${mobileClass} text-muted-foreground`}><Link to="/wishlist"><Heart />Saved{wishlist.length > 0 ? ` (${wishlist.length})` : ""}</Link></Button>
+        <Button asChild variant={pathname === "/cart" ? "secondary" : "ghost"} className={`${mobileClass} text-muted-foreground`}><Link to="/cart"><ShoppingCart />Cart{cartCount > 0 ? ` (${cartCount})` : ""}</Link></Button>
         {menu(true)}
       </nav>
     </>
