@@ -30,6 +30,10 @@ export function detectProductVideo(value: string): ProductVideoLink | undefined 
   } catch { return; }
   return undefined;
 }
+export function productVideoThumbnail(video: ProductVideoLink): string | undefined {
+  if (video.platform === "YouTube") return `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+  return undefined;
+}
 export function productVideoEmbed(video: ProductVideoLink, origin: string): string {
   if (video.platform === "YouTube") return `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&mute=1&playsinline=1&enablejsapi=1&rel=0&origin=${encodeURIComponent(origin)}`;
   if (video.platform === "TikTok") return `https://www.tiktok.com/player/v1/${video.id}?autoplay=1&muted=1&loop=0`;
