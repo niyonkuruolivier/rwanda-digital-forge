@@ -34,19 +34,19 @@ export function Navbar() {
     </DropdownMenu>
   );
   const mobileClass = "h-14 flex-col gap-1 px-3 text-[11px]";
-  const avatar = auth.user ? (
-    <Button asChild variant="ghost" size="icon" className="shrink-0" title="My account">
+  const avatar = (mobile = false) => auth.user ? (
+    <Button asChild variant={mobile ? "outline" : "ghost"} size="icon" className="shrink-0" title="My account">
       <Link to="/account" aria-label="My account">{buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover object-[center_35%]" /> : <UserRound />}</Link>
     </Button>
-  ) : <Button asChild variant="ghost" size="sm"><Link to="/auth" search={{ next: "/account" }}>Sign in</Link></Button>;
+  ) : <Button asChild variant={mobile ? "outline" : "ghost"} size="sm" className={mobile ? "h-9 px-4 text-sm" : ""}><Link to="/auth" search={{ next: "/account" }}>Sign in</Link></Button>;
   return (
     <>
       <header className="sticky top-0 z-40 border-b bg-card text-heading">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 md:gap-4">
           <Link to="/" aria-label="Murandasi home" className="block shrink-0"><img src={logo.url} alt="MURANDASI.COM" className="h-auto w-[150px] object-contain md:w-[200px]" width={1920} height={640} /></Link>
           {/* Mobile-only quick actions */}
-          <span className="ml-auto md:hidden"><Notifications /></span>
-          <span className="md:hidden">{avatar}</span>
+          <span className="ml-auto md:hidden"><Notifications triggerVariant="outline" /></span>
+          <span className="md:hidden">{avatar(true)}</span>
           {!accountPage && <SearchBox />}
           {/* Desktop action bar */}
           <div className="hidden items-center gap-1 md:ml-auto md:flex">
@@ -59,7 +59,7 @@ export function Navbar() {
               <ShoppingCart />{cartCount > 0 && <span className={badgeClass}>{cartCount}</span>}
             </Button>
             <span className="mx-1 h-6 w-px bg-border" aria-hidden="true" />
-            {auth.user ? menu() : avatar}
+            {auth.user ? menu() : avatar()}
           </div>
         </div>
       </header>

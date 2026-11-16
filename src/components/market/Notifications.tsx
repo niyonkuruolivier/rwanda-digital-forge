@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Bell, CheckCheck, Package, Radio, Tag } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useStore } from "@/lib/store";
 import { marketplaceNotifications, unreadNotificationCount } from "@/lib/notifications";
 
-export function Notifications() {
+export function Notifications({ triggerVariant = "ghost", triggerClassName }: { triggerVariant?: ButtonProps["variant"]; triggerClassName?: string }) {
   const s = useStore();
   const [open, setOpen] = useState(false);
   const updates = marketplaceNotifications(s.orders, s.stories, s.vendors, s.role === "vendor" ? s.myVendorId : undefined);
   const count = unreadNotificationCount(updates, s.readNotificationIds);
   return <Popover open={open} onOpenChange={setOpen}>
-    <PopoverTrigger asChild><Button variant="ghost" size="icon" className="relative shrink-0" aria-label={`Notifications${count ? `, ${count} unread` : ""}`} title="Notifications"><Bell />{count > 0 && <span className="absolute -right-1 -top-1 grid min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold leading-4 text-accent-foreground">{count > 99 ? "99+" : count}</span>}</Button></PopoverTrigger>
+    <PopoverTrigger asChild><Button variant={triggerVariant} size="icon" className={cn("relative shrink-0", triggerClassName)} aria-label={`Notifications${count ? `, ${count} unread` : ""}`} title="Notifications"><Bell />{count > 0 && <span className="absolute -right-1 -top-1 grid min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold leading-4 text-accent-foreground">{count > 99 ? "99+" : count}</span>}</Button></PopoverTrigger>
     <PopoverContent align="end" className="w-[min(360px,calc(100vw-2rem))] p-0">
       <div className="flex items-center justify-between border-b p-3"><h2 className="font-bold">Notifications</h2><Button size="icon" variant="ghost" disabled={!count} aria-label="Mark all as read" title="Mark all as read" onClick={() => s.markNotificationsRead(updates.map((n) => n.id))}><CheckCheck /></Button></div>
       <div className="max-h-[60dvh] overflow-y-auto">
