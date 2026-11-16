@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/market/ProductCard";
 import { useStore } from "@/lib/store";
 import { DealStories } from "@/components/market/DealStories";
+import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
 
 type S = { q?: string | undefined; category?: string | undefined; vendor?: string | undefined };
 export const Route = createFileRoute("/shop")({
   validateSearch: (s: Record<string, unknown>): S => ({ q: s['q'] ? String(s['q']) : undefined, category: s['category'] ? String(s['category']) : undefined, vendor: s['vendor'] ? String(s['vendor']) : undefined }),
-  head: () => ({ meta: [{ title: "Shop all products — Murandasi Market" }, { name: "description", content: "Browse and filter products by category and vendor." }, { property: "og:title", content: "Shop all products — Murandasi Market" }, { property: "og:description", content: "Browse and filter products by category and vendor." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Shop all products — Murandasi Market" }, { name: "description", content: "Browse and filter products by category and vendor." }, { property: "og:title", content: "Shop all products — Murandasi Market" }, { property: "og:description", content: "Browse and filter products by category and vendor." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:image", content: SHARE_PREVIEW_IMAGE }, { name: "twitter:image", content: SHARE_PREVIEW_IMAGE }] }),
   component: Shop,
 });
 

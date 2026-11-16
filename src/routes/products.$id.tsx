@@ -9,9 +9,11 @@ import { money } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { canVendorTrade } from "@/lib/admin";
 import { ProductGallery } from "@/components/market/ProductGallery";
+import { ShareButton } from "@/components/market/ShareButton";
+import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
 
 export const Route = createFileRoute("/products/$id")({
-  head: () => ({ meta: [{ title: "Product details — Murandasi Market" }, { name: "description", content: "Photos, price, stock, vendor and reviews for this product." }, { property: "og:title", content: "Product details — Murandasi Market" }, { property: "og:description", content: "Photos, price, stock, vendor and reviews for this product." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Product details — Murandasi Market" }, { name: "description", content: "Photos, price, stock, vendor and reviews for this product." }, { property: "og:title", content: "Product details — Murandasi Market" }, { property: "og:description", content: "Photos, price, stock, vendor and reviews for this product." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:image", content: SHARE_PREVIEW_IMAGE }, { name: "twitter:image", content: SHARE_PREVIEW_IMAGE }] }),
   component: ProductPage,
 });
 
@@ -88,6 +90,7 @@ function ProductPage() {
               <Button size="lg" variant="accent" disabled={!p.stock || blocked} onClick={buy} className="gap-2"><Zap className="h-4 w-4" /> Buy Now</Button>
             </div>
             {blocked && <p className="text-sm text-destructive">This store is unavailable for new purchases.</p>}
+            <ShareButton className="mt-1 justify-self-start" path={`/products/${p.id}`} title={`${p.title} — Murandasi Market`} text={money(p.price)} />
           </div>
         </div>
       </div>

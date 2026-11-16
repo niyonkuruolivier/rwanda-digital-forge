@@ -6,9 +6,10 @@ import { useStore } from "@/lib/store";
 import { DealStories } from "@/components/market/DealStories";
 import { HorizontalBrowse } from "@/components/market/HorizontalBrowse";
 import { homeProducts } from "@/lib/home-products";
+import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Murandasi Market — Your everyday marketplace" }, { name: "description", content: "Shop electronics, fashion, home decor and more from independent stores in Rwanda. Prices in RWF, one shopping cart." }, { property: "og:title", content: "Murandasi Market — Your everyday marketplace" }, { property: "og:description", content: "Find products and independent stores in Rwanda. Browse by category and shop in RWF." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Murandasi Market — Your everyday marketplace" }, { name: "description", content: "Shop electronics, fashion, home decor and more from independent stores in Rwanda. Prices in RWF, one shopping cart." }, { property: "og:title", content: "Murandasi Market — Your everyday marketplace" }, { property: "og:description", content: "Find products and independent stores in Rwanda. Browse by category and shop in RWF." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:image", content: SHARE_PREVIEW_IMAGE }, { name: "twitter:image", content: SHARE_PREVIEW_IMAGE }] }),
   component: Home,
 });
 
