@@ -6,6 +6,8 @@ import { useStore } from "@/lib/store";
 import { DealStories } from "@/components/market/DealStories";
 import { HorizontalBrowse } from "@/components/market/HorizontalBrowse";
 import { homeProducts } from "@/lib/home-products";
+import { rankStores } from "@/lib/store-ratings";
+import { Stars } from "@/components/market/Stars";
 import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
 
 export const Route = createFileRoute("/")({
@@ -14,7 +16,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { products, vendors, categories, categoryImages } = useStore();
+  const { products, vendors, orders, categories, categoryImages, ratingsPending, ratingsError } = useStore();
+  const rankedVendors = rankStores(vendors, orders);
   const picks = homeProducts(products).slice(0, 8);
   return (
     <div className="mx-auto max-w-7xl px-4 pb-4 pt-2 md:pt-10">
@@ -28,7 +31,7 @@ function Home() {
       <section className="pt-4 md:pt-7" aria-labelledby="stores-title">
         <div className="flex items-center justify-between"><h2 id="stores-title" className="text-lg font-bold md:text-xl">Explore stores</h2><span className="text-xs text-muted-foreground">{vendors.length} independent stores</span></div>
         <HorizontalBrowse label="stores" className="mt-2">
-          {vendors.map((v) => <Link key={v.id} to="/vendors/$id" params={{ id: v.id }} className="w-[240px] shrink-0 snap-start overflow-hidden rounded-lg border bg-card transition hover:border-primary/40 md:w-[280px]"><div className="relative h-32 overflow-hidden md:h-40"><img src={v.banner} alt={v.name} className="h-full w-full object-cover" /><span className="absolute bottom-2 left-2 rounded-md bg-card px-2 py-1 text-[11px] font-medium text-heading">{products.filter((p) => p.vendorId === v.id).length} products</span></div><div className="p-3"><h3 className="truncate text-sm font-bold">{v.name}</h3><p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="size-3" />{v.location}</p></div></Link>)}
+          {rankedVendors.map((v) => <Link key={v.id} to="/vendors/$id" params={{ id: v.id }} className="w-[240px] shrink-0 snap-start overflow-hidden rounded-lg border bg-card transition hover:border-primary/40 md:w-[280px]"><div className="relative h-32 overflow-hidden md:h-40"><img src={v.banner} alt={v.name} className="h-full w-full object-cover" /><span className="absolute bottom-2 left-2 rounded-md bg-card px-2 py-1 text-[11px] font-medium text-heading">{products.filter((p) => p.vendorId === v.id).length} products</span></div><div className="p-3"><h3 className="truncate text-sm font-bold">{v.name}</h3><p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><Stars value={v.rating} />{ratingsPending ? "…" : ratingsError ? "Unavailable" : v.ratingCount ? `${v.rating.toFixed(1)} (${v.ratingCount})` : "No ratings yet"}</p><p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="size-3" />{v.location}</p></div></Link>)}
         </HorizontalBrowse>
       </section>
       <section className="pt-4 md:pt-7" aria-labelledby="picks-title">

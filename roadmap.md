@@ -1,5 +1,5 @@
 # Separate authenticated accounts
-- [ ] Add deliberate visitor store ratings, show averages/counts, and rank homepage stores by ratings, completed sales, then recent sales; verify saved ratings across visitors.
+- [x] Add deliberate visitor store ratings and average/count display; verify saved and changed ratings across visitors and homepage ordering by ratings, completed sales, then last-30-day sales.
 - [x] Restore the photo gallery with a video thumbnail beside the ordered photos; tapping switches between photos and the official video player.
 - [x] Show ordered photos followed immediately by video; one link field detects YouTube, Instagram posts/Reels and full TikTok video links. Verified the actual two-photo product followed by playing YouTube video on mobile without overflow; Instagram/TikTok official players render but sample playback was unavailable externally.
 - [x] Let administrators change category cover pictures and remove seller products/stories with protected Cloud actions; verified a saved compressed category picture and temporary product deletion in a separate visitor session, then removed test records. Permission/schema tests pass.
