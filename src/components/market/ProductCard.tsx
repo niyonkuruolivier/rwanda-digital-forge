@@ -10,7 +10,7 @@ export function ProductCard({ product, compact = false }: { product: Product; co
   const wished = wishlist.includes(product.id);
   const off = product.compareAt ? Math.round((1 - product.price / product.compareAt) * 100) : 0;
   return (
-    <div className="group flex min-w-0 flex-col overflow-hidden rounded-lg border bg-card transition hover:border-primary/40">
+    <div className="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-primary/15 bg-card transition hover:border-primary/50">
       <div className="relative aspect-square overflow-hidden bg-muted">
         <Link to="/products/$id" params={{ id: product.id }} className="block h-full">
           <img src={product.images[0]} alt={product.title} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
