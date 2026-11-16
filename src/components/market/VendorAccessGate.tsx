@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { VendorAppeals } from "./VendorAppeals";
 import { toast } from "sonner";
+import logo from "@/assets/murandasi-logo.png.asset.json";
 
 export function VendorAccessGate({ children }: { children: ReactNode }) {
   const auth = useAuth();
@@ -19,6 +20,7 @@ export function VendorAccessGate({ children }: { children: ReactNode }) {
   const suspended = store.accountRestriction?.status === "Suspended";
   return <main className="flex min-h-dvh items-center justify-center bg-background px-5 py-12">
     <section className="w-full max-w-lg text-center" aria-live="polite">
+      <img src={logo.url} alt="MURANDASI.COM" className="mx-auto mb-8 h-auto w-56 max-w-full object-contain" width={1920} height={640} />
       {restricted ? <ShieldBan className="mx-auto mb-6 size-14 text-destructive" /> : <LoaderCircle className="mx-auto mb-6 size-10 animate-spin text-primary motion-reduce:animate-none" />}
       <h1 className="text-2xl font-bold text-heading">{restricted ? suspended ? "You’re suspended" : "You’re blocked" : auth.error || store.accountAccessError ? "Account access unavailable" : "Checking your account…"}</h1>
       {restricted && <>
