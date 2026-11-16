@@ -8,7 +8,7 @@ export function Footer() {
         <div className="space-y-2 text-sm"><p className="font-semibold">Shop</p><Link to="/shop" className="block opacity-70 hover:opacity-100">All products</Link><Link to="/wishlist" className="block opacity-70 hover:opacity-100">Wishlist</Link><Link to="/cart" className="block opacity-70 hover:opacity-100">Cart</Link></div>
         <div className="space-y-2 text-sm"><p className="font-semibold">Sell</p><Link to="/become-vendor" className="block opacity-70 hover:opacity-100">Become a vendor</Link><Link to="/dashboard" className="block opacity-70 hover:opacity-100">Vendor dashboard</Link></div>
       </div>
-      <p className="border-t py-4 text-center text-xs text-muted-foreground">© 2026 Murandasi Market · Rwanda</p>
+      <p className="border-t py-4 text-center text-xs text-muted-foreground">© 2026 Murandasi Market · Rwanda · <Link to="/privacy" className="underline hover:text-foreground">Privacy policy</Link></p>
     </footer>
   );
 }

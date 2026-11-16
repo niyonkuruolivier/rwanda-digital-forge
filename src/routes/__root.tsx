@@ -14,6 +14,7 @@ import { StoreProvider } from "@/lib/store";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/market/Navbar";
+import { Footer } from "@/components/market/Footer";
 import { PageBack } from "@/components/market/BackButton";
 import { CartDrawer } from "@/components/market/CartDrawer";
 import { VendorAccessGate } from "@/components/market/VendorAccessGate";
@@ -138,6 +139,7 @@ function RootComponent() {
         <VendorAccessGate>
         <Navbar />
         <main className="min-h-[60vh]"><PageBack /><Outlet /></main>
+        <Footer />
         <CartDrawer />
         </VendorAccessGate>
         <Toaster position="bottom-right" />
