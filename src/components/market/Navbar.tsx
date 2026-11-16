@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Heart, Home, LayoutGrid, MapPin, Menu, ShoppingCart, Store, UserRound } from "lucide-react";
+import { Heart, Home, LayoutGrid, Menu, ShoppingCart, Store, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useStore } from "@/lib/store";
@@ -45,8 +45,7 @@ export function Navbar() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 md:gap-4">
           <Link to="/" aria-label="Murandasi home" className="block shrink-0"><img src={logo.url} alt="MURANDASI.COM" className="h-auto w-[150px] object-contain md:w-[200px]" width={1920} height={640} /></Link>
           {/* Mobile-only quick actions */}
-          <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground md:hidden"><MapPin className="size-4 text-primary" />Rwanda</span>
-          <span className="md:hidden"><Notifications /></span>
+          <span className="ml-auto md:hidden"><Notifications /></span>
           <span className="md:hidden">{avatar}</span>
           {!accountPage && <SearchBox />}
           {/* Desktop action bar */}
