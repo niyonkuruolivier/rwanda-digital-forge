@@ -52,5 +52,5 @@ export const CATEGORY_IMAGES: Record<Category, string> = {
   Services: u("photo-1586023492125-27b2c045efd7", 600),
 };
 
-export const COMMISSION_RATE = 0.1;
+export const COMMISSION_RATE = 0.13;
 export const money = (n: number) => `RWF ${Math.round(n).toLocaleString("en-US")}`;
