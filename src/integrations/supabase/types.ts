@@ -136,6 +136,32 @@ export type Database = {
         }
         Relationships: []
       }
+      store_ratings: {
+        Row: {
+          stars: number
+          user_id: string
+          vendor_id: string
+        }
+        Insert: {
+          stars: number
+          user_id: string
+          vendor_id: string
+        }
+        Update: {
+          stars?: number
+          user_id?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_ratings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -276,6 +302,14 @@ export type Database = {
           id: string
           message: string
           photos: Json
+        }[]
+      }
+      public_store_ratings: {
+        Args: never
+        Returns: {
+          average_rating: number
+          rating_count: number
+          vendor_id: string
         }[]
       }
       review_vendor_account: {

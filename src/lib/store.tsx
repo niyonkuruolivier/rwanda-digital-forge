@@ -13,6 +13,8 @@ import { moderateVendorAccount, reviewAccountApplication } from "./account.funct
 import { publishCatalog, removeCatalogPost, updateCategoryPicture } from "./catalog.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { sharedCatalog } from "./catalog";
+import { useQuery } from "@tanstack/react-query";
+import { ratedVendors } from "./store-ratings";
 
 export type Role = "buyer" | "vendor" | "admin";
 interface CartLine { productId: string; qty: number; options?: Record<string, string> | undefined }
@@ -44,6 +46,7 @@ const KEY = "murandasi-market-v5";
 
 function useStoreValue() {
   const auth = useAuth();
+  const ratings = useQuery({ queryKey: ["store-ratings"], queryFn: async () => { const result = await supabase.rpc("public_store_ratings"); if (result.error) throw result.error; return result.data; }, refetchInterval: 30000, refetchOnWindowFocus: true });
   const [s, setS] = useState<State>(initial);
   const [ready, setReady] = useState(false);
   const [categories, setCategories] = useState<string[]>(CATEGORIES);
@@ -145,7 +148,7 @@ function useStoreValue() {
   }, [auth.user?.id, auth.role]);
 
   return useMemo(() => {
-    const vendors = s.vendors.map((v) => moderation[v.id] ? { ...v, status: moderation[v.id]?.status ?? "Active", blockedReason: moderation[v.id]?.reason ?? "", suspendedUntil: moderation[v.id]?.suspendedUntil } : v);
+    const vendors = ratedVendors(s.vendors, ratings.data ?? []).map((v) => moderation[v.id] ? { ...v, status: moderation[v.id]?.status ?? "Active", blockedReason: moderation[v.id]?.reason ?? "", suspendedUntil: moderation[v.id]?.suspendedUntil } : v);
     const accountAccessPending = auth.role === "vendor" && moderationIdentity !== auth.user?.id;
     const restriction = moderation[auth.vendorId];
     const accountRestriction = restriction ? { id: auth.vendorId, status: restriction.status, blockedReason: restriction.reason, suspendedUntil: restriction.suspendedUntil } as Vendor : undefined;
@@ -156,6 +159,7 @@ function useStoreValue() {
     const vendor = (id: string) => vendors.find((v) => v.id === id);
     const cartLines = s.cart.map((l) => ({ ...l, product: product(l.productId)! })).filter((l) => l.product);
     return {
+      ratingsPending: ratings.isPending, ratingsError: ratings.isError,
       ...s, vendors, categories, categoryImages, role: auth.role, myVendorId: auth.vendorId, buyer: auth.profile ?? { id: "guest", name: "", email: "", phone: "", city: "", address: "", photo: "", cover: "" }, product, vendor, cartLines, accountRestricted, accountRestriction, accountAccessPending, accountAccessError: auth.role === "vendor" && moderationError, cartOpen: denyActivity ? false : cartOpen, setCartOpen: (open: boolean) => { if (!denyActivity) setCartOpen(open); },
       saveCategoryPicture: async (name: string, image: string) => {
         const result = await savePicture({ data: { name, image } });
@@ -265,7 +269,7 @@ function useStoreValue() {
       submitComplaint: (orderId: string, productId: string, options: Record<string, string> | undefined, message: string, photo: string) => mutate((p) => ({ ...p, orders: p.orders.map((order) => order.id === orderId ? submitPurchaseComplaint(order, productId, options, p.buyer.id, message, photo) : order) })),
       updateItem: (orderId: string, productId: string, patch: Partial<OrderItem>, options?: Record<string, string>) => mutate((p) => ({ ...p, orders: p.orders.map((o) => o.id !== orderId ? o : { ...o, items: o.items.map((i) => samePurchase(i, productId, options) ? { ...i, ...patch } : i) }) })),
     };
-  }, [s, categories, categoryImages, removePost, savePicture, cartOpen, auth, moderation, moderationIdentity, moderationError]);
+  }, [s, categories, categoryImages, removePost, savePicture, cartOpen, auth, moderation, moderationIdentity, moderationError, ratings.data, ratings.isPending, ratings.isError]);
 }
 
 type Store = ReturnType<typeof useStoreValue>;

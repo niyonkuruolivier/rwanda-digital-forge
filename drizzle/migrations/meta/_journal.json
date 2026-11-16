@@ -92,6 +92,13 @@
       "when": 1794623561181,
       "tag": "0012_category_covers_and_post_moderation",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1794849351609,
+      "tag": "0013_visitor_store_ratings",
+      "breakpoints": true
     }
   ]
 }

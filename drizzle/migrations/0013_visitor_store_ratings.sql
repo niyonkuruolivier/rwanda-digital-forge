@@ -1,0 +1,10 @@
+CREATE TABLE public.store_ratings (user_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE, vendor_id text NOT NULL CHECK(length(vendor_id) BETWEEN 1 AND 200), stars integer NOT NULL CHECK(stars BETWEEN 1 AND 5), PRIMARY KEY(user_id,vendor_id));
+GRANT SELECT, INSERT, UPDATE ON public.store_ratings TO authenticated;
+GRANT ALL ON public.store_ratings TO service_role;
+ALTER TABLE public.store_ratings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Read own rating" ON public.store_ratings FOR SELECT TO authenticated USING(user_id=auth.uid());
+CREATE POLICY "Give own rating" ON public.store_ratings FOR INSERT TO authenticated WITH CHECK(user_id=auth.uid() AND public.account_activity_allowed() AND NOT EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=auth.uid() AND vendor_id=store_ratings.vendor_id));
+CREATE POLICY "Change own rating" ON public.store_ratings FOR UPDATE TO authenticated USING(user_id=auth.uid()) WITH CHECK(user_id=auth.uid() AND public.account_activity_allowed() AND NOT EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=auth.uid() AND vendor_id=store_ratings.vendor_id));
+CREATE FUNCTION public.public_store_ratings() RETURNS TABLE(vendor_id text, average_rating numeric, rating_count bigint) LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$ SELECT vendor_id, avg(stars)::numeric, count(*) FROM public.store_ratings GROUP BY vendor_id; $$;
+REVOKE ALL ON FUNCTION public.public_store_ratings() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.public_store_ratings() TO anon, authenticated, service_role;
