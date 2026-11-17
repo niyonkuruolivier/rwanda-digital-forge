@@ -3,7 +3,7 @@ import { VendorApplicationStatus } from "@/components/market/VendorApplicationSt
 import { FundsBadge } from "@/components/market/FundsBadge";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Banknote, MessageCircle, Package, Pencil, Phone, Plus, ShoppingBag, Trash2, ExternalLink, Sparkles, Wallet } from "lucide-react";
+import { Banknote, MessageCircle, Package, Pencil, Percent, Phone, Plus, ShoppingBag, Trash2, ExternalLink, Sparkles, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,6 +20,8 @@ import { StoreProfileEditor } from "@/components/market/StoreProfileEditor";
 import { WithdrawalDialog } from "@/components/market/WithdrawalDialog";
 import { WithdrawalRecipientDetails } from "@/components/market/WithdrawalRecipientDetails";
 import { VendorAgreementRecord } from "@/components/market/VendorAgreementRecord";
+import { ProductDiscountDialog } from "@/components/market/ProductDiscountDialog";
+import { discountPercent, isDiscounted } from "@/lib/discounts";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Vendor dashboard — Murandasi Market" }, { name: "description", content: "Manage your products, stock and orders." }, { property: "og:title", content: "Vendor dashboard — Murandasi Market" }, { property: "og:description", content: "Manage your products, stock and orders." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
@@ -31,6 +33,7 @@ const STATUSES: OrderStatus[] = ["Pending", "Processing", "Shipped", "Delivered"
 function Dashboard() {
   const s = useStore();
   const [editing, setEditing] = useState<Product | undefined>();
+  const [discounting, setDiscounting] = useState<Product | undefined>();
   const [open, setOpen] = useState(false);
   const [storyOpen, setStoryOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
@@ -100,9 +103,10 @@ function Dashboard() {
               {mine.map((p) => (
                 <TableRow key={p.id}>
                   <TableCell><div className="flex items-center gap-3"><img src={p.images[0]} alt="" className="h-10 w-10 rounded-md object-cover" /><span className="font-medium text-heading">{p.title}</span></div></TableCell>
-                  <TableCell>{p.category}</TableCell><TableCell>{money(p.price)}</TableCell>
+                  <TableCell>{p.category}</TableCell><TableCell><p>{money(p.price)}</p>{isDiscounted(p) && <><p className="text-xs text-muted-foreground line-through">{money(p.compareAt ?? p.price)}</p><span className="text-xs font-bold text-primary">-{discountPercent(p)}%</span></>}</TableCell>
                   <TableCell><span className={p.stock === 0 ? "font-semibold text-destructive" : ""}>{p.stock}</span></TableCell>
                   <TableCell className="text-right">
+                    <Button variant="outline" size="sm" className="mr-1" disabled={blocked} onClick={() => setDiscounting(p)}><Percent className="h-4 w-4" />Discount</Button>
                     <Button variant="ghost" size="icon" aria-label="Edit" disabled={blocked} onClick={() => { setEditing(p); setOpen(true); }}><Pencil className="h-4 w-4" /></Button>
                     <Button variant="ghost" size="icon" aria-label="Delete" onClick={async () => { if (confirm(`Delete "${p.title}"?`)) { try { await s.deleteProduct(p.id); toast("Product deleted"); } catch (error) { toast.error(error instanceof Error ? error.message : "Could not delete product."); } } }}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                   </TableCell>
@@ -136,6 +140,7 @@ function Dashboard() {
       </Tabs>
       <WithdrawalDialog key={String(withdrawOpen)} open={withdrawOpen} onOpenChange={setWithdrawOpen} available={bal.available} onSubmit={s.requestWithdrawal} />
       <ProductForm key={editing?.id ?? "new" + open} open={open} onOpenChange={setOpen} initial={editing} vendorId={s.myVendorId} onSave={async (p) => { await s.upsertProduct(p); toast.success(editing ? "Product updated" : "Product published to the marketplace"); }} />
+      {discounting && <ProductDiscountDialog key={discounting.id} product={discounting} onClose={() => setDiscounting(undefined)} onSave={async (p) => { await s.upsertProduct(p); toast.success(isDiscounted(p) ? "Discount saved" : "Discount removed"); }} />}
       <StoryDialog open={storyOpen} onOpenChange={setStoryOpen} />
       {v && <StoreProfileEditor vendor={v} open={profileOpen} onOpenChange={setProfileOpen} onSave={async (details) => { await s.updateVendorProfile(details); setProfileOpen(false); toast.success("Store profile saved"); }} />}
       </div>

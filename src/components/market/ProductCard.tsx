@@ -3,12 +3,13 @@ import { Heart } from "lucide-react";
 import { money, type Product } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
+import { discountPercent, isDiscounted } from "@/lib/discounts";
 
 export function ProductCard({ product, compact = false }: { product: Product; compact?: boolean }) {
   const { vendor, wishlist, toggleWish } = useStore();
   const v = vendor(product.vendorId);
   const wished = wishlist.includes(product.id);
-  const off = product.compareAt ? Math.round((1 - product.price / product.compareAt) * 100) : 0;
+  const off = discountPercent(product);
   return (
     <div className="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-primary/15 bg-card transition hover:border-primary/50">
       <div className="relative aspect-square overflow-hidden bg-muted">
@@ -25,7 +26,7 @@ export function ProductCard({ product, compact = false }: { product: Product; co
         {v && <Link to="/vendors/$id" params={{ id: v.id }} className={`truncate text-muted-foreground hover:text-primary ${compact ? "text-[10px] sm:text-xs" : "text-xs"}`}>{v.name}</Link>}
         <div className="mt-auto pt-1">
           <p className={`font-extrabold text-heading sm:text-base ${compact ? "text-[11px]" : "text-sm"}`}>{money(product.price)}</p>
-          <p className={`min-h-5 text-muted-foreground ${compact ? "text-[10px] sm:text-xs" : "text-xs"}`}>{product.compareAt && <span className="line-through">{money(product.compareAt)}</span>}</p>
+          <p className={`min-h-5 text-muted-foreground ${compact ? "text-[10px] sm:text-xs" : "text-xs"}`}>{isDiscounted(product) && <span className="line-through">{money(product.compareAt ?? product.price)}</span>}</p>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 # Separate authenticated accounts
+- [x] Add quick discounts on existing seller products, a homepage discount section and a shop discount filter; verified seller saving/removing 20%, separate visitor visibility and restored price. Discount, product form and homepage tests pass.
 - [x] Rank homepage products by completed sold quantities independently of store stars; tested unpaid/refunded exclusions and verified best-seller first in the browser.
 - [x] Add deliberate visitor store ratings and average/count display; verify saved and changed ratings across visitors and homepage ordering by ratings, completed sales, then last-30-day sales.
 - [x] Restore the photo gallery with a video thumbnail beside the ordered photos; tapping switches between photos and the official video player.

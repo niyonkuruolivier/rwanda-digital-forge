@@ -9,6 +9,7 @@ import { homeProducts } from "@/lib/home-products";
 import { rankStores } from "@/lib/store-ratings";
 import { Stars } from "@/components/market/Stars";
 import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
+import { isDiscounted } from "@/lib/discounts";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [{ title: "Murandasi Market — Your everyday marketplace" }, { name: "description", content: "Shop electronics, fashion, home decor and more from independent stores in Rwanda. Prices in RWF, one shopping cart." }, { property: "og:title", content: "Murandasi Market — Your everyday marketplace" }, { property: "og:description", content: "Find products and independent stores in Rwanda. Browse by category and shop in RWF." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:image", content: SHARE_PREVIEW_IMAGE }, { name: "twitter:image", content: SHARE_PREVIEW_IMAGE }] }),
@@ -19,6 +20,7 @@ function Home() {
   const { products, vendors, orders, categories, categoryImages, ratingsPending, ratingsError } = useStore();
   const rankedVendors = rankStores(vendors, orders);
   const picks = homeProducts(products, orders).slice(0, 8);
+  const discounts = homeProducts(products.filter(isDiscounted), orders).slice(0, 8);
   return (
     <div className="mx-auto max-w-7xl px-4 pb-4 pt-2 md:pt-10">
       <DealStories />
@@ -34,6 +36,10 @@ function Home() {
           {rankedVendors.map((v) => <Link key={v.id} to="/vendors/$id" params={{ id: v.id }} className="w-[240px] shrink-0 snap-start overflow-hidden rounded-lg border bg-card transition hover:border-primary/40 md:w-[280px]"><div className="relative h-32 overflow-hidden md:h-40"><img src={v.banner} alt={v.name} className="h-full w-full object-cover" /><span className="absolute bottom-2 left-2 rounded-md bg-card px-2 py-1 text-[11px] font-medium text-heading">{products.filter((p) => p.vendorId === v.id).length} products</span></div><div className="p-3"><h3 className="truncate text-sm font-bold">{v.name}</h3><p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><Stars value={v.rating} />{ratingsPending ? "…" : ratingsError ? "Unavailable" : v.ratingCount ? `${v.rating.toFixed(1)} (${v.ratingCount})` : "No ratings yet"}</p><p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="size-3" />{v.location}</p></div></Link>)}
         </HorizontalBrowse>
       </section>
+      {discounts.length > 0 && <section className="pt-4 md:pt-7" aria-labelledby="discounts-title">
+        <div className="flex items-center justify-between gap-3"><h2 id="discounts-title" className="text-lg font-bold md:text-xl">Products on discount</h2><Button asChild variant="link" size="sm"><Link to="/shop" search={{ discount: true }}>See all<ArrowRight /></Link></Button></div>
+        <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-5">{discounts.map((p) => <ProductCard key={p.id} product={p} />)}</div>
+      </section>}
       <section className="pt-4 md:pt-7" aria-labelledby="picks-title">
         <div className="flex items-center justify-between gap-3"><h2 id="picks-title" className="text-lg font-bold md:text-xl">Picked for you</h2><Button asChild variant="link" size="sm"><Link to="/shop" search={{}}>See all<ArrowRight /></Link></Button></div>
         <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-5">{picks.map((p) => <ProductCard key={p.id} product={p} />)}</div>
