@@ -136,6 +136,61 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_order_items: {
+        Row: {
+          id: string
+          order_id: string
+          record: Json
+          vendor_id: string
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          record: Json
+          vendor_id: string
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          record?: Json
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "shared_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_orders: {
+        Row: {
+          buyer_id: string
+          id: string
+          record: Json
+        }
+        Insert: {
+          buyer_id: string
+          id: string
+          record: Json
+        }
+        Update: {
+          buyer_id?: string
+          id?: string
+          record?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_orders_buyer_id_fkey"
+            columns: ["buyer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_ratings: {
         Row: {
           stars: number
@@ -286,6 +341,8 @@ export type Database = {
     }
     Functions: {
       account_activity_allowed: { Args: never; Returns: boolean }
+      can_read_shared_order: { Args: { _id: string }; Returns: boolean }
+      create_shared_demo_order: { Args: { _order: Json }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -312,6 +369,15 @@ export type Database = {
           vendor_id: string
         }[]
       }
+      review_shared_purchase: {
+        Args: {
+          _action: string
+          _id: string
+          _message?: string
+          _photo?: string
+        }
+        Returns: undefined
+      }
       review_vendor_account: {
         Args: { _application_id: string; _status: string }
         Returns: undefined
@@ -322,6 +388,10 @@ export type Database = {
       }
       review_vendor_appeal: {
         Args: { _id: string; _response: string; _status: string }
+        Returns: undefined
+      }
+      update_shared_delivery: {
+        Args: { _delivery: Json; _id: string; _status: string }
         Returns: undefined
       }
       vendor_trading_statuses: {

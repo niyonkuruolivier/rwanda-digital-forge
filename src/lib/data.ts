@@ -1,3 +1,4 @@
+import type { Delivery } from "./delivery";
 export type Category = string;
 export const CATEGORIES: Category[] = ["Electronics", "Fashion", "Home Decor", "Art", "Services"];
 
@@ -15,8 +16,8 @@ export interface Product {
 }
 export type OrderStatus = "Pending" | "Processing" | "Shipped" | "Delivered";
 export interface Claim { message: string; photo?: string | undefined; createdAt: string; status: "open" | "released" | "refunded" }
-export interface OrderItem { productId: string; vendorId: string; shop?: { name: string; location: string; phone?: string | undefined }; title: string; price: number; qty: number; image: string; status: OrderStatus; options?: Record<string, string> | undefined; buyerConfirmedAt?: string | undefined; claim?: Claim | undefined }
-export interface Order { id: string; buyerId?: string | undefined; date: string; customer: string; phone?: string | undefined; address: string; payment: string; items: OrderItem[]; total: number; paymentStatus?: "Pending" | "Paid" | "Failed"; paymentReference?: string; paidAt?: string; paymentMode?: "demo" }
+export interface OrderItem { lineId?: string; delivery?: Delivery; productId: string; vendorId: string; shop?: { name: string; location: string; phone?: string | undefined }; title: string; price: number; qty: number; image: string; status: OrderStatus; options?: Record<string, string> | undefined; buyerConfirmedAt?: string | undefined; claim?: Claim | undefined }
+export interface Order { shared?: boolean; id: string; buyerId?: string | undefined; date: string; customer: string; phone?: string | undefined; address: string; payment: string; items: OrderItem[]; total: number; paymentStatus?: "Pending" | "Paid" | "Failed"; paymentReference?: string; paidAt?: string; paymentMode?: "demo" }
 
 const u = (id: string, w = 800) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 

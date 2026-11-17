@@ -15,6 +15,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { sharedCatalog } from "./catalog";
 import { useQuery } from "@tanstack/react-query";
 import { ratedVendors } from "./store-ratings";
+import { createSharedOrder, listSharedOrders, saveDelivery, reviewSharedItem } from "./shared-orders.functions";
+import type { Delivery } from "./delivery";
 
 export type Role = "buyer" | "vendor" | "admin";
 interface CartLine { productId: string; qty: number; options?: Record<string, string> | undefined }
@@ -53,6 +55,16 @@ function useStoreValue() {
   const [categoryImages, setCategoryImages] = useState<Record<string, string>>(CATEGORY_IMAGES);
   const removePost = useServerFn(removeCatalogPost);
   const savePicture = useServerFn(updateCategoryPicture);
+  const createOrder = useServerFn(createSharedOrder);
+  const fetchOrders = useServerFn(listSharedOrders);
+  const updateDelivery = useServerFn(saveDelivery);
+  const reviewPurchase = useServerFn(reviewSharedItem);
+  const sharedOrders = useQuery({ queryKey: ["shared-orders", auth.user?.id], queryFn: () => fetchOrders(), enabled: !!auth.user, refetchInterval: 15000, refetchOnWindowFocus: true });
+  useEffect(() => {
+    if (!auth.user) return;
+    const channel = supabase.channel(`orders-${auth.user.id}-${crypto.randomUUID()}`).on("postgres_changes", { event: "*", schema: "public", table: "shared_order_items" }, () => { void sharedOrders.refetch(); }).on("postgres_changes", { event: "*", schema: "public", table: "shared_orders" }, () => { void sharedOrders.refetch(); }).subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [auth.user?.id, sharedOrders.refetch]);
   useEffect(() => {
     let active = true;
     const load = async () => {
@@ -158,12 +170,32 @@ function useStoreValue() {
     const product = (id: string) => s.products.find((p) => p.id === id);
     const vendor = (id: string) => vendors.find((v) => v.id === id);
     const cartLines = s.cart.map((l) => ({ ...l, product: product(l.productId)! })).filter((l) => l.product);
+    const allOrders = [...(auth.user ? sharedOrders.data ?? [] : []), ...s.orders.filter(o => !o.shared)];
     return {
+      ordersPending: !!auth.user && sharedOrders.isPending, ordersError: sharedOrders.isError,
       ratingsPending: ratings.isPending, ratingsError: ratings.isError,
       ...s, vendors, categories, categoryImages, role: auth.role, myVendorId: auth.vendorId, buyer: auth.profile ?? { id: "guest", name: "", email: "", phone: "", city: "", address: "", photo: "", cover: "" }, product, vendor, cartLines, accountRestricted, accountRestriction, accountAccessPending, accountAccessError: auth.role === "vendor" && moderationError, cartOpen: denyActivity ? false : cartOpen, setCartOpen: (open: boolean) => { if (!denyActivity) setCartOpen(open); },
       saveCategoryPicture: async (name: string, image: string) => {
         const result = await savePicture({ data: { name, image } });
         setCategoryImages((previous) => ({ ...previous, [result.name]: result.image }));
+      },
+      orders: allOrders,
+      placeSharedOrder: async (input: { customer: string; phone: string; address: string; payment: "Mobile Money" | "Credit Card"; items: { productId: string; qty: number; options?: Record<string, string> | undefined }[] }) => {
+        if (denyActivity) throw new Error("Your account is blocked or suspended.");
+        const id = await createOrder({ data: input });
+        const result = await sharedOrders.refetch();
+        mutate(p => ({ ...p, cart: [] }));
+        return result.data?.find(o => o.id === id) ?? { id, paymentReference: "" };
+      },
+      saveOrderDelivery: async (item: OrderItem, status: OrderStatus, delivery: Delivery) => {
+        if (denyActivity || !item.lineId) throw new Error("Delivery updates are available for shared orders only.");
+        await updateDelivery({ data: { id: item.lineId, status, delivery } });
+        await sharedOrders.refetch();
+      },
+      reviewOrderItem: async (item: OrderItem, action: "confirm" | "complaint" | "released" | "refunded", message = "", photo = "") => {
+        if (!item.lineId) throw new Error("Shared order required.");
+        await reviewPurchase({ data: { id: item.lineId, action, message, photo } });
+        await sharedOrders.refetch();
       },
       removeUserPost: async (kind: "product" | "story", id: string) => {
         await removePost({ data: { kind, id } });
@@ -262,14 +294,14 @@ function useStoreValue() {
       },
       requestWithdrawal: (amount: number, recipient: WithdrawalRecipient) => {
         if (denyActivity || auth.role !== "vendor") throw new Error("Vendor access required.");
-        const details = prepareWithdrawal(amount, vendorBalance(s.orders, s.withdrawals, auth.vendorId).available, recipient);
+        const details = prepareWithdrawal(amount, vendorBalance(allOrders, s.withdrawals, auth.vendorId).available, recipient);
         mutate((p) => ({ ...p, withdrawals: [{ id: `WD-${crypto.randomUUID()}`, vendorId: auth.vendorId, amount, recipient: details, requestedAt: new Date().toISOString(), status: "Requested" }, ...p.withdrawals] }));
       },
       markWithdrawalPaid: (id: string) => mutate((p) => p.role !== "admin" ? p : ({ ...p, withdrawals: p.withdrawals.map((w) => w.id === id ? { ...w, status: "Paid", paidAt: new Date().toISOString() } : w) })),
       submitComplaint: (orderId: string, productId: string, options: Record<string, string> | undefined, message: string, photo: string) => mutate((p) => ({ ...p, orders: p.orders.map((order) => order.id === orderId ? submitPurchaseComplaint(order, productId, options, p.buyer.id, message, photo) : order) })),
       updateItem: (orderId: string, productId: string, patch: Partial<OrderItem>, options?: Record<string, string>) => mutate((p) => ({ ...p, orders: p.orders.map((o) => o.id !== orderId ? o : { ...o, items: o.items.map((i) => samePurchase(i, productId, options) ? { ...i, ...patch } : i) }) })),
     };
-  }, [s, categories, categoryImages, removePost, savePicture, cartOpen, auth, moderation, moderationIdentity, moderationError, ratings.data, ratings.isPending, ratings.isError]);
+  }, [s, categories, categoryImages, removePost, savePicture, cartOpen, auth, moderation, moderationIdentity, moderationError, ratings.data, ratings.isPending, ratings.isError, sharedOrders.data, sharedOrders.isPending, sharedOrders.isError, sharedOrders.refetch, createOrder, updateDelivery, reviewPurchase]);
 }
 
 type Store = ReturnType<typeof useStoreValue>;

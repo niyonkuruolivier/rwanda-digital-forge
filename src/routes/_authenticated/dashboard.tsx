@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ProductForm } from "@/components/market/ProductForm";
-import { money, type OrderStatus, type Product } from "@/lib/data";
+import { money, type Order, type OrderItem, type OrderStatus, type Product } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { StoryDialog, StoryManager } from "@/components/market/StoryManager";
 import { canVendorTrade } from "@/lib/admin";
@@ -22,6 +22,8 @@ import { WithdrawalRecipientDetails } from "@/components/market/WithdrawalRecipi
 import { VendorAgreementRecord } from "@/components/market/VendorAgreementRecord";
 import { ProductDiscountDialog } from "@/components/market/ProductDiscountDialog";
 import { discountPercent, isDiscounted } from "@/lib/discounts";
+import { DeliveryDialog } from "@/components/market/DeliveryDialog";
+import { DeliveryDetails } from "@/components/market/DeliveryDetails";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Vendor dashboard — Murandasi Market" }, { name: "description", content: "Manage your products, stock and orders." }, { property: "og:title", content: "Vendor dashboard — Murandasi Market" }, { property: "og:description", content: "Manage your products, stock and orders." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
@@ -34,6 +36,7 @@ function Dashboard() {
   const s = useStore();
   const [editing, setEditing] = useState<Product | undefined>();
   const [discounting, setDiscounting] = useState<Product | undefined>();
+  const [deliveryFor, setDeliveryFor] = useState<{ order: Order; item: OrderItem } | undefined>();
   const [open, setOpen] = useState(false);
   const [storyOpen, setStoryOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
@@ -121,7 +124,7 @@ function Dashboard() {
             <TableHeader><TableRow><TableHead>Order</TableHead><TableHead>Customer</TableHead><TableHead>Item</TableHead><TableHead>Amount</TableHead><TableHead>Payment</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
             <TableBody>
               {lines.map(({ order, item }) => (
-                <TableRow key={order.id + item.productId}>
+                <TableRow key={item.lineId ?? order.id + item.productId + JSON.stringify(item.options)}>
                   <TableCell><p className="max-w-40 break-all font-medium text-heading">{order.id}</p><p className="text-xs text-muted-foreground">{order.date}</p></TableCell>
                   <TableCell><p>{order.customer}</p><p className="text-xs text-muted-foreground">{order.address}</p>{order.phone && (() => { const wa = order.phone.replace(/[^\d]/g, "").replace(/^0/, "250"); return (
                     <div className="mt-1 flex flex-wrap items-center gap-2">
@@ -130,7 +133,7 @@ function Dashboard() {
                     </div>); })()}</TableCell>
                   <TableCell>{item.title} × {item.qty}{item.options && <span className="block text-xs text-muted-foreground">{Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(" · ")}</span>}</TableCell><TableCell>{money(item.price * item.qty)}</TableCell>
                   <TableCell><span className="font-semibold text-primary">Demo paid</span><FundsBadge state={itemFunds(order, item)} left={holdTimeLeft(order)} />{item.claim && <p className="mt-1 max-w-48 text-xs text-destructive">Complaint: {item.claim.message}</p>}<p className="mt-1 text-xs text-muted-foreground">{order.payment}</p><p className="mt-1 max-w-48 break-all font-mono text-xs">{order.paymentReference}</p><p className="mt-1 text-xs text-muted-foreground">{order.paidAt ? new Date(order.paidAt).toLocaleString("en-GB", { timeZone: "Africa/Kigali" }) : ""}</p></TableCell>
-                  <TableCell><select aria-label="Order status" value={item.status} onChange={(e) => s.setItemStatus(order.id, item.productId, e.target.value as OrderStatus)} className="rounded-md border bg-card px-2 py-1 text-sm">{STATUSES.map((st) => <option key={st}>{st}</option>)}</select></TableCell>
+                  <TableCell>{item.lineId ? <div className="min-w-56"><p className="font-semibold">{item.status}</p><DeliveryDetails delivery={item.delivery} /><Button size="sm" variant="outline" disabled={blocked} onClick={() => setDeliveryFor({ order, item })}>Update delivery</Button></div> : <select aria-label="Order status" value={item.status} onChange={(e) => s.setItemStatus(order.id, item.productId, e.target.value as OrderStatus)} className="rounded-md border bg-card px-2 py-1 text-sm">{STATUSES.map((st) => <option key={st}>{st}</option>)}</select>}</TableCell>
                 </TableRow>
               ))}
               {lines.length === 0 && <TableRow><TableCell colSpan={6} className="py-10 text-center text-muted-foreground">No completed payments yet.</TableCell></TableRow>}
@@ -142,6 +145,7 @@ function Dashboard() {
       <ProductForm key={editing?.id ?? "new" + open} open={open} onOpenChange={setOpen} initial={editing} vendorId={s.myVendorId} onSave={async (p) => { await s.upsertProduct(p); toast.success(editing ? "Product updated" : "Product published to the marketplace"); }} />
       {discounting && <ProductDiscountDialog key={discounting.id} product={discounting} onClose={() => setDiscounting(undefined)} onSave={async (p) => { await s.upsertProduct(p); toast.success(isDiscounted(p) ? "Discount saved" : "Discount removed"); }} />}
       <StoryDialog open={storyOpen} onOpenChange={setStoryOpen} />
+      {deliveryFor && <DeliveryDialog order={deliveryFor.order} item={deliveryFor.item} onClose={() => setDeliveryFor(undefined)} onSave={async (status, delivery) => { await s.saveOrderDelivery(deliveryFor.item, status, delivery); toast.success("Delivery details saved for the buyer"); }} />}
       {v && <StoreProfileEditor vendor={v} open={profileOpen} onOpenChange={setProfileOpen} onSave={async (details) => { await s.updateVendorProfile(details); setProfileOpen(false); toast.success("Store profile saved"); }} />}
       </div>
     </div>

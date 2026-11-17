@@ -1,5 +1,5 @@
 # Separate authenticated accounts
-- [ ] Add seller-managed driver name, phone/email, delivery address and shipment updates visible in buyer orders; awaiting confirmation whether to connect orders across accounts or keep the existing device-only demonstration.
+- [x] Connect new orders across buyer/vendor accounts with private driver contacts, destination and shipment updates; verified buyer checkout, seller shipping details, live buyer updates, reload persistence and buyer confirmation. Payments remain demo; legacy browser orders are not imported.
 - [x] Add quick discounts on existing seller products, a homepage discount section and a shop discount filter; verified seller saving/removing 20%, separate visitor visibility and restored price. Discount, product form and homepage tests pass.
 - [x] Rank homepage products by completed sold quantities independently of store stars; tested unpaid/refunded exclusions and verified best-seller first in the browser.
 - [x] Add deliberate visitor store ratings and average/count display; verify saved and changed ratings across visitors and homepage ordering by ratings, completed sales, then last-30-day sales.

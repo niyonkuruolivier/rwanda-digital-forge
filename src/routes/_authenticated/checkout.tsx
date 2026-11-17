@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CartLines, TotalsBox, useGroupedCart } from "@/components/market/CartDrawer";
 import { useStore } from "@/lib/store";
-import { demoPaymentConfirmation } from "@/lib/orders";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/checkout")({
@@ -15,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/checkout")({
 });
 
 function Checkout() {
-  const { cartLines, placeOrder, buyer } = useStore();
+  const { cartLines, placeSharedOrder, buyer } = useStore();
   const { totals } = useGroupedCart();
   const [pay, setPay] = useState<"Mobile Money" | "Credit Card">("Mobile Money");
   const [done, setDone] = useState<string | null>(null);
@@ -35,20 +34,16 @@ function Checkout() {
   );
   if (cartLines.length === 0) return <p className="py-24 text-center text-muted-foreground">Your cart is empty. <Link to="/" className="text-primary">Go shopping</Link></p>;
 
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (busy) return;
     const f = new FormData(e.currentTarget);
     setBusy(true);
-    setTimeout(() => {
-      const id = "MM-" + crypto.randomUUID();
-      const confirmation = demoPaymentConfirmation(crypto.randomUUID(), new Date().toISOString());
-      const placed = placeOrder({ id, buyerId: buyer.id, ...confirmation, date: new Date().toISOString().slice(0, 10), customer: String(f.get("name")), phone: String(f.get("phone")), address: `${f.get("address")}, ${f.get("city")}`, payment: pay, total: totals.total,
-        items: cartLines.map((l) => ({ productId: l.productId, vendorId: l.product.vendorId, title: l.product.title, price: l.product.price, qty: l.qty, image: l.product.images[0] ?? "", status: "Pending" as const, options: l.options })) });
-      if (!placed) { setBusy(false); toast.error("A store in your cart is blocked. Remove its items before paying."); return; }
-      setDone(id);
-      setReference(confirmation.paymentReference);
-    }, 900);
+    try {
+      const placed = await placeSharedOrder({ customer: String(f.get("name")), phone: String(f.get("phone")), address: `${f.get("address")}, ${f.get("city")}`, payment: pay, items: cartLines.map(l => ({ productId: l.productId, qty: l.qty, options: l.options })) });
+      setDone(placed.id); setReference(placed.paymentReference ?? "");
+    } catch (error) { toast.error(error instanceof Error ? error.message : "Could not place order. Try again."); }
+    finally { setBusy(false); }
   };
   return (
     <form onSubmit={submit} className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-[1fr_380px]">

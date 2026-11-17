@@ -5,6 +5,7 @@ import { hasCompletedPayment } from "@/lib/orders";
 import { splitPayment } from "@/lib/pricing";
 import { useStore } from "@/lib/store";
 import { holdTimeLeft, itemFunds } from "@/lib/withdrawals";
+import { toast } from "sonner";
 
 const digits = (phone?: string) => (phone ?? "").replace(/[^\d+]/g, "");
 
@@ -45,8 +46,8 @@ export function HeldPayments({ vendorId, admin, search = "" }: { vendorId?: stri
             {tel && <Button asChild size="sm" variant="outline"><a href={`https://wa.me/${tel.replace("+", "")}`} target="_blank" rel="noopener noreferrer"><MessageCircle />WhatsApp</a></Button>}
             {!tel && <span className="text-xs text-muted-foreground">No phone number on this order</span>}
             {admin && <>
-              <Button size="sm" variant="secondary" onClick={() => { if (i.claim) s.updateItem(o.id, i.productId, { claim: { ...i.claim, status: "released" } }, i.options); }}>Release to vendor</Button>
-              <Button size="sm" variant="outline" onClick={() => { if (i.claim) s.updateItem(o.id, i.productId, { claim: { ...i.claim, status: "refunded" } }, i.options); }}>Refund buyer</Button>
+              <Button size="sm" variant="secondary" onClick={async () => { try { if (i.lineId) await s.reviewOrderItem(i, "released"); else if (i.claim) s.updateItem(o.id, i.productId, { claim: { ...i.claim, status: "released" } }, i.options); } catch(error) { toast.error(error instanceof Error ? error.message : "Could not release payment."); } }}>Release to vendor</Button>
+              <Button size="sm" variant="outline" onClick={async () => { try { if (i.lineId) await s.reviewOrderItem(i, "refunded"); else if (i.claim) s.updateItem(o.id, i.productId, { claim: { ...i.claim, status: "refunded" } }, i.options); } catch(error) { toast.error(error instanceof Error ? error.message : "Could not refund payment."); } }}>Refund buyer</Button>
             </>}
             {!admin && <span className="self-center text-xs font-semibold text-muted-foreground">Status: waiting for admin to decide</span>}
           </div>}

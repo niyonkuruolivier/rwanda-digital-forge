@@ -1,0 +1,5 @@
+CREATE OR REPLACE FUNCTION public.can_read_shared_order(_id text) RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$ SELECT auth.uid() IS NOT NULL AND (EXISTS(SELECT 1 FROM public.shared_orders WHERE id=_id AND buyer_id=auth.uid()) OR public.has_role(auth.uid(),'admin') OR EXISTS(SELECT 1 FROM public.shared_order_items i JOIN public.user_roles r ON r.vendor_id=i.vendor_id WHERE i.order_id=_id AND r.user_id=auth.uid() AND r.role='vendor')) $$;
+REVOKE ALL ON FUNCTION public.can_read_shared_order(text) FROM PUBLIC,anon;
+GRANT EXECUTE ON FUNCTION public.can_read_shared_order(text) TO authenticated;
+DROP POLICY "Participants read order contacts" ON public.shared_orders;
+CREATE POLICY "Participants read order contacts" ON public.shared_orders FOR SELECT TO authenticated USING(public.can_read_shared_order(id));
