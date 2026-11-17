@@ -41,3 +41,26 @@ export const reviewAccountApplication = createServerFn({ method: "POST" }).middl
     if (update.error) throw new Error("Could not review application.");
     return true;
   });
+export const listMemberAccounts = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
+  const allowed = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+  if (allowed.error || !allowed.data) throw new Error("Administrator access required.");
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const users: { id: string; email?: string; created_at: string; last_sign_in_at?: string | null }[] = [];
+  for (let page = 1; page <= 20; page++) {
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
+    if (error) throw new Error("Could not load accounts.");
+    users.push(...data.users);
+    if (data.users.length < 1000) break;
+  }
+  const [roles, profiles] = await Promise.all([
+    supabaseAdmin.from("user_roles").select("user_id,role"),
+    supabaseAdmin.from("profiles").select("id,name,phone,city,photo"),
+  ]);
+  if (roles.error || profiles.error) throw new Error("Could not load accounts.");
+  return users.map((u) => {
+    const r = (roles.data ?? []).filter((x) => x.user_id === u.id).map((x) => x.role);
+    const p = (profiles.data ?? []).find((x) => x.id === u.id);
+    const type = r.includes("admin") ? "Admin" : r.includes("vendor") ? "Vendor" : "Buyer";
+    return { id: u.id, email: u.email ?? "", name: p?.name ?? "", phone: p?.phone ?? "", city: p?.city ?? "", photo: p?.photo ?? "", type, joined: u.created_at, lastSignIn: u.last_sign_in_at ?? null };
+  }).sort((a, b) => Date.parse(b.joined) - Date.parse(a.joined));
+});
