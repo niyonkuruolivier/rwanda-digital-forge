@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PhotoUpload } from "@/components/market/PhotoUpload";
+import { OrderTracker } from "@/components/market/OrderTracker";
 import { FundsBadge } from "@/components/market/FundsBadge";
 import { money, type Order, type OrderItem } from "@/lib/data";
 import { buyerOrders } from "@/lib/buyer";
@@ -26,11 +27,12 @@ function MyOrders() {
   const [now, setNow] = useState(Date.now());
   useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer); }, []);
   const orders = buyerOrders(s.orders, s.buyer.id);
-  const visible = orders.filter((order) => filter === "all" || order.items.some((item) => filter === "complaints" ? !!item.claim : itemFunds(order, item, now) === filter));
+  const visible = orders.filter((order) => filter === "all" || order.items.some((item) => filter === "active" ? item.status !== "Delivered" : filter === "delivered" ? item.status === "Delivered" : filter === "complaints" ? !!item.claim : itemFunds(order, item, now) === filter));
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-2xl font-extrabold">Purchase history</h1>
-      <div className="mt-4"><Label htmlFor="purchase-filter">Purchases</Label><select id="purchase-filter" value={filter} onChange={(e) => setFilter(e.target.value)} className="mt-1 h-10 w-full rounded-md border bg-card px-3"><option value="all">All purchases</option><option value="pending">Awaiting approval</option><option value="available">Released to seller</option><option value="complaints">Complaints</option><option value="refunded">Refunded</option></select></div>
+      <h1 className="text-2xl font-extrabold">My orders</h1>
+      <p className="mt-1 text-sm text-muted-foreground">Follow where each order is and see your full order history.</p>
+      <div className="mt-4"><Label htmlFor="purchase-filter">Purchases</Label><select id="purchase-filter" value={filter} onChange={(e) => setFilter(e.target.value)} className="mt-1 h-10 w-full rounded-md border bg-card px-3"><option value="all">All purchases</option><option value="active">On the way (not yet delivered)</option><option value="delivered">Delivered</option><option value="pending">Awaiting approval</option><option value="available">Released to seller</option><option value="complaints">Complaints</option><option value="refunded">Refunded</option></select></div>
       <div className="mt-6 space-y-4">
         {visible.length === 0 && <p className="py-16 text-center text-muted-foreground">{orders.length ? "No purchases in this view." : "No orders yet."} <Link to="/" className="text-primary">Go shopping</Link></p>}
         {visible.map((order) => <div key={order.id} className="rounded-lg border bg-card p-4 shadow-sm">
@@ -44,7 +46,8 @@ function MyOrders() {
               <img src={item.image} alt="" className="size-16 shrink-0 rounded-md object-cover" />
               <div className="min-w-0 flex-1">
                 <p className="line-clamp-2 text-sm font-semibold text-heading">{item.title} × {item.qty}</p>
-                <p className="text-xs text-muted-foreground">{money(item.price * item.qty)} · {item.status}</p>
+                <p className="text-xs text-muted-foreground">{money(item.price * item.qty)}</p>
+                <OrderTracker status={item.status} />
                 {item.options && <p className="mt-1 text-xs text-muted-foreground">{Object.entries(item.options).map(([key, value]) => `${key}: ${value}`).join(" · ")}</p>}
                 <Button asChild variant="link" size="sm" className="h-auto max-w-full justify-start whitespace-normal px-0 py-2 text-left"><Link to="/vendors/$id" params={{ id: item.vendorId }}><Store className="shrink-0" />{shop?.name ?? "Purchased shop"}</Link></Button>
                 {shop?.location && <p className="text-xs text-muted-foreground">{shop.location}</p>}
