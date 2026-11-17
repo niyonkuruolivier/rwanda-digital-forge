@@ -29,7 +29,7 @@ function Checkout() {
       <p className="mt-2 text-muted-foreground">Order <b className="text-heading">{done}</b> was placed. Each vendor will ship their items separately.</p>
       <p className="mt-4 font-semibold text-primary">Demo payment completed</p>
       <p className="mt-1 break-all text-sm text-muted-foreground">Payment reference: {reference}</p>
-      <p className="mt-4 text-sm text-muted-foreground">When your items arrive, confirm them in My orders — or report a problem within 1 day.</p>
+      <p className="mt-4 text-sm text-muted-foreground">When your items arrive, confirm them in My orders — or report a problem within 2 days.</p>
       <div className="mt-8 flex justify-center gap-3"><Button asChild size="lg" variant="outline"><Link to="/orders">My orders</Link></Button><Button asChild size="lg"><Link to="/">Continue shopping</Link></Button></div>
     </div>
   );

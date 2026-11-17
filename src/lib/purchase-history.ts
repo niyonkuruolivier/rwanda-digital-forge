@@ -29,6 +29,6 @@ export function purchaseOutcome(order: Order, item: OrderItem, now = Date.now())
   if (state === "refunded") return "Complaint resolved · marked refunded";
   if (item.claim?.status === "released") return "Complaint resolved · released to seller by admin";
   if (item.buyerConfirmedAt) return "You approved · released to seller";
-  if (state === "available") return "Automatically released after 1 day · no approval received";
+  if (state === "available") return "Automatically released after 2 days · no approval received";
   return "Awaiting your approval · money held";
 }

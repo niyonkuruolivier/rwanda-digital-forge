@@ -22,7 +22,7 @@ const sameLine = (l: CartLine, productId: string, options?: Record<string, strin
   l.productId === productId && JSON.stringify(l.options ?? {}) === JSON.stringify(options ?? {});
 interface State { products: Product[]; vendors: Vendor[]; cart: CartLine[]; wishlist: string[]; orders: Order[]; role: Role; myVendorId: string; stories: DealStory[]; readNotificationIds: string[]; withdrawals: Withdrawal[]; buyer: BuyerProfile; applications: VendorApplication[]; adminEvents: AdminEvent[] }
 
-// Demo pending-payment rows: paid a few hours ago so the 24h hold is still running.
+// Demo pending-payment rows: paid a few hours ago so the two-day hold is still running.
 const hoursAgo = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString();
 const initial: State = { products: SEED_PRODUCTS, vendors: VENDORS, cart: [], wishlist: [], orders: ([
   { id: "MM-1004", ...demoPaymentConfirmation("1004", hoursAgo(5)), date: hoursAgo(5).slice(0, 10), customer: "Diane Uwase", phone: "+250788000004", address: "KK 15 Rd, Kigali", payment: "Mobile Money", total: 70000, items: [

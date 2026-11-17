@@ -3,7 +3,7 @@ import type { Order, OrderItem } from "./data";
 import { hasCompletedPayment } from "./orders";
 import { splitPayment } from "./pricing";
 
-export const HOLD_MS = 24 * 60 * 60 * 1000;
+export const HOLD_MS = 2 * 24 * 60 * 60 * 1000;
 
 export type FundsState = "pending" | "disputed" | "available" | "refunded";
 
@@ -40,7 +40,9 @@ export function itemFunds(order: Order, item: OrderItem, now = Date.now()): Fund
 export function holdTimeLeft(order: Order, now = Date.now()): string {
   const left = (order.paidAt ? Date.parse(order.paidAt) : now) + HOLD_MS - now;
   if (left <= 0) return "0m";
-  const h = Math.floor(left / 3_600_000);
+  const d = Math.floor(left / 86_400_000);
+  const h = Math.floor((left % 86_400_000) / 3_600_000);
+  if (d >= 1) return h >= 1 ? `${d}d ${h}h` : `${d}d`;
   return h >= 1 ? `${h}h` : `${Math.max(1, Math.floor(left / 60_000))}m`;
 }
 

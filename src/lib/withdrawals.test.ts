@@ -28,23 +28,23 @@ describe("payment hold", () => {
     expect(() => prepareWithdrawal(9001, 9000, bank)).toThrow();
     expect(() => prepareWithdrawal(1, 0, bank)).toThrow();
   });
-  it("money is pending for one day after payment", () => {
+  it("money is pending for two days after payment", () => {
     expect(itemFunds(order(), order().items[0]!, T + HOLD_MS - 1)).toBe("pending");
   });
-  it("money becomes available automatically after one day without confirmation", () => {
+  it("money becomes available automatically after two days without confirmation", () => {
     expect(itemFunds(order(), order().items[0]!, T + HOLD_MS)).toBe("available");
   });
   it("buyer confirmation releases money right away", () => {
     const o = order({ buyerConfirmedAt: paidAt });
     expect(itemFunds(o, o.items[0]!, T + 1)).toBe("available");
   });
-  it("an open complaint keeps money held even after one day", () => {
+  it("an open complaint keeps money held even after two days", () => {
     const o = order({ claim: { message: "bad", createdAt: paidAt, status: "open" } });
     expect(itemFunds(o, o.items[0]!, T + 5 * HOLD_MS)).toBe("disputed");
   });
-  it("vendor balance is 90% share minus withdrawals", () => {
+  it("vendor balance is 87% share minus withdrawals", () => {
     const b = vendorBalance([order()], [{ id: "w", vendorId: "v", amount: 4000, requestedAt: "", status: "Requested" }], "v", T + HOLD_MS);
-    expect(b.earned).toBe(9000);
-    expect(b.available).toBe(5000);
+    expect(b.earned).toBe(8700);
+    expect(b.available).toBe(4700);
   });
 });

@@ -18,7 +18,7 @@ describe("purchase history", () => {
     expect(submitPurchaseComplaint(order, "p", { Size: "M" }, "buyer", "Broken", "", time + 1)).toBe(order);
     expect(submitPurchaseComplaint(order, "p", { Size: "M" }, "buyer", " ", photo, time + 1)).toBe(order);
   });
-  it("holds only the complained variant and retains its evidence beyond one day", () => {
+  it("holds only the complained variant and retains its evidence beyond two days", () => {
     const saved = submitPurchaseComplaint(order, "p", { Size: "M" }, "buyer", "Wrong size", photo, time + 1);
     const target = saved.items[0], sibling = saved.items[1];
     if (!target || !sibling) throw new Error("Missing purchases");
@@ -26,14 +26,14 @@ describe("purchase history", () => {
     expect(target.claim?.message).toBe("Wrong size");
     expect(itemFunds(saved, target, time + HOLD_MS * 2)).toBe("disputed");
     expect(sibling.claim).toBeUndefined();
-    expect(vendorBalance([saved], [], "v", time + HOLD_MS * 2)).toMatchObject({ disputed: 9000, available: 9000 });
+    expect(vendorBalance([saved], [], "v", time + HOLD_MS * 2)).toMatchObject({ disputed: 8700, available: 8700 });
   });
   it("does not reopen already released payments or another buyer's purchases", () => {
     expect(submitPurchaseComplaint(order, "p", { Size: "M" }, "other", "Broken", photo, time + 1)).toBe(order);
     expect(submitPurchaseComplaint(order, "p", { Size: "M" }, "buyer", "Broken", photo, time + HOLD_MS)).toBe(order);
   });
-  it("distinguishes buyer approval from automatic release after one day", () => {
-    expect(purchaseOutcome(order, item, time + HOLD_MS)).toContain("Automatically released after 1 day");
+  it("distinguishes buyer approval from automatic release after two days", () => {
+    expect(purchaseOutcome(order, item, time + HOLD_MS)).toContain("Automatically released after 2 days");
     expect(purchaseOutcome(order, { ...item, buyerConfirmedAt: new Date(time + 1).toISOString() }, time + 2)).toContain("You approved");
   });
 });

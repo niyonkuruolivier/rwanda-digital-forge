@@ -23,7 +23,7 @@ export function HeldPayments({ vendorId, admin, search = "" }: { vendorId?: stri
       <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-bold">{rows.length}</span>
       {complaints > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-destructive px-2 py-0.5 text-xs font-bold text-destructive-foreground"><AlertTriangle className="size-3" />{complaints} complaint{complaints > 1 ? "s" : ""}</span>}
     </div>
-    <p className="mt-1 text-sm text-muted-foreground">Money held by Murandasi — not in {admin ? "the vendor's" : "your"} balance yet. It is released when the buyer taps "All good", or automatically after 1 day. A complaint keeps it held until solved.</p>
+    <p className="mt-1 text-sm text-muted-foreground">Money held by Murandasi — not in {admin ? "the vendor's" : "your"} balance yet. It is released when the buyer taps "All good", or automatically after 2 days. A complaint keeps it held until solved.</p>
     <div className="mt-4 space-y-3">
       {rows.length === 0 && <p className="rounded-xl border bg-card p-5 text-sm text-muted-foreground">Nothing pending.</p>}
       {rows.map(({ o, i, state }) => {
