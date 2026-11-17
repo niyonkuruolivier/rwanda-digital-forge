@@ -3,7 +3,7 @@ import { VendorApplicationStatus } from "@/components/market/VendorApplicationSt
 import { FundsBadge } from "@/components/market/FundsBadge";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Banknote, Package, Pencil, Plus, ShoppingBag, Trash2, ExternalLink, Sparkles, Wallet } from "lucide-react";
+import { Banknote, MessageCircle, Package, Pencil, Phone, Plus, ShoppingBag, Trash2, ExternalLink, Sparkles, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -119,7 +119,11 @@ function Dashboard() {
               {lines.map(({ order, item }) => (
                 <TableRow key={order.id + item.productId}>
                   <TableCell><p className="max-w-40 break-all font-medium text-heading">{order.id}</p><p className="text-xs text-muted-foreground">{order.date}</p></TableCell>
-                  <TableCell><p>{order.customer}</p><p className="text-xs text-muted-foreground">{order.address}</p></TableCell>
+                  <TableCell><p>{order.customer}</p><p className="text-xs text-muted-foreground">{order.address}</p>{order.phone && (() => { const wa = order.phone.replace(/[^\d]/g, "").replace(/^0/, "250"); return (
+                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                      <a href={`tel:${order.phone}`} className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium text-primary"><Phone className="h-3 w-3" />{order.phone}</a>
+                      <a href={`https://wa.me/${wa}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium text-primary"><MessageCircle className="h-3 w-3" />WhatsApp</a>
+                    </div>); })()}</TableCell>
                   <TableCell>{item.title} × {item.qty}{item.options && <span className="block text-xs text-muted-foreground">{Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(" · ")}</span>}</TableCell><TableCell>{money(item.price * item.qty)}</TableCell>
                   <TableCell><span className="font-semibold text-primary">Demo paid</span><FundsBadge state={itemFunds(order, item)} left={holdTimeLeft(order)} />{item.claim && <p className="mt-1 max-w-48 text-xs text-destructive">Complaint: {item.claim.message}</p>}<p className="mt-1 text-xs text-muted-foreground">{order.payment}</p><p className="mt-1 max-w-48 break-all font-mono text-xs">{order.paymentReference}</p><p className="mt-1 text-xs text-muted-foreground">{order.paidAt ? new Date(order.paidAt).toLocaleString("en-GB", { timeZone: "Africa/Kigali" }) : ""}</p></TableCell>
                   <TableCell><select aria-label="Order status" value={item.status} onChange={(e) => s.setItemStatus(order.id, item.productId, e.target.value as OrderStatus)} className="rounded-md border bg-card px-2 py-1 text-sm">{STATUSES.map((st) => <option key={st}>{st}</option>)}</select></TableCell>
