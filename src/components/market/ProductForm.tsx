@@ -18,6 +18,11 @@ export function ProductForm({ open, onOpenChange, initial, vendorId, onSave }: {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [videoLinkValue, setVideoLinkValue] = useState(initial?.videoUrl ?? "");
+  const [regular, setRegular] = useState(String(initial?.compareAt ?? initial?.price ?? ""));
+  const [discount, setDiscount] = useState(String(initial?.compareAt && initial.compareAt > initial.price ? Math.round((1 - initial.price / initial.compareAt) * 100) : ""));
+  const regularNum = Number(regular) || 0;
+  const discountNum = Math.min(90, Math.max(0, Math.round(Number(discount) || 0)));
+  const finalPrice = Math.round(regularNum * (1 - discountNum / 100));
   const detected = detectProductVideo(videoLinkValue);
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,11 +38,12 @@ export function ProductForm({ open, onOpenChange, initial, vendorId, onSave }: {
     const options: ProductOption[] = ([["Size", list("sizes")], ["Color", list("colors")]] as const)
       .filter(([, values]) => values.length > 0)
       .map(([name, values]) => ({ name, values }));
+    if (Number(discount) < 0 || Number(discount) > 90) { setError("Discount must be between 0% and 90%."); return; }
     setSaving(true);
     try { await onSave({
       id: initial?.id ?? "p" + Date.now(), vendorId, title: String(f.get("title")), category,
-      price: Number(f.get("price")), stock: Number(f.get("stock")), description: String(f.get("description")),
-      images, rating: initial?.rating ?? 0, reviews: initial?.reviews ?? [], compareAt: initial?.compareAt,
+      price: finalPrice, stock: Number(f.get("stock")), description: String(f.get("description")),
+      images, rating: initial?.rating ?? 0, reviews: initial?.reviews ?? [], compareAt: discountNum > 0 ? regularNum : undefined,
       ...(video?.success ? { videoUrl: video.data } : {}),
       ...(options.length ? { options } : {}),
     });
@@ -51,8 +57,16 @@ export function ProductForm({ open, onOpenChange, initial, vendorId, onSave }: {
           <div><Label htmlFor="title">Product title</Label><Input id="title" name="title" defaultValue={initial?.title} required /></div>
           <div><Label htmlFor="category">Category *</Label><select id="category" name="category" required defaultValue={initial?.category ?? ""} className="h-10 w-full rounded-md border bg-card px-2 text-sm"><option value="" disabled>Choose one category</option>{categories.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label htmlFor="price">Price (RWF)</Label><Input id="price" name="price" type="number" step="1" min="0" defaultValue={initial?.price} required /></div>
+            <div><Label htmlFor="price">Price (RWF)</Label><Input id="price" name="price" type="number" step="1" min="0" value={regular} onChange={(e) => setRegular(e.target.value)} required /></div>
             <div><Label htmlFor="stock">Stock</Label><Input id="stock" name="stock" type="number" min="0" defaultValue={initial?.stock} required /></div>
+          </div>
+          <div className="rounded-lg border bg-muted/40 p-3">
+            <Label htmlFor="discount">Discount % (optional)</Label>
+            <div className="mt-1 flex flex-wrap gap-2">
+              <Input id="discount" name="discount" type="number" min="0" max="90" step="1" placeholder="0" className="w-24" value={discount} onChange={(e) => setDiscount(e.target.value)} />
+              {[0, 10, 20, 30, 50].map((d) => <Button key={d} type="button" size="sm" variant={discountNum === d ? "default" : "outline"} onClick={() => setDiscount(d ? String(d) : "")}>{d ? `${d}%` : "None"}</Button>)}
+            </div>
+            {discountNum > 0 && regularNum > 0 && <p role="status" className="mt-2 text-sm">Buyers pay <span className="font-bold text-primary">RWF {finalPrice.toLocaleString()}</span> <span className="text-muted-foreground line-through">RWF {regularNum.toLocaleString()}</span> · {discountNum}% off</p>}
           </div>
           <PhotoUpload id="file" label="Add product photos" value="" onChange={(value) => setImages((current) => [...current, value])} onPhotosChange={(values) => { setImages((current) => [...current, ...values]); setError(""); }} onBusyChange={setLoading} />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
