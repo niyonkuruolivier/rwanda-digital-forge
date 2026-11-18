@@ -1,7 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Download, Heart, Home, LayoutGrid, Menu, ShoppingCart, Store, UserRound } from "lucide-react";
-import { useState } from "react";
-import { InstallApp } from "@/components/market/InstallApp";
+import { Heart, Home, LayoutGrid, Menu, ShoppingCart, Store, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useStore } from "@/lib/store";
@@ -15,7 +13,6 @@ import { SearchBox } from "@/components/market/SearchBox";
 const badgeClass = "absolute -right-1 -top-1 grid min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold leading-4 text-accent-foreground";
 
 export function Navbar() {
-  const [installOpen, setInstallOpen] = useState(false);
   const { cartCount, wishlist, setCartOpen, buyer } = useStore();
   const auth = useAuth(); const queryClient = useQueryClient();
   const nav = useNavigate();
@@ -25,7 +22,6 @@ export function Navbar() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="ghost" size={mobile ? "default" : "icon"} aria-label={mobile ? "More options" : "Account menu"} className={mobile ? "h-14 flex-col gap-1 px-3 text-[11px]" : ""}>{mobile ? <Menu className="size-5" /> : buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover" /> : <UserRound className="size-5" />}{mobile && "More"}</Button></DropdownMenuTrigger>
       <DropdownMenuContent align="end" side={mobile ? "top" : "bottom"} className="w-56">
-        <DropdownMenuItem onSelect={() => setInstallOpen(true)}><Download />Install app</DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/account"><UserRound />My account</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/become-vendor"><Store />Start selling</Link></DropdownMenuItem>
@@ -54,7 +50,6 @@ export function Navbar() {
           {!accountPage && <SearchBox />}
           {/* Desktop action bar */}
           <div className="hidden items-center gap-1 md:ml-auto md:flex">
-            <Button variant="ghost" size="icon" title="Install app" aria-label="Install app" onClick={() => setInstallOpen(true)}><Download /></Button>
             <Button asChild variant="ghost"><Link to="/shop" search={{}}>Shop</Link></Button>
             <Notifications />
             <Button asChild variant="ghost" size="icon" className="relative" title="Saved products">
@@ -75,7 +70,6 @@ export function Navbar() {
         <Button asChild variant={pathname === "/cart" ? "secondary" : "ghost"} className={`${mobileClass} text-muted-foreground`}><Link to="/cart"><ShoppingCart />Cart{cartCount > 0 ? ` (${cartCount})` : ""}</Link></Button>
         {menu(true)}
       </nav>
-      <InstallApp open={installOpen} onOpenChange={setInstallOpen} />
     </>
   );
 }
