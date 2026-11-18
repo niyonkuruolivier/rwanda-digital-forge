@@ -18,6 +18,8 @@ import { ratedVendors } from "./store-ratings";
 import { createSharedOrder, listSharedOrders, saveDelivery, reviewSharedItem } from "./shared-orders.functions";
 import type { Delivery } from "./delivery";
 import { availableCartQuantity } from "./inventory";
+import { verifiedVendors } from "./vendor-verification";
+import { setVendorVerification } from "./vendor-verification.functions";
 
 export type Role = "buyer" | "vendor" | "admin";
 interface CartLine { productId: string; qty: number; options?: Record<string, string> | undefined }
@@ -49,6 +51,8 @@ const KEY = "murandasi-market-v5";
 
 function useStoreValue() {
   const auth = useAuth();
+  const verification = useQuery({ queryKey: ["vendor-verification"], queryFn: async () => { const result = await supabase.from("vendor_verification").select("vendor_id,verified"); if (result.error) throw result.error; return result.data; }, refetchInterval: 15000, refetchOnWindowFocus: true });
+  const saveVerification = useServerFn(setVendorVerification);
   const ratings = useQuery({ queryKey: ["store-ratings"], queryFn: async () => { const result = await supabase.rpc("public_store_ratings"); if (result.error) throw result.error; return result.data; }, refetchInterval: 30000, refetchOnWindowFocus: true });
   const [s, setS] = useState<State>(initial);
   const [ready, setReady] = useState(false);
@@ -161,7 +165,7 @@ function useStoreValue() {
   }, [auth.user?.id, auth.role]);
 
   return useMemo(() => {
-    const vendors = ratedVendors(s.vendors, ratings.data ?? []).map((v) => moderation[v.id] ? { ...v, status: moderation[v.id]?.status ?? "Active", blockedReason: moderation[v.id]?.reason ?? "", suspendedUntil: moderation[v.id]?.suspendedUntil } : v);
+    const vendors = verifiedVendors(ratedVendors(s.vendors, ratings.data ?? []), verification.data ?? []).map((v) => moderation[v.id] ? { ...v, status: moderation[v.id]?.status ?? "Active", blockedReason: moderation[v.id]?.reason ?? "", suspendedUntil: moderation[v.id]?.suspendedUntil } : v);
     const accountAccessPending = auth.role === "vendor" && moderationIdentity !== auth.user?.id;
     const restriction = moderation[auth.vendorId];
     const accountRestriction = restriction ? { id: auth.vendorId, status: restriction.status, blockedReason: restriction.reason, suspendedUntil: restriction.suspendedUntil } as Vendor : undefined;
@@ -176,6 +180,11 @@ function useStoreValue() {
     return {
       ordersPending: !!auth.user && sharedOrders.isPending, ordersError: sharedOrders.isError,
       ratingsPending: ratings.isPending, ratingsError: ratings.isError,
+      verificationPending: verification.isPending, verificationError: verification.isError,
+      setVendorVerified: async (vendorId: string, verified: boolean) => {
+        await saveVerification({ data: { vendorId, verified } });
+        await verification.refetch();
+      },
       ...s, vendors, categories, categoryImages, role: auth.role, myVendorId: auth.vendorId, buyer: auth.profile ?? { id: "guest", name: "", email: "", phone: "", city: "", address: "", photo: "", cover: "" }, product, vendor, cartLines, accountRestricted, accountRestriction, accountAccessPending, accountAccessError: auth.role === "vendor" && moderationError, cartOpen: denyActivity ? false : cartOpen, setCartOpen: (open: boolean) => { if (!denyActivity) setCartOpen(open); },
       saveCategoryPicture: async (name: string, image: string) => {
         const result = await savePicture({ data: { name, image } });
@@ -310,7 +319,7 @@ function useStoreValue() {
       submitComplaint: (orderId: string, productId: string, options: Record<string, string> | undefined, message: string, photo: string) => mutate((p) => ({ ...p, orders: p.orders.map((order) => order.id === orderId ? submitPurchaseComplaint(order, productId, options, p.buyer.id, message, photo) : order) })),
       updateItem: (orderId: string, productId: string, patch: Partial<OrderItem>, options?: Record<string, string>) => mutate((p) => ({ ...p, orders: p.orders.map((o) => o.id !== orderId ? o : { ...o, items: o.items.map((i) => samePurchase(i, productId, options) ? { ...i, ...patch } : i) }) })),
     };
-  }, [s, categories, categoryImages, removePost, savePicture, cartOpen, auth, moderation, moderationIdentity, moderationError, ratings.data, ratings.isPending, ratings.isError, sharedOrders.data, sharedOrders.isPending, sharedOrders.isError, sharedOrders.refetch, createOrder, updateDelivery, reviewPurchase]);
+  }, [s, categories, categoryImages, removePost, savePicture, cartOpen, auth, moderation, moderationIdentity, moderationError, ratings.data, ratings.isPending, ratings.isError, verification.data, verification.isPending, verification.isError, verification.refetch, saveVerification, sharedOrders.data, sharedOrders.isPending, sharedOrders.isError, sharedOrders.refetch, createOrder, updateDelivery, reviewPurchase]);
 }
 
 type Store = ReturnType<typeof useStoreValue>;

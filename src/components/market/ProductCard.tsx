@@ -4,6 +4,7 @@ import { money, type Product } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { discountPercent, isDiscounted } from "@/lib/discounts";
+import { VerifiedBadge } from "./VerifiedBadge";
 
 export function ProductCard({ product, compact = false }: { product: Product; compact?: boolean }) {
   const { vendor, wishlist, toggleWish } = useStore();
@@ -23,7 +24,7 @@ export function ProductCard({ product, compact = false }: { product: Product; co
       </div>
       <div className={`flex flex-1 flex-col sm:gap-2 sm:p-4 ${compact ? "gap-1.5 p-2" : "gap-2 p-3"}`}>
         <Link to="/products/$id" params={{ id: product.id }} className={`line-clamp-2 font-semibold text-heading hover:text-primary ${compact ? "min-h-8 break-words text-xs leading-4 sm:min-h-10 sm:text-sm sm:leading-5" : "min-h-10 text-sm leading-5"}`}>{product.title}</Link>
-        {v && <Link to="/vendors/$id" params={{ id: v.id }} className={`truncate text-muted-foreground hover:text-primary ${compact ? "text-[10px] sm:text-xs" : "text-xs"}`}>{v.name}</Link>}
+        {v && <Link to="/vendors/$id" params={{ id: v.id }} className={`flex min-w-0 items-center gap-1 text-muted-foreground hover:text-primary ${compact ? "text-[10px] sm:text-xs" : "text-xs"}`}><span className="truncate">{v.name}</span><VerifiedBadge verified={v.verified} compact /></Link>}
         <div className="mt-auto pt-1">
           <p className={`font-extrabold text-heading sm:text-base ${compact ? "text-[11px]" : "text-sm"}`}>{money(product.price)}</p>
           <p className={`min-h-5 text-muted-foreground ${compact ? "text-[10px] sm:text-xs" : "text-xs"}`}>{isDiscounted(product) && <span className="line-through">{money(product.compareAt ?? product.price)}</span>}</p>

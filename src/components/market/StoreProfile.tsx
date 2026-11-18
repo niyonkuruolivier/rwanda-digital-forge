@@ -5,6 +5,7 @@ import { ReadMore } from "./ReadMore";
 import { ShareButton } from "./ShareButton";
 import type { Vendor } from "@/lib/data";
 import { StoreRating } from "./StoreRating";
+import { VerifiedBadge } from "./VerifiedBadge";
 
 export function StoreProfile({ vendor, actions }: { vendor: Vendor; actions?: ReactNode }) {
   return <>
@@ -14,7 +15,7 @@ export function StoreProfile({ vendor, actions }: { vendor: Vendor; actions?: Re
       <div className="absolute inset-x-0 top-3 z-10 mx-auto flex max-w-7xl items-center justify-between gap-2 px-4"><BackButton onPhoto /><ShareButton className="bg-card/60 shadow-md backdrop-blur" path={`/vendors/${vendor.id}`} title={`${vendor.name} — Murandasi Market`} text={vendor.bio} /></div>
       <div className="relative mx-auto flex min-h-[220px] max-w-7xl items-end justify-between gap-4 px-4 pb-6 pt-24 md:min-h-[300px] md:pb-8">
         <div className="min-w-0 flex-1">
-          <h1 className="break-words text-2xl font-extrabold md:text-4xl">{vendor.name}</h1>
+          <div className="flex flex-wrap items-center gap-2"><h1 className="break-words text-2xl font-extrabold md:text-4xl">{vendor.name}</h1><VerifiedBadge verified={vendor.verified} /></div>
           <p className="mt-2 flex items-start gap-1 text-sm text-foreground"><MapPin className="size-4 shrink-0 text-primary" /><span className="break-words">{vendor.location}</span></p>
         </div>
         <img src={vendor.logo} alt={`${vendor.name} profile`} width={112} height={112} className="size-20 shrink-0 rounded-full border-4 border-card bg-card object-cover shadow-sm md:size-28" />

@@ -365,6 +365,24 @@ export type Database = {
         }
         Relationships: []
       }
+      vendor_verification: {
+        Row: {
+          updated_at: string
+          vendor_id: string
+          verified: boolean
+        }
+        Insert: {
+          updated_at?: string
+          vendor_id: string
+          verified?: boolean
+        }
+        Update: {
+          updated_at?: string
+          vendor_id?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

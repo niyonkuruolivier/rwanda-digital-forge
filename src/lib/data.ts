@@ -3,6 +3,7 @@ export type Category = string;
 export const CATEGORIES: Category[] = ["Electronics", "Fashion", "Home Decor", "Art", "Services"];
 
 export interface Vendor {
+  verified?: boolean;
   id: string; name: string; bio: string; logo: string; banner: string; rating: number; location: string; joined: string; phone?: string | undefined;
   status?: "Active" | "Blocked" | "Suspended"; blockedReason?: string; suspendedUntil?: string | undefined;
 }

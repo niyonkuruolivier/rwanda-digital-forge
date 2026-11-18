@@ -1,4 +1,5 @@
 # Launch audit
+- [x] Add administrator-controlled vendor badges; verified admin save/removal, reload persistence, separate mobile visitor display, and administrator-only permission tests; unverified vendors retain selling access.
 - [x] Audit core account/catalog/order/inventory/finance/security paths; retain evidence and incomplete checks in audit.md (not a full launch certification).
 - [x] Fix and verify stock synchronization/overselling, misleading commission labels, local demo record exposure and payment-data collection.
 - [x] Verify signed-in buyer/vendor saved-order and delivery flows, denied admin access, public desktop/mobile pages and regression tests.
