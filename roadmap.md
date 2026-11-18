@@ -1,5 +1,5 @@
 # Admin post browsing
-- [ ] Arrange Products and Stories as horizontal selectors with photo grids and previews; verify shared deletion and admin browsing.
+- [x] Arrange Products and Stories as horizontal selectors with photo grids and previews; verified signed-in admin browsing, story preview, deletion confirmation and mobile overflow. Shared deletion and permission tests pass; existing Cloud removal remains unchanged.
 
 # Separate authenticated accounts
 - [x] Add home-screen installation on phones/computers with official icons, browser instructions and an email-link action; verified manifest/icon responses, mobile/desktop controls and simulated browser prompt acceptance. Actual device installation requires publishing; no offline caching.
