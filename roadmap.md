@@ -1,4 +1,5 @@
 # Separate authenticated accounts
+- [x] Add home-screen installation on phones/computers with official icons, browser instructions and an email-link action; verified manifest/icon responses, mobile/desktop controls and simulated browser prompt acceptance. Actual device installation requires publishing; no offline caching.
 - [x] Connect new orders across buyer/vendor accounts with private driver contacts, destination and shipment updates; verified buyer checkout, seller shipping details, live buyer updates, reload persistence and buyer confirmation. Payments remain demo; legacy browser orders are not imported.
 - [x] Add quick discounts on existing seller products, a homepage discount section and a shop discount filter; verified seller saving/removing 20%, separate visitor visibility and restored price. Discount, product form and homepage tests pass.
 - [x] Rank homepage products by completed sold quantities independently of store stars; tested unpaid/refunded exclusions and verified best-seller first in the browser.
