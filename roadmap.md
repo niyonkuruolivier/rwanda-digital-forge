@@ -1,3 +1,6 @@
+# Admin post browsing
+- [ ] Arrange Products and Stories as horizontal selectors with photo grids and previews; verify shared deletion and admin browsing.
+
 # Separate authenticated accounts
 - [x] Add home-screen installation on phones/computers with official icons, browser instructions and an email-link action; verified manifest/icon responses, mobile/desktop controls and simulated browser prompt acceptance. Actual device installation requires publishing; no offline caching.
 - [x] Connect new orders across buyer/vendor accounts with private driver contacts, destination and shipment updates; verified buyer checkout, seller shipping details, live buyer updates, reload persistence and buyer confirmation. Payments remain demo; legacy browser orders are not imported.

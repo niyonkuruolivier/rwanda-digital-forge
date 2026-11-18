@@ -7,4 +7,8 @@ describe("shared seller updates", () => {
   it("keeps deleted products out of every visitor's seed catalog", () => {
     expect(mergeCatalog([{ id: "p1" }], [{ kind: "product", id: "p1", vendor_id: "v", record: { id: "p1" }, deleted: true }], "product")).toEqual([]);
   });
+  it("removes an administrator-deleted story from shared buyer and vendor catalogs", () => {
+    const rows = [{ kind: "story", id: "s1", vendor_id: "v", record: { id: "s1" }, deleted: true }];
+    expect(mergeCatalog([{ id: "s1" }, { id: "s2" }], rows, "story")).toEqual([{ id: "s2" }]);
+  });
 });
