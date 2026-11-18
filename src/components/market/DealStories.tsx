@@ -1,19 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ExternalLink, Plus, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useStore } from "@/lib/store";
 import { money } from "@/lib/data";
-import { groupStoriesByVendor, isStoryLive, safeLiveUrl, storiesForVendor, storyAfterTap, storyTimeLeft } from "@/lib/stories";
+import { isStoryLive, statusGroups, safeLiveUrl, storiesForVendor, storyAfterTap, storyTimeLeft } from "@/lib/stories";
 import { HorizontalBrowse } from "@/components/market/HorizontalBrowse";
 import { STORY_PLAYBACK_MS, useStoryPlayback } from "@/hooks/use-story-playback";
+
+const VIEWED_KEY = "murandasi-viewed-stories";
 
 export function DealStories({ vendorId }: { vendorId?: string } = {}) {
   const s = useStore();
   const [selected, setSelected] = useState<string | null>(null);
   const available = s.stories.filter((story) => s.vendor(story.vendorId));
-  const groups = groupStoriesByVendor(vendorId ? storiesForVendor(available, vendorId) : available);
+  const [viewed, setViewed] = useState<Set<string>>(() => new Set());
+  // Freeze row order while watching so groups do not jump mid-playback.
+  const [orderViewed, setOrderViewed] = useState<Set<string>>(() => new Set());
+  useEffect(() => {
+    try { const ids = new Set<string>(JSON.parse(localStorage.getItem(VIEWED_KEY) ?? "[]")); setViewed(ids); setOrderViewed(ids); } catch { /* ignore unreadable history */ }
+  }, []);
+  const groups = statusGroups(vendorId ? storiesForVendor(available, vendorId) : available, orderViewed);
   const stories = groups.flatMap((group) => group.stories);
   const index = stories.findIndex((story) => story.id === selected);
   const story = stories[index];
@@ -23,21 +31,31 @@ export function DealStories({ vendorId }: { vendorId?: string } = {}) {
   const liveUrl = live ? safeLiveUrl(story?.liveUrl ?? "") : undefined;
   const currentGroup = groups.find((group) => group.vendorId === story?.vendorId);
   const groupIndex = currentGroup?.stories.findIndex((item) => item.id === story?.id) ?? 0;
-  const elapsed = useStoryPlayback(story?.id, () => setSelected(storyAfterTap(stories, index, "right")));
+  const elapsed = useStoryPlayback(story?.id, () => setSelected(storyAfterTap(stories, index, "right") ?? (close(), null)));
+
+  useEffect(() => {
+    if (!story || viewed.has(story.id)) return;
+    const next = new Set(viewed).add(story.id);
+    setViewed(next);
+    try { localStorage.setItem(VIEWED_KEY, JSON.stringify([...next].slice(-500))); } catch { /* storage full */ }
+  }, [story?.id]);
+  const close = () => { setSelected(null); setOrderViewed(new Set(viewed)); };
 
   if (vendorId && stories.length === 0) return null;
 
   return <section aria-label="Deal stories" className="mb-7">
     <HorizontalBrowse label="stories and deals">
       {groups.map((group) => {
-        const item = group.stories[0];
+        const item = group.stories[group.stories.length - 1];
         if (!item) return null;
+        const seen = group.stories.every((x) => viewed.has(x.id));
         const seller = s.vendor(item.vendorId);
         const active = isStoryLive(item);
-        return <Button key={group.vendorId} variant="ghost" onClick={() => setSelected(item.id)} aria-label={`View statuses: ${seller?.name} — ${group.stories.length} updates${active ? " — LIVE" : ""}`} className="relative h-[120px] w-[110px] shrink-0 overflow-hidden rounded-lg p-0 text-left md:h-[140px] md:w-[130px]">
+        return <Button key={group.vendorId} variant="ghost" onClick={() => setSelected(group.startId)} aria-label={`${seen ? "Viewed" : "New"} statuses: ${seller?.name} — ${group.stories.length} updates${active ? " — LIVE" : ""}`} className="relative h-[120px] w-[110px] shrink-0 overflow-hidden rounded-lg p-0 text-left md:h-[140px] md:w-[130px]">
           <img src={item.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          <span className="story-shade absolute inset-0" />
-          <span className="absolute left-2 top-2 size-9 rounded-full border-[3px] border-primary bg-card p-0.5"><img src={seller?.logo} alt="" className="h-full w-full rounded-full object-cover" /></span>
+          <span className={`story-shade absolute inset-0 ${seen ? "opacity-90" : ""}`} />
+          <span className={`absolute left-2 top-12 rounded-sm px-1.5 py-0.5 text-[10px] font-bold ${seen ? "bg-navy/70 text-navy-foreground" : "bg-primary text-primary-foreground"}`}>{seen ? "Viewed" : "New"}</span>
+          <span className={`absolute left-2 top-2 size-9 rounded-full border-[3px] bg-card p-0.5 ${seen ? "border-muted-foreground/50" : "border-primary"}`}><img src={seller?.logo} alt="" className="h-full w-full rounded-full object-cover" /></span>
           {active && <span className="absolute right-2 top-2 flex items-center gap-1 rounded-sm bg-destructive px-1.5 py-1 text-[10px] font-bold text-destructive-foreground"><Radio className="size-3" />LIVE</span>}
           {group.stories.length > 1 && <span className="absolute right-2 top-12 rounded-sm bg-navy/70 px-1.5 py-0.5 text-[10px] font-semibold text-navy-foreground">{group.stories.length}</span>}
           <span className="absolute bottom-2 left-2 right-10 line-clamp-2 whitespace-normal text-xs font-bold text-navy-foreground">{seller?.name}</span>
@@ -47,7 +65,7 @@ export function DealStories({ vendorId }: { vendorId?: string } = {}) {
       {!vendorId && <Button asChild size="icon" variant="outline" className="size-10 shrink-0 rounded-full"><Link to={s.role === "vendor" ? "/dashboard" : "/become-vendor"} aria-label="Add story" title="Add story"><Plus /></Link></Button>}
       {stories.length === 0 && <p className="py-4 text-sm text-muted-foreground">No deal stories yet.</p>}
     </HorizontalBrowse>
-    <Dialog open={Boolean(story)} onOpenChange={(open) => { if (!open) setSelected(null); }}>
+    <Dialog open={Boolean(story)} onOpenChange={(open) => { if (!open) close(); }}>
       <DialogContent className="max-h-[90dvh] w-[calc(100%-2rem)] max-w-sm overflow-y-auto rounded-lg p-0">
         {story && <>
           <div className="relative h-[min(48dvh,420px)] overflow-hidden rounded-t-lg bg-muted">
@@ -63,7 +81,7 @@ export function DealStories({ vendorId }: { vendorId?: string } = {}) {
             <DialogTitle className="leading-snug">{story.title}</DialogTitle>
             <DialogDescription>{vendor?.name}{product ? ` · ${money(product.price)}` : ""} · Disappears in {storyTimeLeft(story).replace(" left", "")}</DialogDescription>
             {liveUrl && <Button asChild variant="destructive" className="w-full"><a href={liveUrl} target="_blank" rel="noopener noreferrer"><Radio />Watch live<ExternalLink /></a></Button>}
-            <Button asChild variant={live ? "outline" : "default"} className="w-full">{product ? <Link to="/products/$id" params={{ id: product.id }} onClick={() => setSelected(null)}>Shop this deal</Link> : <Link to="/vendors/$id" params={{ id: story.vendorId }} onClick={() => setSelected(null)}>Visit store</Link>}</Button>
+            <Button asChild variant={live ? "outline" : "default"} className="w-full">{product ? <Link to="/products/$id" params={{ id: product.id }} onClick={close}>Shop this deal</Link> : <Link to="/vendors/$id" params={{ id: story.vendorId }} onClick={close}>Visit store</Link>}</Button>
           </div>
         </>}
       </DialogContent>

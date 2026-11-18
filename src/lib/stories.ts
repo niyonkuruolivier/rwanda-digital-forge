@@ -94,3 +94,17 @@ export const SEED_STORIES: DealStory[] = ["p1", "p6", "p10", "p5"].flatMap((id, 
   const image = p?.images[0];
   return p && image ? [{ id: `story-${id}`, vendorId: p.vendorId, title: p.title, image, productId: p.id, isLive: false, createdAt: Date.now() - (i + 1) * 3 * 3_600_000 }] : [];
 });
+export interface StoryGroup { vendorId: string; stories: DealStory[]; viewed: boolean; startId: string }
+
+/** WhatsApp-style status groups: new updates first, each seller's updates play oldest to newest and open at the first unviewed one. */
+export function statusGroups(stories: DealStory[], viewedIds: ReadonlySet<string>, now = Date.now()): StoryGroup[] {
+  return groupStoriesByVendor(stories, now)
+    .map(({ vendorId, stories: items }) => {
+      const ordered = [...items].sort((a, b) => a.createdAt - b.createdAt);
+      const firstNew = ordered.find((story) => !viewedIds.has(story.id));
+      return { vendorId, stories: ordered, viewed: !firstNew, startId: (firstNew ?? ordered[0]!).id };
+    })
+    .sort((a, b) => Number(a.viewed) - Number(b.viewed)
+      || Number(b.stories.some((story) => isStoryLive(story, now))) - Number(a.stories.some((story) => isStoryLive(story, now)))
+      || Math.max(...b.stories.map((story) => story.createdAt)) - Math.max(...a.stories.map((story) => story.createdAt)));
+}

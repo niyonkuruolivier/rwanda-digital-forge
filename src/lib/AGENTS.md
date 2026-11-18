@@ -6,3 +6,4 @@
 - Homepage product ordering sums completed-payment item quantities, excludes refunds, and uses posting date only for sales ties; shop rating never drives product order.
 - Agreement Word exports decode company assets and encode PNG bytes in the browser because asset delivery can return WebP regardless of the uploaded filename.
 - Admin account lists come from an admin-verified server function reading auth users with roles/profiles, so emails never reach non-admins.
+- Story viewed state is per-device browser history; statusGroups orders new sellers first, plays each seller oldest-to-newest from the first unviewed update, and row order freezes while the viewer is open.
