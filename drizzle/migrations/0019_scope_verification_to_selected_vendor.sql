@@ -1,0 +1,1 @@
+ALTER POLICY "Administrator verifies existing sellers" ON public.vendor_verification WITH CHECK (public.has_role(auth.uid(), 'admin') AND EXISTS (SELECT 1 FROM public.marketplace_content c WHERE c.kind = 'store' AND c.id = vendor_verification.vendor_id AND NOT c.deleted));

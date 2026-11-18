@@ -134,6 +134,13 @@
       "when": 1794966219819,
       "tag": "0018_vendor_verification_badges",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1794966828260,
+      "tag": "0019_scope_verification_to_selected_vendor",
+      "breakpoints": true
     }
   ]
 }
