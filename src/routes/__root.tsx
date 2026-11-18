@@ -18,6 +18,7 @@ import { Footer } from "@/components/market/Footer";
 import { PageBack } from "@/components/market/BackButton";
 import { CartDrawer } from "@/components/market/CartDrawer";
 import { VendorAccessGate } from "@/components/market/VendorAccessGate";
+import { WelcomeSignIn } from "@/components/market/WelcomeSignIn";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -147,6 +148,7 @@ function RootComponent() {
         <main className="min-h-[60vh]"><PageBack /><Outlet /></main>
         <Footer />
         <CartDrawer />
+        <WelcomeSignIn />
         </VendorAccessGate>
         <Toaster position="bottom-right" />
       </StoreProvider></AuthProvider>
