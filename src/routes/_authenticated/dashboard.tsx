@@ -1,3 +1,5 @@
+import { InventoryHistory } from "@/components/market/InventoryHistory";
+import { vendorOrderCounts, lowStockProducts } from "@/lib/inventory";
 import { HeldPayments } from "@/components/market/HeldPayments";
 import { VendorApplicationStatus } from "@/components/market/VendorApplicationStatus";
 import { FundsBadge } from "@/components/market/FundsBadge";
@@ -55,9 +57,14 @@ function Dashboard() {
   const lines = paidVendorLines(s.orders, s.myVendorId);
   const bal = vendorBalance(s.orders, s.withdrawals, s.myVendorId);
   const myWithdrawals = s.withdrawals.filter((w) => w.vendorId === s.myVendorId);
+  const counts = vendorOrderCounts(s.orders, s.myVendorId);
+  const lowStock = lowStockProducts(mine);
   const metrics = [
     { label: "Total Sales", value: lines.reduce((n, l) => n + l.item.qty, 0), icon: ShoppingBag },
     { label: "Active Listings", value: mine.filter((p) => p.stock > 0).length, icon: Package },
+    { label: "Total orders", value: counts.total, icon: ShoppingBag },
+    { label: "Pending orders", value: counts.pending, icon: Package },
+    { label: "Completed orders", value: counts.completed, icon: Package },
   ];
   return (
     <div className="pb-10">
@@ -77,18 +84,22 @@ function Dashboard() {
       <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-3">
         {metrics.map((m) => <div key={m.label} className="rounded-xl border bg-card p-5 shadow-sm"><div className="flex items-center justify-between text-sm text-muted-foreground">{m.label}<m.icon className="h-4 w-4 text-primary" /></div><p className="mt-2 text-2xl font-bold text-heading">{m.value}</p></div>)}
         <div className="col-span-2 rounded-xl border bg-card p-5 shadow-sm lg:col-span-1">
-          <div className="flex items-center justify-between text-sm text-muted-foreground">Available to withdraw (90%)<Banknote className="h-4 w-4 text-primary" /></div>
+          <div className="flex items-center justify-between text-sm text-muted-foreground">Demo balance (87%)<Banknote className="h-4 w-4 text-primary" /></div>
           <p className="mt-2 text-2xl font-bold text-heading">{money(bal.available)}</p>
           <p className="mt-1 text-xs text-muted-foreground">Pending payment: <b>{money(bal.pending + bal.disputed)}</b>{bal.disputed > 0 && <> · of which complaint: <b className="text-destructive">{money(bal.disputed)}</b></>}</p>
-          <Button size="sm" className="mt-3 w-full" disabled={bal.available <= 0} onClick={() => setWithdrawOpen(true)}>
-            <Wallet className="h-4 w-4" /> Withdraw {money(bal.available)}
+          <Button size="sm" className="mt-3 w-full" disabled onClick={() => setWithdrawOpen(true)}>
+            <Wallet className="h-4 w-4" /> Payouts not connected
           </Button>
         </div>
       </div>
+      <p className="mt-4 text-sm text-muted-foreground">Payments are demonstrations, not received money. Withdrawals are unavailable.</p>
+      {s.ordersError && <p role="alert" className="mt-3 text-sm text-destructive">Could not load orders. Refresh to try again.</p>}
+      {lowStock.length > 0 && <p role="status" className="mt-3 text-sm text-destructive">Low stock: {lowStock.map(p => `${p.title} (${p.stock === 0 ? "out of stock" : `${p.stock} left`})`).join(" · ")}</p>}
       <HeldPayments vendorId={s.myVendorId} />
       <Tabs defaultValue="products" className="mt-8">
-        <div className="market-scroll max-w-full overflow-x-auto"><TabsList><TabsTrigger value="products">Products ({mine.length})</TabsTrigger><TabsTrigger value="orders">Orders ({lines.length})</TabsTrigger><TabsTrigger value="withdrawals">Withdrawals</TabsTrigger><TabsTrigger value="stories">Stories</TabsTrigger><TabsTrigger value="agreement">Agreement</TabsTrigger></TabsList></div>
+        <div className="market-scroll max-w-full overflow-x-auto"><TabsList><TabsTrigger value="products">Products ({mine.length})</TabsTrigger><TabsTrigger value="orders">Orders ({counts.total})</TabsTrigger><TabsTrigger value="inventory">Inventory history</TabsTrigger><TabsTrigger value="withdrawals">Withdrawals</TabsTrigger><TabsTrigger value="stories">Stories</TabsTrigger><TabsTrigger value="agreement">Agreement</TabsTrigger></TabsList></div>
         <TabsContent value="agreement" className="mt-5"><h3 className="text-lg font-bold">Signed vendor agreement</h3>{s.applications.filter((a) => a.vendor.id === s.myVendorId).map((a) => <article key={a.id} className="border-b py-4"><p className="font-semibold">{a.vendor.name} · {a.status}</p><VendorAgreementRecord application={a} /></article>)}{!s.applications.some((a) => a.vendor.id === s.myVendorId) && <p className="mt-3 text-sm text-muted-foreground">This existing demo store has no signed application agreement.</p>}</TabsContent>
+        <TabsContent value="inventory" className="mt-4"><InventoryHistory vendorId={s.myVendorId} /></TabsContent>
         <TabsContent value="stories"><StoryManager /></TabsContent>
         <TabsContent value="withdrawals" className="mt-4 overflow-x-auto rounded-xl border bg-card shadow-sm">
           <Table>

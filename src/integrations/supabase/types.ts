@@ -58,6 +58,36 @@ export type Database = {
           },
         ]
       }
+      inventory_history: {
+        Row: {
+          created_at: string
+          id: string
+          new_stock: number
+          previous_stock: number
+          product_id: string
+          reason: string
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          new_stock: number
+          previous_stock: number
+          product_id: string
+          reason: string
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          new_stock?: number
+          previous_stock?: number
+          product_id?: string
+          reason?: string
+          vendor_id?: string
+        }
+        Relationships: []
+      }
       marketplace_content: {
         Row: {
           admin_removed: boolean

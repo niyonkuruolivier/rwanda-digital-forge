@@ -22,17 +22,24 @@ describe("admin demo oversight", () => {
     expect(vendorAccountRestricted("vendor", suspended, end - 1)).toBe(true);
     expect(vendorAccountRestricted("vendor", suspended, end)).toBe(false);
   });
-  it("shows 10% platform commission and 90% vendor share", () => {
+  it("shows 13% platform commission and 87% vendor share", () => {
     const summary = vendorSummary([order], [], [], vendor.id);
     expect(summary.gross).toBe(10000);
-    expect(summary.commission).toBe(1000);
-    expect(summary.vendorShare).toBe(9000);
+    expect(summary.commission).toBe(1300);
+    expect(summary.vendorShare).toBe(8700);
+  });
+  it("keeps ledger rounding consistent with the withdrawable item shares", () => {
+    const small: Order = { ...order, items: order.items.flatMap(item => [{ ...item, price: 4 }, { ...item, productId: "other", price: 4 }]) };
+    const summary = vendorSummary([small], [], [], vendor.id);
+    expect(summary.commission).toBe(2);
+    expect(summary.vendorShare).toBe(6);
+    expect(summary.available).toBe(6);
   });
   it("tracks paid and requested withdrawals separately from available money", () => {
     const summary = vendorSummary([order], [{ id: "w", vendorId: vendor.id, amount: 2000, status: "Paid", requestedAt: "" }, { id: "r", vendorId: vendor.id, amount: 1000, status: "Requested", requestedAt: "" }], [], vendor.id);
     expect(summary.paidOut).toBe(2000);
     expect(summary.requested).toBe(1000);
-    expect(summary.available).toBe(6000);
+    expect(summary.available).toBe(5700);
   });
   it("blocking stops trade and unblocking restores it", () => {
     expect(canVendorTrade({ ...vendor, status: "Blocked" })).toBe(false);
@@ -82,10 +89,10 @@ describe("admin demo oversight", () => {
   it("retains the rejection reason for the applicant to correct and reapply", () => {
     expect(reviewApplication(application, "Rejected", "now", "  Please provide a valid RDB certificate.  ").rejectionReason).toBe("Please provide a valid RDB certificate.");
   });
-  it("complaints keep a vendor's 90% share out of available money", () => {
+  it("complaints keep a vendor's 87% share out of available money", () => {
     const disputed: Order = { ...order, items: order.items.map((i) => ({ ...i, claim: { message: "Damaged", photo: "photo", status: "open", createdAt: "2026-11-14T00:00:00Z" } })) };
     const summary = vendorSummary([disputed], [], [], vendor.id);
-    expect(summary.disputed).toBe(9000);
+    expect(summary.disputed).toBe(8700);
     expect(summary.available).toBe(0);
   });
 });

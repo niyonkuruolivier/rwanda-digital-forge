@@ -3,7 +3,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { deliveryUpdateSchema } from "./delivery";
 import type { Order, OrderItem } from "./data";
-export const createSharedOrder = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator((input: unknown) => z.object({ customer: z.string().trim().min(1).max(200), phone: z.string().trim().min(7).max(50), address: z.string().trim().min(1).max(500), payment: z.enum(["Mobile Money", "Credit Card"]), items: z.array(z.object({ productId: z.string(), qty: z.number().int().min(1).max(1000), options: z.record(z.string()).optional() })).min(1).max(100) }).parse(input)).handler(async ({ data, context }) => {
+export const createSharedOrder = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator((input: unknown) => z.object({ customer: z.string().trim().min(1).max(200), phone: z.string().trim().min(7).max(50), address: z.string().trim().min(1).max(500), payment: z.enum(["Mobile Money", "Credit Card"]), items: z.array(z.object({ productId: z.string().min(1).max(100), qty: z.number().int().min(1).max(1000), options: z.record(z.string(), z.string()).optional() })).min(1).max(100) }).parse(input)).handler(async ({ data, context }) => {
   const result = await context.supabase.rpc("create_shared_demo_order", { _order: JSON.parse(JSON.stringify(data)) });
   if (result.error) throw new Error(result.error.message);
   return result.data;

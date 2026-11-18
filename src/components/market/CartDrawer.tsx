@@ -31,7 +31,7 @@ export function CartLines() {
                 <div className="mt-1 flex items-center gap-2">
                   <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setQty(l.productId, l.qty - 1, l.options)} aria-label="Decrease"><Minus className="h-3 w-3" /></Button>
                   <span className="w-6 text-center text-sm">{l.qty}</span>
-                  <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setQty(l.productId, l.qty + 1, l.options)} aria-label="Increase"><Plus className="h-3 w-3" /></Button>
+                  <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setQty(l.productId, l.qty + 1, l.options)} disabled={g.lines.filter(line => line.productId === l.productId).reduce((n, line) => n + line.qty, 0) >= l.product.stock} aria-label="Increase"><Plus className="h-3 w-3" /></Button>
                   <Button variant="ghost" size="icon" className="ml-auto size-7 text-muted-foreground hover:text-destructive" onClick={() => setQty(l.productId, 0, l.options)} aria-label="Remove"><Trash2 className="h-4 w-4" /></Button>
                 </div>
               </div>

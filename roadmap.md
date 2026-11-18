@@ -1,3 +1,12 @@
+# Launch audit
+- [x] Audit core account/catalog/order/inventory/finance/security paths; retain evidence and incomplete checks in audit.md (not a full launch certification).
+- [x] Fix and verify stock synchronization/overselling, misleading commission labels, local demo record exposure and payment-data collection.
+- [x] Verify signed-in buyer/vendor saved-order and delivery flows, denied admin access, public desktop/mobile pages and regression tests.
+- [ ] Connect real payment verification and payouts; blocked pending payment-provider credentials and merchant configuration.
+- [ ] Complete real-money payment/cancellation/refund and payout lifecycle; blocked by merchant credentials and agreed payment/cancellation rules.
+- [ ] Resolve upstream picomatch advisory; blocked by absence of a published fixed version above 4.0.7.
+- [ ] Verify real administrator and hosted OAuth/recovery flows; blocked by administrator session and external account/email confirmation.
+
 # Admin post browsing
 - [x] Arrange Products and Stories as horizontal selectors with photo grids and previews; verified signed-in admin browsing, story preview, deletion confirmation and mobile overflow. Shared deletion and permission tests pass; existing Cloud removal remains unchanged.
 

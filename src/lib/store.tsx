@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ratedVendors } from "./store-ratings";
 import { createSharedOrder, listSharedOrders, saveDelivery, reviewSharedItem } from "./shared-orders.functions";
 import type { Delivery } from "./delivery";
+import { availableCartQuantity } from "./inventory";
 
 export type Role = "buyer" | "vendor" | "admin";
 interface CartLine { productId: string; qty: number; options?: Record<string, string> | undefined }
@@ -169,8 +170,9 @@ function useStoreValue() {
     const mutate = (update: (previous: State) => State) => { if (!denyActivity) setS(update); };
     const product = (id: string) => s.products.find((p) => p.id === id);
     const vendor = (id: string) => vendors.find((v) => v.id === id);
-    const cartLines = s.cart.map((l) => ({ ...l, product: product(l.productId)! })).filter((l) => l.product);
-    const allOrders = [...(auth.user ? sharedOrders.data ?? [] : []), ...s.orders.filter(o => !o.shared)];
+    const cartLines = s.cart.flatMap((l) => { const item = product(l.productId); return item ? [{ ...l, product: item }] : []; });
+    // Legacy browser demonstrations remain saved but are never shared as account records.
+    const allOrders = auth.user ? sharedOrders.data ?? [] : [];
     return {
       ordersPending: !!auth.user && sharedOrders.isPending, ordersError: sharedOrders.isError,
       ratingsPending: ratings.isPending, ratingsError: ratings.isError,
@@ -179,7 +181,7 @@ function useStoreValue() {
         const result = await savePicture({ data: { name, image } });
         setCategoryImages((previous) => ({ ...previous, [result.name]: result.image }));
       },
-      orders: allOrders,
+      orders: allOrders, withdrawals: [] as Withdrawal[],
       placeSharedOrder: async (input: { customer: string; phone: string; address: string; payment: "Mobile Money" | "Credit Card"; items: { productId: string; qty: number; options?: Record<string, string> | undefined }[] }) => {
         if (denyActivity) throw new Error("Your account is blocked or suspended.");
         const id = await createOrder({ data: input });
@@ -204,11 +206,19 @@ function useStoreValue() {
       cartCount: s.cart.reduce((n, l) => n + l.qty, 0),
       addToCart: (productId: string, qty = 1, options?: Record<string, string>) => mutate((p) => {
         const item = p.products.find((x) => x.id === productId);
-        if (!canVendorTrade(vendor(item?.vendorId ?? ""))) return p;
+        if (!item || !canVendorTrade(vendor(item.vendorId))) return p;
         const ex = p.cart.find((l) => sameLine(l, productId, options));
-        return { ...p, cart: ex ? p.cart.map((l) => sameLine(l, productId, options) ? { ...l, qty: l.qty + qty } : l) : [...p.cart, { productId, qty, options }] };
+        const others = p.cart.filter(l => l.productId === productId && !sameLine(l, productId, options)).reduce((n, l) => n + l.qty, 0);
+        const nextQty = availableCartQuantity(item.stock, (ex?.qty ?? 0) + qty, others);
+        if (!nextQty) return p;
+        return { ...p, cart: ex ? p.cart.map((l) => sameLine(l, productId, options) ? { ...l, qty: nextQty } : l) : [...p.cart, { productId, qty: nextQty, options }] };
       }),
-      setQty: (productId: string, qty: number, options?: Record<string, string>) => mutate((p) => ({ ...p, cart: qty <= 0 ? p.cart.filter((l) => !sameLine(l, productId, options)) : p.cart.map((l) => sameLine(l, productId, options) ? { ...l, qty } : l) })),
+      setQty: (productId: string, qty: number, options?: Record<string, string>) => mutate((p) => {
+        const item = p.products.find(x => x.id === productId);
+        const others = p.cart.filter(l => l.productId === productId && !sameLine(l, productId, options)).reduce((n,l) => n + l.qty, 0);
+        const nextQty = availableCartQuantity(item?.stock ?? 0, qty, others);
+        return { ...p, cart: nextQty <= 0 ? p.cart.filter(l => !sameLine(l, productId, options)) : p.cart.map(l => sameLine(l, productId, options) ? { ...l, qty: nextQty } : l) };
+      }),
       clearCart: () => mutate((p) => ({ ...p, cart: [] })),
       toggleWish: (id: string) => mutate((p) => ({ ...p, wishlist: p.wishlist.includes(id) ? p.wishlist.filter((w) => w !== id) : [...p.wishlist, id] })),
       setRole: (_role: Role) => { /* Account roles are assigned only by the server. */ },
@@ -294,8 +304,7 @@ function useStoreValue() {
       },
       requestWithdrawal: (amount: number, recipient: WithdrawalRecipient) => {
         if (denyActivity || auth.role !== "vendor") throw new Error("Vendor access required.");
-        const details = prepareWithdrawal(amount, vendorBalance(allOrders, s.withdrawals, auth.vendorId).available, recipient);
-        mutate((p) => ({ ...p, withdrawals: [{ id: `WD-${crypto.randomUUID()}`, vendorId: auth.vendorId, amount, recipient: details, requestedAt: new Date().toISOString(), status: "Requested" }, ...p.withdrawals] }));
+        throw new Error("Withdrawals are unavailable until real payment verification and payouts are connected. Demo payments cannot be withdrawn.");
       },
       markWithdrawalPaid: (id: string) => mutate((p) => p.role !== "admin" ? p : ({ ...p, withdrawals: p.withdrawals.map((w) => w.id === id ? { ...w, status: "Paid", paidAt: new Date().toISOString() } : w) })),
       submitComplaint: (orderId: string, productId: string, options: Record<string, string> | undefined, message: string, photo: string) => mutate((p) => ({ ...p, orders: p.orders.map((order) => order.id === orderId ? submitPurchaseComplaint(order, productId, options, p.buyer.id, message, photo) : order) })),

@@ -41,7 +41,8 @@ export function paymentLedger(orders: Order[]) {
   return orders.filter(hasCompletedPayment).flatMap((order) => [...new Set(order.items.map((i) => i.vendorId))].map((vendorId) => {
     const items = order.items.filter((i) => i.vendorId === vendorId);
     const gross = items.reduce((n, i) => n + i.price * i.qty, 0);
-    return { order, vendorId, items, gross, ...splitPayment(gross) };
+    const commission = items.reduce((sum, item) => sum + splitPayment(item.price * item.qty).commission, 0);
+    return { order, vendorId, items, gross, commission, vendorShare: gross - commission };
   }));
 }
 

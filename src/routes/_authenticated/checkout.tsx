@@ -65,8 +65,6 @@ function Checkout() {
               <Button type="button" variant="outline" aria-pressed={pay === m} disabled={busy} key={m} onClick={() => setPay(m)} className={`h-auto justify-start gap-3 rounded-lg border-2 p-4 text-left ${pay === m ? "border-primary bg-primary/5" : ""}`}><Icon className="h-5 w-5 text-primary" /><span className="font-medium text-heading">{m}</span></Button>
             ))}
           </div>
-          {pay === "Mobile Money" ? <div><Label htmlFor="momo">Mobile Money number</Label><Input id="momo" required placeholder="07xx xxx xxx" /></div> :
-            <div className="grid gap-4 sm:grid-cols-3"><div className="sm:col-span-3"><Label htmlFor="card">Card number</Label><Input id="card" required placeholder="4242 4242 4242 4242" /></div><div><Label htmlFor="exp">Expiry</Label><Input id="exp" required placeholder="MM/YY" /></div><div><Label htmlFor="cvc">CVC</Label><Input id="cvc" required placeholder="123" /></div></div>}
           <p className="text-xs text-muted-foreground">Demo checkout — no real payment is taken.</p>
         </div>
       </div>
