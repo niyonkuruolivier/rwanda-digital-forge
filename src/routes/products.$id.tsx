@@ -35,7 +35,11 @@ function ProductPage() {
   const missing = (p.options ?? []).find((o) => !sel[o.name]);
   const ready = () => {
     if (blocked) { toast.error("This store is currently unavailable for new purchases."); return false; }
-    if (missing) { toast.error(`Please choose a ${missing.name.toLowerCase()} first`); return false; }
+    if (missing) {
+      toast.error(`Please choose a ${missing.name.toLowerCase()} first`);
+      document.querySelector(`[data-option="${missing.name}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
     return true;
   };
   const chosen = p.options?.length ? sel : undefined;
@@ -58,39 +62,41 @@ function ProductPage() {
           </>}
           mainClassName="md:aspect-[4/3] md:max-h-[68vh]"
         />
-        <div className="self-start md:sticky md:top-24">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{p.category}</p>
-          <h1 className="mt-1 text-2xl font-extrabold text-heading md:text-3xl">{p.title}</h1>
-          <div className="mt-4 flex flex-wrap items-baseline gap-3">
-            <span className="text-3xl font-bold text-primary">{money(p.price)}</span>
-            {p.compareAt && <><span className="text-lg text-muted-foreground line-through">{money(p.compareAt)}</span><span className="rounded-full bg-accent px-2 py-0.5 text-xs font-bold text-accent-foreground">Sale</span></>}
-          </div>
-          <p className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${p.stock > 0 ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
-            <span className={`h-1.5 w-1.5 rounded-full ${p.stock > 0 ? "bg-primary" : "bg-destructive"}`} />
-            {p.stock > 0 ? `In stock · ${p.stock} pieces` : "Out of stock"}
-          </p>
-          {v && <Link to="/vendors/$id" params={{ id: v.id }} className="mt-4 flex items-center gap-3 rounded-xl border bg-card p-3 shadow-sm hover:shadow-md">
-            <img src={v.logo} alt="" className="h-10 w-10 rounded-full object-cover" />
-            <div className="flex-1"><p className="text-xs text-muted-foreground">Sold by</p><p className="font-semibold text-heading">{v.name}</p></div>
-            <Store className="h-4 w-4 text-primary" />
-          </Link>}
-          <ReadMore text={p.description} className="mt-4 text-muted-foreground" />
-          {(p.options ?? []).map((o) => (
-            <div key={o.name} className="mt-5">
-              <p className="text-sm font-semibold text-heading">{o.name}{sel[o.name] && <span className="ml-2 font-normal text-muted-foreground">{sel[o.name]}</span>}</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {o.values.map((val) => (
-                  <button
-                    key={val}
-                    onClick={() => setSel((prev) => ({ ...prev, [o.name]: val }))}
-                    aria-pressed={sel[o.name] === val}
-                    className={`rounded-full border-2 px-4 py-1.5 text-sm font-medium transition ${sel[o.name] === val ? "border-primary bg-primary text-primary-foreground" : "bg-card text-heading hover:border-primary/50"}`}
-                  >{val}</button>
-                ))}
-              </div>
+        <div className="flex flex-col self-start md:sticky md:top-24">
+          <div className="order-2 mt-6 flex flex-col md:order-1 md:mt-0">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{p.category}</p>
+            <h1 className="mt-1 text-2xl font-extrabold text-heading md:text-3xl">{p.title}</h1>
+            <div className="mt-4 flex flex-wrap items-baseline gap-3">
+              <span className="text-3xl font-bold text-primary">{money(p.price)}</span>
+              {p.compareAt && <><span className="text-lg text-muted-foreground line-through">{money(p.compareAt)}</span><span className="rounded-full bg-accent px-2 py-0.5 text-xs font-bold text-accent-foreground">Sale</span></>}
             </div>
-          ))}
-          <div className="mt-6 space-y-3">
+            <p className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${p.stock > 0 ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${p.stock > 0 ? "bg-primary" : "bg-destructive"}`} />
+              {p.stock > 0 ? `In stock · ${p.stock} pieces` : "Out of stock"}
+            </p>
+            {v && <Link to="/vendors/$id" params={{ id: v.id }} className="mt-4 flex items-center gap-3 rounded-xl border bg-card p-3 shadow-sm hover:shadow-md">
+              <img src={v.logo} alt="" className="h-10 w-10 rounded-full object-cover" />
+              <div className="flex-1"><p className="text-xs text-muted-foreground">Sold by</p><p className="font-semibold text-heading">{v.name}</p></div>
+              <Store className="h-4 w-4 text-primary" />
+            </Link>}
+            <ReadMore text={p.description} className="mt-4 text-muted-foreground" />
+            {(p.options ?? []).map((o) => (
+              <div key={o.name} data-option={o.name} className="mt-5">
+                <p className="text-sm font-semibold text-heading">{o.name}{sel[o.name] && <span className="ml-2 font-normal text-muted-foreground">{sel[o.name]}</span>}</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {o.values.map((val) => (
+                    <button
+                      key={val}
+                      onClick={() => setSel((prev) => ({ ...prev, [o.name]: val }))}
+                      aria-pressed={sel[o.name] === val}
+                      className={`rounded-full border-2 px-4 py-1.5 text-sm font-medium transition ${sel[o.name] === val ? "border-primary bg-primary text-primary-foreground" : "bg-card text-heading hover:border-primary/50"}`}
+                    >{val}</button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="order-1 mt-0 space-y-3 md:order-2 md:mt-6">
             <div className="flex items-center justify-between rounded-xl border bg-card p-3 shadow-sm">
               <span className="text-sm font-medium text-muted-foreground">Quantity</span>
               <div className="flex items-center gap-1">
