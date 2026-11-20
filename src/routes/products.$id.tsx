@@ -87,23 +87,21 @@ function ProductPage() {
               <Store className="h-4 w-4 text-primary" />
             </Link>}
             <ReadMore text={p.description} className="mt-4 text-muted-foreground" />
-            {(p.options ?? []).map((o) => (
-              <div key={o.name} data-option={o.name} className="mt-5">
-                <p className="text-sm font-semibold text-heading">{o.name}{sel[o.name] && <span className="ml-2 font-normal text-muted-foreground">{sel[o.name]}</span>}</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {o.values.map((val) => (
-                    <button
-                      key={val}
-                      onClick={() => setSel((prev) => ({ ...prev, [o.name]: val }))}
-                      aria-pressed={sel[o.name] === val}
-                      className={`rounded-full border-2 px-4 py-1.5 text-sm font-medium transition ${sel[o.name] === val ? "border-primary bg-primary text-primary-foreground" : "bg-card text-heading hover:border-primary/50"}`}
-                    >{val}</button>
-                  ))}
-                </div>
-              </div>
-            ))}
           </div>
           <div className="order-1 mt-0 space-y-3 md:order-2 md:mt-6">
+            {(p.options ?? []).length > 0 && <div className="space-y-2.5 rounded-xl border bg-card p-3 shadow-sm">
+              {(p.options ?? []).map((o) => (
+                <div key={o.name} data-option={o.name} className="flex items-start gap-3">
+                  <p className="w-12 shrink-0 pt-1 text-xs font-semibold text-heading">{o.name}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {o.values.map((val) => (
+                      <button key={val} onClick={() => setSel((prev) => ({ ...prev, [o.name]: val }))} aria-pressed={sel[o.name] === val}
+                        className={`min-w-8 rounded-md border px-2 py-1 text-xs font-medium transition ${sel[o.name] === val ? "border-primary bg-primary text-primary-foreground" : "bg-background text-heading hover:border-primary/50"}`}>{val}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>}
             <div className="flex items-center justify-between rounded-xl border bg-card p-3 shadow-sm">
               <span className="text-sm font-medium text-muted-foreground">Quantity</span>
               <div className="flex items-center gap-1">
