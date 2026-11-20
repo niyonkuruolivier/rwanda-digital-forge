@@ -1,4 +1,6 @@
 # Launch audit
+- [x] Add trigger-created account activity alerts and live unread counts; verified actual seller publishing, private recipient isolation, denied forged alerts, read persistence after reload, order link navigation, guest exclusion and phone layout.
+- [ ] Enable background phone push delivery; blocked because Firebase connection was declined.
 - [x] Add administrator-controlled vendor badges; verified admin save/removal, reload persistence, separate mobile visitor display, and administrator-only permission tests; unverified vendors retain selling access.
 - [x] Audit core account/catalog/order/inventory/finance/security paths; retain evidence and incomplete checks in audit.md (not a full launch certification).
 - [x] Fix and verify stock synchronization/overselling, misleading commission labels, local demo record exposure and payment-data collection.

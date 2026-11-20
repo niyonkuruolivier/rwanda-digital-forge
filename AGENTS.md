@@ -36,7 +36,7 @@ use the editor.
 - Shared navigation owns desktop links and a mobile bottom bar; account links reflect verified roles and sign-out clears protected queries before clearing the session.
 - BackButton uses router history with a home fallback; root PageBack covers non-home pages except rendered photo profiles, whose shared BackButton stays over the cover, avoiding duplicate or missing return controls.
 - Deal stories use the shared Cloud catalog; LIVE is seller-declared with a validated HTTPS external link, not automatic provider status or in-app broadcast. LIVE stories show for 3 hours from liveSince; sellers renew with "Still live".
-- In-app notifications derive from mock orders and stories, with read identifiers in the shared store; this keeps updates consistent without implying push delivery or cross-user messaging.
+- Alerts use trigger-created public/recipient rows and account-owned read receipts; RLS protects private activity. Push needs a connected provider.
 - ProductCard exposes an opt-in compact mobile variant for the Shop grid, so denser browsing does not change cards on other pages.
 - Story image halves are accessible previous/next tap targets using the shared story navigation helper; keep shopping links and the dialog close control outside those targets to avoid accidental navigation.
 - Group active stories by vendor before rendering cards and flatten those groups for tap navigation, so each seller has one card and their updates play together.

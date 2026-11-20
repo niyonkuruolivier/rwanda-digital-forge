@@ -141,6 +141,20 @@
       "when": 1794966828260,
       "tag": "0019_scope_verification_to_selected_vendor",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1795170211346,
+      "tag": "0020_saved_activity_notifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1795170272235,
+      "tag": "0021_purchase_activity_labels",
+      "breakpoints": true
     }
   ]
 }

@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_notifications: {
+        Row: {
+          created_at: string
+          detail: string
+          href: string
+          id: string
+          kind: string
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: string
+          href: string
+          id?: string
+          kind: string
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: string
+          href?: string
+          id?: string
+          kind?: string
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       customer_feedback: {
         Row: {
           author_name: string
@@ -117,6 +147,32 @@ export type Database = {
           vendor_id?: string
         }
         Relationships: []
+      }
+      notification_reads: {
+        Row: {
+          notification_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          notification_id: string
+          read_at?: string
+          user_id?: string
+        }
+        Update: {
+          notification_id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_reads_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "activity_notifications"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_categories: {
         Row: {
@@ -391,6 +447,16 @@ export type Database = {
       account_activity_allowed: { Args: never; Returns: boolean }
       can_read_shared_order: { Args: { _id: string }; Returns: boolean }
       create_shared_demo_order: { Args: { _order: Json }; Returns: string }
+      emit_activity: {
+        Args: {
+          _detail: string
+          _href: string
+          _kind: string
+          _title: string
+          _user: string
+        }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
