@@ -13,9 +13,16 @@ import { BackButton } from "@/components/market/BackButton";
 import { ShareButton } from "@/components/market/ShareButton";
 import { ReadMore } from "@/components/market/ReadMore";
 import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
+import { getSharePreview } from "@/lib/share-preview.functions";
 
 export const Route = createFileRoute("/products/$id")({
-  head: () => ({ meta: [{ title: "Product details — Murandasi Market" }, { name: "description", content: "Photos, price, stock, vendor and reviews for this product." }, { property: "og:title", content: "Product details — Murandasi Market" }, { property: "og:description", content: "Photos, price, stock, vendor and reviews for this product." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:image", content: SHARE_PREVIEW_IMAGE }, { name: "twitter:image", content: SHARE_PREVIEW_IMAGE }] }),
+  loader: ({ params }) => getSharePreview({ data: { kind: "product", id: params.id } }).catch(() => null),
+  head: ({ loaderData }) => {
+    const title = loaderData?.title ?? "Product details — Murandasi Market";
+    const description = loaderData?.description ?? "Photos, price, stock, vendor and reviews for this product.";
+    const image = loaderData?.image ?? SHARE_PREVIEW_IMAGE;
+    return { meta: [{ title }, { name: "description", content: description }, { property: "og:title", content: title }, { property: "og:description", content: description }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:image", content: image }, { name: "twitter:image", content: image }] };
+  },
   component: ProductPage,
 });
 
