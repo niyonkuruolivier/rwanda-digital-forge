@@ -24,6 +24,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as VendorsIdRouteImport } from './routes/vendors.$id'
+import { Route as ApiPublicShareImageRouteImport } from './routes/api/public/share-image'
 import { Route as ApiPublicVideoThumbnailRouteImport } from './routes/api/public/video-thumbnail'
 
 const IndexRoute = IndexRouteImport.update({
@@ -101,6 +102,11 @@ const VendorsIdRoute = VendorsIdRouteImport.update({
   path: '/vendors/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicShareImageRoute = ApiPublicShareImageRouteImport.update({
+  id: '/api/public/share-image',
+  path: '/api/public/share-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicVideoThumbnailRoute = ApiPublicVideoThumbnailRouteImport.update({
   id: '/api/public/video-thumbnail',
   path: '/api/public/video-thumbnail',
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/orders': typeof AuthenticatedOrdersRoute
   '/products/$id': typeof ProductsIdRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/api/public/share-image': typeof ApiPublicShareImageRoute
   '/api/public/video-thumbnail': typeof ApiPublicVideoThumbnailRoute
 }
 export interface FileRoutesByTo {
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/orders': typeof AuthenticatedOrdersRoute
   '/products/$id': typeof ProductsIdRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/api/public/share-image': typeof ApiPublicShareImageRoute
   '/api/public/video-thumbnail': typeof ApiPublicVideoThumbnailRoute
 }
 export interface FileRoutesById {
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/products/$id': typeof ProductsIdRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/api/public/share-image': typeof ApiPublicShareImageRoute
   '/api/public/video-thumbnail': typeof ApiPublicVideoThumbnailRoute
 }
 export interface FileRouteTypes {
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/products/$id'
     | '/vendors/$id'
+    | '/api/public/share-image'
     | '/api/public/video-thumbnail'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/products/$id'
     | '/vendors/$id'
+    | '/api/public/share-image'
     | '/api/public/video-thumbnail'
   id:
     | '__root__'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/_authenticated/orders'
     | '/products/$id'
     | '/vendors/$id'
+    | '/api/public/share-image'
     | '/api/public/video-thumbnail'
   fileRoutesById: FileRoutesById
 }
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   WishlistRoute: typeof WishlistRoute
   ProductsIdRoute: typeof ProductsIdRoute
   VendorsIdRoute: typeof VendorsIdRoute
+  ApiPublicShareImageRoute: typeof ApiPublicShareImageRoute
   ApiPublicVideoThumbnailRoute: typeof ApiPublicVideoThumbnailRoute
 }
 
@@ -335,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/share-image': {
+      id: '/api/public/share-image'
+      path: '/api/public/share-image'
+      fullPath: '/api/public/share-image'
+      preLoaderRoute: typeof ApiPublicShareImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/video-thumbnail': {
       id: '/api/public/video-thumbnail'
       path: '/api/public/video-thumbnail'
@@ -376,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   WishlistRoute: WishlistRoute,
   ProductsIdRoute: ProductsIdRoute,
   VendorsIdRoute: VendorsIdRoute,
+  ApiPublicShareImageRoute: ApiPublicShareImageRoute,
   ApiPublicVideoThumbnailRoute: ApiPublicVideoThumbnailRoute,
 }
 export const routeTree = rootRouteImport
