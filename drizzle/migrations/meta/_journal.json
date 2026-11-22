@@ -183,6 +183,13 @@
       "when": 1795382504297,
       "tag": "0025_chat_message_alerts",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1795385948687,
+      "tag": "0026_chat_block_outside_sites",
+      "breakpoints": true
     }
   ]
 }
