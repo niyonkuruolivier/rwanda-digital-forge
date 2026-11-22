@@ -1,3 +1,4 @@
+import { ChatWithSeller } from "@/components/market/ChatWithSeller";
 import { CustomerFeedback } from "@/components/market/CustomerFeedback";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -114,6 +115,7 @@ function ProductPage() {
               <Button size="lg" disabled={!p.stock || blocked} onClick={add} className="gap-2"><ShoppingCart className="h-4 w-4" /> Add to Cart</Button>
               <Button size="lg" variant="accent" disabled={!p.stock || blocked} onClick={buy} className="gap-2"><Zap className="h-4 w-4" /> Buy Now</Button>
             </div>
+            <ChatWithSeller vendorId={p.vendorId} productId={p.id} productTitle={p.title} />
             {blocked && <p className="text-sm text-destructive">This store is unavailable for new purchases.</p>}
           </div>
         </div>

@@ -44,6 +44,71 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          sender_id: string
+          thread_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          sender_id: string
+          thread_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "chat_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_threads: {
+        Row: {
+          buyer_id: string
+          buyer_name: string
+          created_at: string
+          id: string
+          last_at: string
+          product_id: string
+          product_title: string
+          vendor_id: string
+        }
+        Insert: {
+          buyer_id: string
+          buyer_name?: string
+          created_at?: string
+          id?: string
+          last_at?: string
+          product_id?: string
+          product_title?: string
+          vendor_id: string
+        }
+        Update: {
+          buyer_id?: string
+          buyer_name?: string
+          created_at?: string
+          id?: string
+          last_at?: string
+          product_id?: string
+          product_title?: string
+          vendor_id?: string
+        }
+        Relationships: []
+      }
       customer_feedback: {
         Row: {
           author_name: string
@@ -445,7 +510,9 @@ export type Database = {
     }
     Functions: {
       account_activity_allowed: { Args: never; Returns: boolean }
+      can_access_chat: { Args: { _id: string }; Returns: boolean }
       can_read_shared_order: { Args: { _id: string }; Returns: boolean }
+      chat_text_blocked: { Args: { _t: string }; Returns: boolean }
       create_shared_demo_order: { Args: { _order: Json }; Returns: string }
       emit_activity: {
         Args: {

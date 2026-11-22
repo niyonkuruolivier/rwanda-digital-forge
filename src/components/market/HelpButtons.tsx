@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from "ai";
 import { Bot, Send, X, Square, ShoppingCart } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useStore } from "@/lib/store";
 import { money } from "@/lib/data";
@@ -44,6 +44,7 @@ function ChatProduct({ item, onAdd, onBuy }: { item: AssistantProduct; onAdd: (o
 export function HelpButtons() {
   const { products, vendors, addToCart } = useStore();
   const nav = useNavigate();
+  const onMessages = useRouterState({ select: (r) => r.location.pathname === "/messages" });
   const catalog = useRef({ products, vendors, addToCart });
   catalog.current = { products, vendors, addToCart };
   const [open, setOpen] = useState(false);
@@ -88,7 +89,7 @@ export function HelpButtons() {
 
   return (
     <>
-      {!open && (
+      {!open && !onMessages && (
         <div className="fixed bottom-20 right-3 z-40 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
           <button type="button" onClick={() => setOpen(true)} aria-label="Ask Murandasi AI assistant"
             className="relative flex h-12 w-12 items-center justify-center rounded-full border border-primary-foreground/30 bg-[image:var(--gradient-primary)] text-primary-foreground shadow-lg ring-2 ring-primary/20 transition-transform hover:scale-105">
@@ -111,7 +112,16 @@ export function HelpButtons() {
             <button type="button" onClick={() => setOpen(false)} aria-label="Close assistant" className="rounded-full p-1.5 hover:bg-primary-foreground/20"><X className="h-5 w-5" /></button>
           </header>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm">
-            {messages.length === 0 && <p className="text-muted-foreground">Muraho! Tell me what you want to buy (for example "charger") and I will show what is in stock.</p>}
+            {messages.length === 0 && (
+              <div className="space-y-3">
+                <p className="text-muted-foreground">Muraho! Tap an example or type what you want to buy.</p>
+                <div className="flex flex-wrap gap-2">
+                  {["Show me headsets", "Phone chargers", "Shoes size 42", "Products on discount", "How do returns work?", "How does delivery work?"].map((q) => (
+                    <button key={q} type="button" onClick={() => void sendMessage({ text: q })} className="rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/10">{q}</button>
+                  ))}
+                </div>
+              </div>
+            )}
             {messages.map((m) => (
               <div key={m.id} className={m.role === "user" ? "ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-primary-foreground" : "max-w-[90%] whitespace-pre-wrap text-foreground"}>
                 {m.parts.map((p, i) => {

@@ -139,6 +139,12 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useEffect(() => {
+    const block = (e: Event) => { if ((e.target as HTMLElement | null)?.closest?.("img, video")) e.preventDefault(); };
+    document.addEventListener("contextmenu", block);
+    document.addEventListener("dragstart", block);
+    return () => { document.removeEventListener("contextmenu", block); document.removeEventListener("dragstart", block); };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

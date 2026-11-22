@@ -162,6 +162,20 @@
       "when": 1795171017731,
       "tag": "0022_limit_vendor_badge_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1795382138789,
+      "tag": "0023_buyer_seller_chat",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1795382282969,
+      "tag": "0024_chat_thread_buyer_read",
+      "breakpoints": true
     }
   ]
 }

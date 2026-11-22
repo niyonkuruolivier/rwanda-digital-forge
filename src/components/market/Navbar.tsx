@@ -17,13 +17,14 @@ export function Navbar() {
   const auth = useAuth(); const queryClient = useQueryClient();
   const nav = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const accountPage = ["/auth", "/account", "/dashboard", "/admin", "/orders", "/become-vendor"].includes(pathname) || pathname.startsWith("/vendors/");
+  const accountPage = ["/auth", "/account", "/dashboard", "/admin", "/orders", "/messages", "/become-vendor"].includes(pathname) || pathname.startsWith("/vendors/");
   const menu = (mobile = false) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="ghost" size={mobile ? "default" : "icon"} aria-label={mobile ? "More options" : "Account menu"} className={mobile ? "h-14 flex-col gap-1 px-3 text-[11px]" : ""}>{mobile ? <Menu className="size-5" /> : buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover" /> : <UserRound className="size-5" />}{mobile && "More"}</Button></DropdownMenuTrigger>
       <DropdownMenuContent align="end" side={mobile ? "top" : "bottom"} className="w-56">
         <DropdownMenuItem asChild><Link to="/account"><UserRound />My account</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
+        <DropdownMenuItem asChild><Link to="/messages">Messages</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/become-vendor"><Store />Start selling</Link></DropdownMenuItem>
         {auth.role === "vendor" && <DropdownMenuItem asChild><Link to="/dashboard">Seller dashboard</Link></DropdownMenuItem>}
         {auth.role === "admin" && <DropdownMenuItem asChild><Link to="/admin">Administrator dashboard</Link></DropdownMenuItem>}

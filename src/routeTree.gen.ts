@@ -21,6 +21,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedBecomeVendorRouteImport } from './routes/_authenticated/become-vendor'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
@@ -88,6 +89,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/become-vendor': typeof AuthenticatedBecomeVendorRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/api/chat': typeof ApiChatRoute
   '/products/$id': typeof ProductsIdRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/become-vendor': typeof AuthenticatedBecomeVendorRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/api/chat': typeof ApiChatRoute
   '/products/$id': typeof ProductsIdRoute
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   '/_authenticated/become-vendor': typeof AuthenticatedBecomeVendorRoute
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/api/chat': typeof ApiChatRoute
   '/products/$id': typeof ProductsIdRoute
@@ -192,6 +201,7 @@ export interface FileRouteTypes {
     | '/become-vendor'
     | '/checkout'
     | '/dashboard'
+    | '/messages'
     | '/orders'
     | '/api/chat'
     | '/products/$id'
@@ -211,6 +221,7 @@ export interface FileRouteTypes {
     | '/become-vendor'
     | '/checkout'
     | '/dashboard'
+    | '/messages'
     | '/orders'
     | '/api/chat'
     | '/products/$id'
@@ -231,6 +242,7 @@ export interface FileRouteTypes {
     | '/_authenticated/become-vendor'
     | '/_authenticated/checkout'
     | '/_authenticated/dashboard'
+    | '/_authenticated/messages'
     | '/_authenticated/orders'
     | '/api/chat'
     | '/products/$id'
@@ -340,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/orders': {
       id: '/_authenticated/orders'
       path: '/orders'
@@ -391,6 +410,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBecomeVendorRoute: typeof AuthenticatedBecomeVendorRoute
   AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
 }
 
@@ -400,6 +420,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBecomeVendorRoute: AuthenticatedBecomeVendorRoute,
   AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
 }
 

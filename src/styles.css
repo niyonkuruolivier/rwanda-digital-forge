@@ -168,3 +168,6 @@
   background-image: var(--gradient-primary);
 }
 
+
+/* Discourage saving photos: no dragging, long-press menu or selection on images. */
+img { -webkit-user-drag: none; user-select: none; -webkit-touch-callout: none; }

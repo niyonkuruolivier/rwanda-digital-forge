@@ -1,0 +1,1 @@
+CREATE POLICY "Buyer reads own threads" ON public.chat_threads FOR SELECT TO authenticated USING (buyer_id = auth.uid());
