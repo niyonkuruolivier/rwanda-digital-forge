@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Heart, Home, LayoutGrid, Menu, ShoppingCart, Store, UserRound } from "lucide-react";
+import { Heart, Home, MessageCircle, LayoutGrid, Menu, ShoppingCart, Store, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useStore } from "@/lib/store";
@@ -24,7 +24,7 @@ export function Navbar() {
       <DropdownMenuContent align="end" side={mobile ? "top" : "bottom"} className="w-56">
         <DropdownMenuItem asChild><Link to="/account"><UserRound />My account</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
-        <DropdownMenuItem asChild><Link to="/messages">Messages</Link></DropdownMenuItem>
+        <DropdownMenuItem asChild><Link to="/messages"><MessageCircle />My chats</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/become-vendor"><Store />Start selling</Link></DropdownMenuItem>
         {auth.role === "vendor" && <DropdownMenuItem asChild><Link to="/dashboard">Seller dashboard</Link></DropdownMenuItem>}
         {auth.role === "admin" && <DropdownMenuItem asChild><Link to="/admin">Administrator dashboard</Link></DropdownMenuItem>}
@@ -34,6 +34,11 @@ export function Navbar() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
+  const chats = (mobile = false) => auth.user ? (
+    <Button asChild variant={mobile ? "outline" : "ghost"} size="icon" className="shrink-0" title="My chats">
+      <Link to="/messages" aria-label="My chats"><MessageCircle /></Link>
+    </Button>
+  ) : null;
   const mobileClass = "h-14 flex-col gap-1 px-3 text-[11px]";
   const avatar = (mobile = false) => auth.user ? (
     <Button asChild variant={mobile ? "outline" : "ghost"} size="icon" className="shrink-0" title="My account">
@@ -46,12 +51,13 @@ export function Navbar() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 md:gap-4">
           <Link to="/" aria-label="Murandasi home" className="block shrink-0"><img src={logo.url} alt="MURANDASI.COM" className="h-auto w-[150px] object-contain md:w-[200px]" width={1920} height={640} /></Link>
           {/* Mobile-only quick actions */}
-          <span className="ml-auto md:hidden"><Notifications triggerVariant="outline" /></span>
+          <span className="ml-auto flex gap-2 md:hidden">{chats(true)}<Notifications triggerVariant="outline" /></span>
           <span className="md:hidden">{avatar(true)}</span>
           {!accountPage && <SearchBox />}
           {/* Desktop action bar */}
           <div className="hidden items-center gap-1 md:ml-auto md:flex">
             <Button asChild variant="ghost"><Link to="/shop" search={{}}>Shop</Link></Button>
+            {chats()}
             <Notifications />
             <Button asChild variant="ghost" size="icon" className="relative" title="Saved products">
               <Link to="/wishlist" aria-label="Saved products"><Heart />{wishlist.length > 0 && <span className={badgeClass}>{wishlist.length}</span>}</Link>
