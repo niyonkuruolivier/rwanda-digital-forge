@@ -22,7 +22,7 @@ export function ChatWithSeller({ vendorId, productId, productTitle }: { vendorId
     }
     setBusy(false);
     if (!id) { toast.error("Could not open the chat. Please try again."); return; }
-    void nav({ to: "/messages", search: { t: id } });
+    void nav({ to: "/messages", search: { t: id, p: productId } });
   };
-  return <Button type="button" variant="outline" size="lg" disabled={busy} onClick={() => void open()} className="w-full gap-2"><MessageCircle className="h-4 w-4" />Chat with seller</Button>;
+  return <Button type="button" variant="outline" size="lg" disabled={busy} onClick={() => void open()} className="w-full gap-2"><MessageCircle className="h-4 w-4" />{auth.user ? "Chat with seller" : "Sign in to chat with seller"}</Button>;
 }
