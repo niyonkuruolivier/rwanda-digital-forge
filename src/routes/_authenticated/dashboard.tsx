@@ -1,3 +1,4 @@
+import { SellerChatsCard } from "@/components/market/SellerChatsCard";
 import { InventoryHistory } from "@/components/market/InventoryHistory";
 import { vendorOrderCounts, lowStockProducts } from "@/lib/inventory";
 import { HeldPayments } from "@/components/market/HeldPayments";
@@ -96,6 +97,7 @@ function Dashboard() {
       {s.ordersError && <p role="alert" className="mt-3 text-sm text-destructive">Could not load orders. Refresh to try again.</p>}
       {lowStock.length > 0 && <p role="status" className="mt-3 text-sm text-destructive">Low stock: {lowStock.map(p => `${p.title} (${p.stock === 0 ? "out of stock" : `${p.stock} left`})`).join(" · ")}</p>}
       <HeldPayments vendorId={s.myVendorId} />
+      <SellerChatsCard vendorId={s.myVendorId} />
       <Tabs defaultValue="products" className="mt-8">
         <div className="market-scroll max-w-full overflow-x-auto"><TabsList><TabsTrigger value="products">Products ({mine.length})</TabsTrigger><TabsTrigger value="orders">Orders ({counts.total})</TabsTrigger><TabsTrigger value="inventory">Inventory history</TabsTrigger><TabsTrigger value="withdrawals">Withdrawals</TabsTrigger><TabsTrigger value="stories">Stories</TabsTrigger><TabsTrigger value="agreement">Agreement</TabsTrigger></TabsList></div>
         <TabsContent value="agreement" className="mt-5"><h3 className="text-lg font-bold">Signed vendor agreement</h3>{s.applications.filter((a) => a.vendor.id === s.myVendorId).map((a) => <article key={a.id} className="border-b py-4"><p className="font-semibold">{a.vendor.name} · {a.status}</p><VendorAgreementRecord application={a} /></article>)}{!s.applications.some((a) => a.vendor.id === s.myVendorId) && <p className="mt-3 text-sm text-muted-foreground">This existing demo store has no signed application agreement.</p>}</TabsContent>
