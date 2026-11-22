@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useStore } from "@/lib/store";
 import { chatTextBlocked, CHAT_RULE } from "@/lib/chat-filter";
+import { chatAutoReply } from "@/lib/chat-auto-reply";
+import { Bot } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/messages")({
   validateSearch: (s: Record<string, unknown>) => ({ ...(typeof s["t"] === "string" ? { t: s["t"] } : {}), ...(typeof s["p"] === "string" ? { p: s["p"] } : {}) }) as { t?: string; p?: string },
@@ -74,7 +76,8 @@ function Messages() {
               )}
               <div className="flex-1 space-y-2 overflow-y-auto p-4 text-sm">
                 {msgs.data?.length === 0 && <p className="text-center text-xs text-muted-foreground">Tap a question below to start the chat.</p>}
-                {msgs.data?.map((m) => <div key={m.id} className={m.sender_id === auth.user?.id ? "ml-auto w-fit max-w-[80%] rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-primary-foreground" : "w-fit max-w-[80%] rounded-2xl rounded-bl-sm bg-muted px-3 py-2"}>{m.body}</div>)}
+                {msgs.data?.map((m) => { const auto = m.sender_id === active.buyer_id ? chatAutoReply(m.body, item, vendor(active.vendor_id)?.location) : null; return <div key={m.id} className="space-y-2"><div className={m.sender_id === auth.user?.id ? "ml-auto w-fit max-w-[80%] rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-primary-foreground" : "w-fit max-w-[80%] rounded-2xl rounded-bl-sm bg-muted px-3 py-2"}>{m.body}</div>
+                  {auto && <div className="w-fit max-w-[85%] rounded-2xl rounded-bl-sm border border-primary/30 bg-primary/5 px-3 py-2"><p className="mb-1 flex items-center gap-1 text-[11px] font-semibold text-primary"><Bot className="h-3 w-3" />Auto-reply · the seller can also answer</p><p>{auto.text}</p>{auto.photos && <div className="mt-2 flex gap-1.5 overflow-x-auto">{auto.photos.map((src) => <img key={src} src={src} alt="" className="h-20 w-20 shrink-0 rounded-lg object-cover" />)}</div>}</div>}</div>; })}
                 <div ref={endRef} />
               </div>
               <form onSubmit={(e) => { e.preventDefault(); void send(); }} className="border-t p-3">
