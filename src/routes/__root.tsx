@@ -19,6 +19,7 @@ import { PageBack } from "@/components/market/BackButton";
 import { CartDrawer } from "@/components/market/CartDrawer";
 import { VendorAccessGate } from "@/components/market/VendorAccessGate";
 import { WelcomeSignIn } from "@/components/market/WelcomeSignIn";
+import { HelpButtons } from "@/components/market/HelpButtons";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -149,6 +150,7 @@ function RootComponent() {
         <Footer />
         <CartDrawer />
         <WelcomeSignIn />
+        <HelpButtons />
         </VendorAccessGate>
         <Toaster position="bottom-right" />
       </StoreProvider></AuthProvider>

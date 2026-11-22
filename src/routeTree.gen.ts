@@ -22,6 +22,7 @@ import { Route as AuthenticatedBecomeVendorRouteImport } from './routes/_authent
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as VendorsIdRouteImport } from './routes/vendors.$id'
 import { Route as ApiPublicShareImageRouteImport } from './routes/api/public/share-image'
@@ -92,6 +93,11 @@ const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsIdRoute = ProductsIdRouteImport.update({
   id: '/products/$id',
   path: '/products/$id',
@@ -126,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/orders': typeof AuthenticatedOrdersRoute
+  '/api/chat': typeof ApiChatRoute
   '/products/$id': typeof ProductsIdRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/api/public/share-image': typeof ApiPublicShareImageRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/orders': typeof AuthenticatedOrdersRoute
+  '/api/chat': typeof ApiChatRoute
   '/products/$id': typeof ProductsIdRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/api/public/share-image': typeof ApiPublicShareImageRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
+  '/api/chat': typeof ApiChatRoute
   '/products/$id': typeof ProductsIdRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/api/public/share-image': typeof ApiPublicShareImageRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/dashboard'
     | '/orders'
+    | '/api/chat'
     | '/products/$id'
     | '/vendors/$id'
     | '/api/public/share-image'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/dashboard'
     | '/orders'
+    | '/api/chat'
     | '/products/$id'
     | '/vendors/$id'
     | '/api/public/share-image'
@@ -221,6 +232,7 @@ export interface FileRouteTypes {
     | '/_authenticated/checkout'
     | '/_authenticated/dashboard'
     | '/_authenticated/orders'
+    | '/api/chat'
     | '/products/$id'
     | '/vendors/$id'
     | '/api/public/share-image'
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   ShopRoute: typeof ShopRoute
   WishlistRoute: typeof WishlistRoute
+  ApiChatRoute: typeof ApiChatRoute
   ProductsIdRoute: typeof ProductsIdRoute
   VendorsIdRoute: typeof VendorsIdRoute
   ApiPublicShareImageRoute: typeof ApiPublicShareImageRoute
@@ -334,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrdersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/$id': {
       id: '/products/$id'
       path: '/products/$id'
@@ -394,6 +414,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   ShopRoute: ShopRoute,
   WishlistRoute: WishlistRoute,
+  ApiChatRoute: ApiChatRoute,
   ProductsIdRoute: ProductsIdRoute,
   VendorsIdRoute: VendorsIdRoute,
   ApiPublicShareImageRoute: ApiPublicShareImageRoute,
