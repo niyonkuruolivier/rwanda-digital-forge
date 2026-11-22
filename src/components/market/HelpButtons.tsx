@@ -1,3 +1,4 @@
+import { useChatViewport } from "@/hooks/use-chat-viewport";
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from "ai";
@@ -48,6 +49,7 @@ export function HelpButtons() {
   const catalog = useRef({ products, vendors, addToCart });
   catalog.current = { products, vendors, addToCart };
   const [open, setOpen] = useState(false);
+  const chatStyle = useChatViewport(open);
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -104,7 +106,7 @@ export function HelpButtons() {
       )}
 
       {open && (
-        <section aria-label="Murandasi AI assistant"
+        <section aria-label="Murandasi AI assistant" style={chatStyle}
           className="fixed inset-x-2 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] top-16 z-50 flex flex-col overflow-hidden rounded-2xl border bg-card shadow-2xl md:inset-x-auto md:bottom-6 md:right-6 md:top-auto md:h-[34rem] md:w-96 md:rounded-2xl">
           <header className="flex items-center gap-2 bg-[image:var(--gradient-primary)] px-4 py-3 text-primary-foreground">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground/20"><Bot className="h-5 w-5" /></span>

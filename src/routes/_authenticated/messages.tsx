@@ -1,3 +1,4 @@
+import { useChatViewport } from "@/hooks/use-chat-viewport";
 import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -24,6 +25,7 @@ function Messages() {
   const qc = useQueryClient();
   const threads = useQuery({ queryKey: ["chat-threads", auth.user?.id], queryFn: async () => { const { data, error } = await supabase.from("chat_threads").select("*").order("last_at", { ascending: false }); if (error) throw error; return data; }, refetchInterval: 15000 });
   const active = threads.data?.find((x) => x.id === t) ?? (t ? undefined : threads.data?.[0]);
+  const chatStyle = useChatViewport(!!t && !!active);
   const msgs = useQuery({ enabled: !!active, queryKey: ["chat-messages", active?.id], queryFn: async () => { const { data, error } = await supabase.from("chat_messages").select("*").eq("thread_id", active!.id).order("created_at"); if (error) throw error; return data; } });
   useEffect(() => {
     if (!active) return;
@@ -66,7 +68,7 @@ function Messages() {
             ))}
           </ul>
           {active && (
-            <section className={`flex h-[calc(100dvh-15rem)] min-h-80 flex-col md:h-[65vh] overflow-hidden rounded-2xl border bg-card ${!t ? "hidden md:flex" : ""}`}>
+            <section style={chatStyle} className={`flex h-[calc(100dvh-15rem)] min-h-80 flex-col md:h-[65vh] overflow-hidden rounded-2xl border bg-card ${!t ? "hidden md:flex" : ""}`}>
               <header className="border-b px-4 py-3"><button type="button" onClick={() => void nav({ search: {} })} className="mr-2 text-xs text-primary md:hidden">← Chats</button><span className="font-semibold">{label(active)}</span>{active.product_title && <span className="ml-2 text-xs text-muted-foreground">about {active.product_title}</span>}</header>
               {item && (
                 <Link to="/products/$id" params={{ id: item.id }} className="flex items-center gap-3 border-b bg-muted/40 px-4 py-2">
