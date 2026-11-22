@@ -17,3 +17,9 @@ it("rejects external and unsafe notification destinations", () => {
   expect(activityDestination("//other.example")).toBe("/");
   expect(activityDestination("javascript:alert(1)")).toBe("/");
 });
+import { activityDestination as dest } from "./activity-notifications";
+import { it as it2, expect as expect2 } from "vitest";
+it2("chat alerts open the conversation", () => {
+  expect2(dest("/messages?t=0b5c1f0e-1111-4222-8333-444455556666")).toBe("/messages?t=0b5c1f0e-1111-4222-8333-444455556666");
+  expect2(dest("/messages?t=evil")).toBe("/");
+});

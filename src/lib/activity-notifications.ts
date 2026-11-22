@@ -8,5 +8,6 @@ export function unreadActivityCount(alerts: ActivityAlert[], readIds: string[]) 
 export function activityDestination(href: string) {
   if (["/orders", "/dashboard", "/admin", "/account", "/become-vendor"].includes(href)) return href;
   if (/^\/(products|vendors)\/[a-zA-Z0-9_-]+$/.test(href)) return href;
+  if (/^\/messages\?t=[0-9a-f-]{36}$/.test(href)) return href;
   return "/";
 }
