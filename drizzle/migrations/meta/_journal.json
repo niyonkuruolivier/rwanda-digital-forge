@@ -190,6 +190,20 @@
       "when": 1795385948687,
       "tag": "0026_chat_block_outside_sites",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1795386374999,
+      "tag": "0027_product_video_uploads_and_listing_text_rules",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1795386396055,
+      "tag": "0028_listing_text_rules_store_kind",
+      "breakpoints": true
     }
   ]
 }

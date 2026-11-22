@@ -28,6 +28,7 @@ import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as VendorsIdRouteImport } from './routes/vendors.$id'
 import { Route as ApiPublicShareImageRouteImport } from './routes/api/public/share-image'
 import { Route as ApiPublicVideoThumbnailRouteImport } from './routes/api/public/video-thumbnail'
+import { Route as ApiPublicProductVideoSplatRouteImport } from './routes/api/public/product-video/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -124,6 +125,12 @@ const ApiPublicVideoThumbnailRoute = ApiPublicVideoThumbnailRouteImport.update({
   path: '/api/public/video-thumbnail',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicProductVideoSplatRoute =
+  ApiPublicProductVideoSplatRouteImport.update({
+    id: '/api/public/product-video/$',
+    path: '/api/public/product-video/$',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/vendors/$id': typeof VendorsIdRoute
   '/api/public/share-image': typeof ApiPublicShareImageRoute
   '/api/public/video-thumbnail': typeof ApiPublicVideoThumbnailRoute
+  '/api/public/product-video/$': typeof ApiPublicProductVideoSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -164,6 +172,7 @@ export interface FileRoutesByTo {
   '/vendors/$id': typeof VendorsIdRoute
   '/api/public/share-image': typeof ApiPublicShareImageRoute
   '/api/public/video-thumbnail': typeof ApiPublicVideoThumbnailRoute
+  '/api/public/product-video/$': typeof ApiPublicProductVideoSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -186,6 +195,7 @@ export interface FileRoutesById {
   '/vendors/$id': typeof VendorsIdRoute
   '/api/public/share-image': typeof ApiPublicShareImageRoute
   '/api/public/video-thumbnail': typeof ApiPublicVideoThumbnailRoute
+  '/api/public/product-video/$': typeof ApiPublicProductVideoSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/vendors/$id'
     | '/api/public/share-image'
     | '/api/public/video-thumbnail'
+    | '/api/public/product-video/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/vendors/$id'
     | '/api/public/share-image'
     | '/api/public/video-thumbnail'
+    | '/api/public/product-video/$'
   id:
     | '__root__'
     | '/'
@@ -249,6 +261,7 @@ export interface FileRouteTypes {
     | '/vendors/$id'
     | '/api/public/share-image'
     | '/api/public/video-thumbnail'
+    | '/api/public/product-video/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -264,6 +277,7 @@ export interface RootRouteChildren {
   VendorsIdRoute: typeof VendorsIdRoute
   ApiPublicShareImageRoute: typeof ApiPublicShareImageRoute
   ApiPublicVideoThumbnailRoute: typeof ApiPublicVideoThumbnailRoute
+  ApiPublicProductVideoSplatRoute: typeof ApiPublicProductVideoSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -401,6 +415,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicVideoThumbnailRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/product-video/$': {
+      id: '/api/public/product-video/$'
+      path: '/api/public/product-video/$'
+      fullPath: '/api/public/product-video/$'
+      preLoaderRoute: typeof ApiPublicProductVideoSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -440,6 +461,7 @@ const rootRouteChildren: RootRouteChildren = {
   VendorsIdRoute: VendorsIdRoute,
   ApiPublicShareImageRoute: ApiPublicShareImageRoute,
   ApiPublicVideoThumbnailRoute: ApiPublicVideoThumbnailRoute,
+  ApiPublicProductVideoSplatRoute: ApiPublicProductVideoSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

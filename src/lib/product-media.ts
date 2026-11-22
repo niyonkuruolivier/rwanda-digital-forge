@@ -39,7 +39,7 @@ export function productVideoEmbed(video: ProductVideoLink, origin: string): stri
   if (video.platform === "TikTok") return `https://www.tiktok.com/player/v1/${video.id}?autoplay=1&muted=1&loop=0`;
   return `${video.url}embed/`;
 }
-export const productVideoSchema = z.string().trim().max(2048).refine((value) => Boolean(detectProductVideo(value)), "Paste a YouTube, Instagram post/Reel, or full TikTok video link.");
+export const productVideoSchema = z.string().trim().max(2048).refine((value) => /^\/api\/public\/product-video\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+\.(mp4|webm|mov)$/.test(value) || Boolean(detectProductVideo(value)), "Upload a product video file.");
 export const catalogPhotoSchema = z.string().max(100_000).refine((value) => {
   if (!value) return true;
   if (value.startsWith("https://")) return true;
@@ -57,3 +57,4 @@ export function moveProductPhoto(images: string[], from: number, to: number): st
   next.splice(to, 0, photo);
   return next;
 }
+export const isUploadedVideo = (v: string | undefined) => !!v && v.startsWith("/api/public/product-video/");

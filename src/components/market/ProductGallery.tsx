@@ -2,16 +2,16 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Heart, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductVideo } from "@/components/market/ProductVideo";
-import { detectProductVideo, productVideoThumbnail } from "@/lib/product-media";
+import { detectProductVideo, isUploadedVideo, productVideoThumbnail } from "@/lib/product-media";
 
 export function ProductGallery({ title, images, videoUrl, wished, onToggleWish, overlay, mainClassName }: { title: string; images: string[]; videoUrl?: string | undefined; wished: boolean; onToggleWish: () => void; overlay?: ReactNode; mainClassName?: string }) {
   const [selected, setSelected] = useState<number | "video">(0);
-  const video = videoUrl ? detectProductVideo(videoUrl) : undefined;
+  const video = videoUrl ? (isUploadedVideo(videoUrl) ? { url: videoUrl, uploaded: true as const } : detectProductVideo(videoUrl)) : undefined;
   const showVideo = selected === "video" && video;
   const [thumbFailed, setThumbFailed] = useState(false);
   useEffect(() => setThumbFailed(false), [video?.url]);
   const videoThumb = video
-    ? thumbFailed
+    ? "uploaded" in video || thumbFailed
       ? images[0]
       : (productVideoThumbnail(video) ?? `/api/public/video-thumbnail?url=${encodeURIComponent(video.url)}`)
     : undefined;

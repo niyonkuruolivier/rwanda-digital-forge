@@ -531,6 +531,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      listing_text_blocked: { Args: { _t: string }; Returns: boolean }
       public_customer_feedback: {
         Args: { _target_id: string; _target_type: string }
         Returns: {
