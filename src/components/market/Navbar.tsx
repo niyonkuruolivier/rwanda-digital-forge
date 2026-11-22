@@ -25,7 +25,7 @@ export function Navbar() {
         <DropdownMenuItem asChild><Link to="/account"><UserRound />My account</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/messages"><MessageCircle />My chats</Link></DropdownMenuItem>
-        <DropdownMenuItem asChild><Link to="/become-vendor"><Store />Start selling</Link></DropdownMenuItem>
+        {auth.role !== "vendor" && <DropdownMenuItem asChild><Link to="/become-vendor"><Store />Start selling</Link></DropdownMenuItem>}
         {auth.role === "vendor" && <DropdownMenuItem asChild><Link to="/dashboard">Seller dashboard</Link></DropdownMenuItem>}
         {auth.role === "admin" && <DropdownMenuItem asChild><Link to="/admin">Administrator dashboard</Link></DropdownMenuItem>}
         <DropdownMenuSeparator />
@@ -42,7 +42,7 @@ export function Navbar() {
   const mobileClass = "h-14 flex-col gap-1 px-3 text-[11px]";
   const avatar = (mobile = false) => auth.user ? (
     <Button asChild variant={mobile ? "outline" : "ghost"} size="icon" className="shrink-0" title="My account">
-      <Link to="/account" aria-label="My account">{buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover object-[center_35%]" /> : <UserRound />}</Link>
+      <Link to={auth.role === "vendor" ? "/dashboard" : "/account"} aria-label="My account">{buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover object-[center_35%]" /> : <UserRound />}</Link>
     </Button>
   ) : <Button asChild variant={mobile ? "outline" : "ghost"} size="sm" className={mobile ? "h-9 px-4 text-sm" : ""}><Link to="/auth" search={{ next: "/account" }}>Sign in</Link></Button>;
   return (

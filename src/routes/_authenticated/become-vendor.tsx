@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Navigate } from "@tanstack/react-router";
 import { Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -76,6 +76,7 @@ function Become() {
     setPrepared(undefined);
     toast.success("Application and signed agreement saved for admin review.");
   };
+  if (auth.role === "vendor") return <Navigate to="/dashboard" replace />;
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div>
@@ -87,7 +88,7 @@ function Become() {
       </div>
       <VendorApplicationStatus />
       {applications.filter((a) => a.buyerId === buyer.id).map((a) => <article key={a.id} className="my-5 rounded-lg border bg-card p-4"><p className="text-sm"><b>{a.vendor.name}</b> · {a.status === "Pending" ? "Waiting for admin approval" : a.status}</p><VendorAgreementRecord application={a} />{a.rejectionReason && <p className="mt-3 break-words text-sm"><b>Reason from administrator: </b>{a.rejectionReason}</p>}</article>)}
-      {!pending && auth.role !== "vendor" && <form onSubmit={submit} className="mt-6 space-y-5 border-t pt-6">
+      {!pending && <form onSubmit={submit} className="mt-6 space-y-5 border-t pt-6">
         <fieldset disabled={saving || Boolean(pending)} className="space-y-4">
         <h2 className="text-lg font-bold">{rejected ? "Correct your details & reapply" : "Store & business details"}</h2>
         <div><Label htmlFor="name">Store name</Label><Input id="name" name="name" defaultValue={rejected?.vendor.name ?? ""} required /></div>
