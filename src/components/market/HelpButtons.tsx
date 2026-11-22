@@ -105,7 +105,7 @@ export function HelpButtons() {
 
       {open && (
         <section aria-label="Murandasi AI assistant"
-          className="fixed inset-x-0 bottom-0 top-16 z-50 flex flex-col overflow-hidden border bg-card shadow-2xl md:inset-x-auto md:bottom-6 md:right-6 md:top-auto md:h-[34rem] md:w-96 md:rounded-2xl">
+          className="fixed inset-x-2 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] top-16 z-50 flex flex-col overflow-hidden rounded-2xl border bg-card shadow-2xl md:inset-x-auto md:bottom-6 md:right-6 md:top-auto md:h-[34rem] md:w-96 md:rounded-2xl">
           <header className="flex items-center gap-2 bg-[image:var(--gradient-primary)] px-4 py-3 text-primary-foreground">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground/20"><Bot className="h-5 w-5" /></span>
             <div className="flex-1 leading-tight"><p className="text-sm font-semibold">Murandasi AI</p><p className="text-xs opacity-80">Shopping assistant</p></div>
@@ -143,7 +143,7 @@ export function HelpButtons() {
             {error && <p className="text-destructive">{error.message || "Something went wrong."}</p>}
             <div ref={endRef} />
           </div>
-          <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex items-end gap-2 border-t bg-card p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex items-end gap-2 border-t bg-card p-3">
             <textarea ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} rows={1} placeholder="Type your question…"
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
               className="max-h-32 min-h-10 flex-1 resize-none rounded-xl border bg-background px-3 py-2 text-base outline-none focus:ring-2 focus:ring-primary/40 md:text-sm" />
