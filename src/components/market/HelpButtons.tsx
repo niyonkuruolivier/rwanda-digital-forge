@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
-import { Bot, Send, X, Square } from "lucide-react";
+import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import { Bot, Send, X, Square, ShoppingCart } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
+import { useStore } from "@/lib/store";
+import { money } from "@/lib/data";
+import { searchAssistantProducts, type AssistantProduct } from "@/lib/assistant-catalog";
 
 const WHATSAPP = "250788723098";
 
@@ -13,12 +18,62 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
+function ChatProduct({ item, onAdd, onBuy }: { item: AssistantProduct; onAdd: (o: Record<string, string>) => void; onBuy: (o: Record<string, string>) => void }) {
+  const [chosen, setChosen] = useState<Record<string, string>>(() => Object.fromEntries(item.options.map((o) => [o.name, o.values[0] ?? ""])));
+  return (
+    <div className="flex gap-2 rounded-xl border bg-background p-2">
+      {item.image && <img src={item.image} alt={item.title} className="h-16 w-16 shrink-0 rounded-lg object-cover" />}
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">{item.title}</p>
+        <p className="text-xs text-muted-foreground">{item.shop} · {item.stock} in stock</p>
+        <p className="text-sm font-semibold text-primary">{money(item.price)}</p>
+        {item.options.map((o) => (
+          <select key={o.name} aria-label={o.name} value={chosen[o.name]} onChange={(e) => setChosen((c) => ({ ...c, [o.name]: e.target.value }))} className="mr-1 mt-1 rounded-md border bg-card px-1 py-0.5 text-xs">
+            {o.values.map((v) => <option key={v} value={v}>{o.name}: {v}</option>)}
+          </select>
+        ))}
+        <div className="mt-1.5 flex gap-1.5">
+          <button type="button" onClick={() => onAdd(chosen)} className="flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium hover:bg-muted"><ShoppingCart className="h-3 w-3" />Add</button>
+          <button type="button" onClick={() => onBuy(chosen)} className="rounded-full bg-[image:var(--gradient-primary)] px-3 py-1 text-xs font-semibold text-primary-foreground">Buy now</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function HelpButtons() {
+  const { products, vendors, addToCart } = useStore();
+  const nav = useNavigate();
+  const catalog = useRef({ products, vendors, addToCart });
+  catalog.current = { products, vendors, addToCart };
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
-  const { messages, sendMessage, status, stop, error } = useChat({ transport: new DefaultChatTransport({ api: "/api/chat" }) });
+  const goCheckout = () => { setOpen(false); void nav({ to: "/checkout" }); };
+  const { messages, sendMessage, status, stop, error, addToolOutput } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+    onToolCall: ({ toolCall }) => {
+      if (toolCall.dynamic) return;
+      const c = catalog.current;
+      const input = toolCall.input as { query?: string; productId?: string; qty?: number; options?: { name: string; value: string }[] | null };
+      let output: unknown;
+      if (toolCall.toolName === "findProducts") output = searchAssistantProducts(c.products, c.vendors, input.query ?? "");
+      else if (toolCall.toolName === "addToCart") {
+        const p = c.products.find((x) => x.id === input.productId);
+        if (!p || p.stock <= 0) output = { ok: false, reason: "Product not available" };
+        else {
+          const opts = input.options?.length ? Object.fromEntries(input.options.map((o) => [o.name, o.value])) : undefined;
+          c.addToCart(p.id, Math.max(1, Math.min(input.qty ?? 1, p.stock)), opts);
+          toast.success("Added to cart");
+          output = { ok: true, title: p.title };
+        }
+      } else if (toolCall.toolName === "goToCheckout") { goCheckout(); output = { ok: true }; }
+      else return;
+      void addToolOutput({ tool: toolCall.toolName as never, toolCallId: toolCall.toolCallId, output: output as never });
+    },
+  });
   const busy = status === "submitted" || status === "streaming";
 
   useEffect(() => { if (open) inputRef.current?.focus(); }, [open, status]);
@@ -56,10 +111,22 @@ export function HelpButtons() {
             <button type="button" onClick={() => setOpen(false)} aria-label="Close assistant" className="rounded-full p-1.5 hover:bg-primary-foreground/20"><X className="h-5 w-5" /></button>
           </header>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm">
-            {messages.length === 0 && <p className="text-muted-foreground">Muraho! Ask me about products, orders, delivery or selling on Murandasi.</p>}
+            {messages.length === 0 && <p className="text-muted-foreground">Muraho! Tell me what you want to buy (for example "charger") and I will show what is in stock.</p>}
             {messages.map((m) => (
               <div key={m.id} className={m.role === "user" ? "ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-primary-foreground" : "max-w-[90%] whitespace-pre-wrap text-foreground"}>
-                {m.parts.map((p, i) => (p.type === "text" ? <span key={i}>{p.text}</span> : null))}
+                {m.parts.map((p, i) => {
+                  if (p.type === "text") return <span key={i}>{p.text}</span>;
+                  if (p.type === "tool-findProducts" && "output" in p && p.state === "output-available") {
+                    const items = p.output as AssistantProduct[];
+                    if (!items.length) return null;
+                    return <div key={i} className="my-2 space-y-2 whitespace-normal">{items.map((item) => (
+                      <ChatProduct key={item.id} item={item}
+                        onAdd={(o) => { addToCart(item.id, 1, item.options.length ? o : undefined); toast.success("Added to cart"); }}
+                        onBuy={(o) => { addToCart(item.id, 1, item.options.length ? o : undefined); goCheckout(); }} />
+                    ))}</div>;
+                  }
+                  return null;
+                })}
               </div>
             ))}
             {status === "submitted" && <p className="animate-pulse text-muted-foreground">Thinking…</p>}
