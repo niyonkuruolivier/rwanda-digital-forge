@@ -64,3 +64,47 @@ export const listMemberAccounts = createServerFn({ method: "GET" }).middleware([
     return { id: u.id, email: u.email ?? "", name: p?.name ?? "", phone: p?.phone ?? "", city: p?.city ?? "", photo: p?.photo ?? "", type, joined: u.created_at, lastSignIn: u.last_sign_in_at ?? null };
   }).sort((a, b) => Date.parse(b.joined) - Date.parse(a.joined));
 });
+
+async function requireAdmin(context: { supabase: any; userId: string }) {
+  const { data, error } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+  if (error || !data) throw new Error("Administrator access required.");
+}
+
+/** Admin only: buyers with at least one paid order, with their block status. */
+export const listPayingCustomers = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
+  await requireAdmin(context);
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const orders = await supabaseAdmin.from("shared_orders").select("buyer_id,record").eq("record->>paymentStatus", "Paid");
+  if (orders.error) throw new Error("Could not load paying customers.");
+  const stats = new Map<string, { orders: number; total: number }>();
+  for (const o of orders.data ?? []) {
+    const s = stats.get(o.buyer_id) ?? { orders: 0, total: 0 };
+    s.orders += 1; s.total += Number((o.record as { total?: number })?.total ?? 0);
+    stats.set(o.buyer_id, s);
+  }
+  const ids = [...stats.keys()];
+  if (!ids.length) return [];
+  const profiles = await supabaseAdmin.from("profiles").select("id,name,phone,city").in("id", ids);
+  const out = [];
+  for (const id of ids) {
+    const u = await supabaseAdmin.auth.admin.getUserById(id);
+    const p = (profiles.data ?? []).find((x) => x.id === id);
+    const banned = (u.data.user as { banned_until?: string | null } | null)?.banned_until;
+    out.push({ id, email: u.data.user?.email ?? "", name: p?.name ?? "", phone: p?.phone ?? "", city: p?.city ?? "", ...stats.get(id)!, blocked: !!banned && Date.parse(banned) > Date.now() });
+  }
+  return out.sort((a, b) => b.total - a.total);
+});
+
+/** Admin only: block or unblock a customer's sign-in. */
+export const setCustomerBlocked = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator((v) => z.object({ id: z.string().uuid(), blocked: z.boolean() }).parse(v))
+  .handler(async ({ context, data }) => {
+    await requireAdmin(context);
+    if (data.id === context.userId) throw new Error("You cannot block yourself.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const isAdmin = await supabaseAdmin.rpc("has_role", { _user_id: data.id, _role: "admin" });
+    if (isAdmin.data) throw new Error("Administrators cannot be blocked.");
+    const r = await supabaseAdmin.auth.admin.updateUserById(data.id, { ban_duration: data.blocked ? "876000h" : "none" });
+    if (r.error) throw new Error("Could not update this customer.");
+    return true;
+  });
