@@ -342,6 +342,32 @@ export type Database = {
           },
         ]
       }
+      staff_permissions: {
+        Row: {
+          created_at: string
+          task: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          task: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          task?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_ratings: {
         Row: {
           stars: number
@@ -531,6 +557,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_task: { Args: { _task: string; _user_id: string }; Returns: boolean }
       listing_text_blocked: { Args: { _t: string }; Returns: boolean }
       public_customer_feedback: {
         Args: { _target_id: string; _target_type: string }

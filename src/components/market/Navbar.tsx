@@ -28,6 +28,7 @@ export function Navbar() {
         {auth.role !== "vendor" && <DropdownMenuItem asChild><Link to="/become-vendor"><Store />Start selling</Link></DropdownMenuItem>}
         {auth.role === "vendor" && <DropdownMenuItem asChild><Link to="/dashboard">Seller dashboard</Link></DropdownMenuItem>}
         {auth.role === "admin" && <DropdownMenuItem asChild><Link to="/admin">Administrator dashboard</Link></DropdownMenuItem>}
+        {auth.role !== "admin" && auth.tasks.length > 0 && <DropdownMenuItem asChild><Link to="/admin">Helper tasks</Link></DropdownMenuItem>}
         <DropdownMenuSeparator />
         <DropdownMenuLabel>{auth.user ? "Your account" : "Account access"}</DropdownMenuLabel>
         {auth.user ? <DropdownMenuItem onSelect={async () => { await queryClient.cancelQueries(); queryClient.clear(); await supabase.auth.signOut(); await auth.refresh(); await nav({ to: "/auth", search: { next: "/account" }, replace: true }); }}>Sign out</DropdownMenuItem> : <DropdownMenuItem asChild><Link to="/auth" search={{ next: "/account" }}>Sign in</Link></DropdownMenuItem>}

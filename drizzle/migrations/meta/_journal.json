@@ -204,6 +204,13 @@
       "when": 1795386396055,
       "tag": "0028_listing_text_rules_store_kind",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1795440012949,
+      "tag": "0029_admin_helper_tasks",
+      "breakpoints": true
     }
   ]
 }

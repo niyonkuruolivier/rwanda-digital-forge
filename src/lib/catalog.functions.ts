@@ -42,7 +42,7 @@ export const publishCatalog = createServerFn({ method: "POST" }).middleware([req
 export const addProductCategory = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ name: categoryNameSchema }).parse(input))
   .handler(async ({ context, data }) => {
-    const admin = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const admin = await context.supabase.rpc("has_task", { _user_id: context.userId, _task: "categories" });
     if (admin.error || !admin.data) throw new Error("Administrator access required.");
     if (CATEGORIES.some((name) => name.toLowerCase() === data.name.toLowerCase())) throw new Error("This category already exists.");
     const result = await context.supabase.from("product_categories").insert({ name: data.name });
@@ -53,7 +53,7 @@ export const addProductCategory = createServerFn({ method: "POST" }).middleware(
 export const updateCategoryPicture = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
   .inputValidator((input) => categoryPictureSchema.parse(input))
   .handler(async ({ context, data }) => {
-    const admin = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const admin = await context.supabase.rpc("has_task", { _user_id: context.userId, _task: "categories" });
     requireCatalogAdministrator(Boolean(admin.data), admin.error);
     const rows = await context.supabase.from("product_categories").select("name");
     if (rows.error) throw new Error("Could not check categories.");
@@ -66,7 +66,7 @@ export const updateCategoryPicture = createServerFn({ method: "POST" }).middlewa
 export const removeCatalogPost = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
   .inputValidator((input) => removePostSchema.parse(input))
   .handler(async ({ context, data }) => {
-    const admin = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const admin = await context.supabase.rpc("has_task", { _user_id: context.userId, _task: "products" });
     requireCatalogAdministrator(Boolean(admin.data), admin.error);
     const existing = await context.supabase.from("marketplace_content").select("vendor_id,record").eq("kind", data.kind).eq("id", data.id).maybeSingle();
     if (existing.error) throw new Error("Could not find post.");

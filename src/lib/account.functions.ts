@@ -22,7 +22,7 @@ export const requireAdminAccount = createServerFn({ method: "GET" }).middleware(
 export const moderateVendorAccount = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
   .inputValidator((value) => z.object({ id: z.string().min(1), status: z.enum(["Active", "Blocked", "Suspended"]), reason: z.string().trim().max(2000).default(""), days: z.number().int().min(1).default(1) }).refine((data) => data.status === "Active" || data.reason.length > 0, { message: "A reason is required for blocking or suspension." }).parse(value))
   .handler(async ({ context, data }) => {
-    const allowed = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const allowed = await context.supabase.rpc("has_task", { _user_id: context.userId, _task: "vendors" });
     if (allowed.error || !allowed.data) throw new Error("Administrator access required.");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const suspendedUntil = data.status === "Suspended" ? suspensionEnd(data.days) : null;
@@ -34,7 +34,7 @@ export const moderateVendorAccount = createServerFn({ method: "POST" }).middlewa
 export const reviewAccountApplication = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
   .inputValidator((value) => z.object({ id: z.string(), status: z.enum(["Approved", "Rejected"]), reason: z.string().trim().max(2000).default("") }).refine((data) => data.status !== "Rejected" || data.reason.length > 0, { message: "Give the applicant a reason for rejection.", path: ["reason"] }).parse(value))
   .handler(async ({ context, data }) => {
-    const allowed = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const allowed = await context.supabase.rpc("has_task", { _user_id: context.userId, _task: "applications" });
     if (allowed.error || !allowed.data) throw new Error("Administrator access required.");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const update = await supabaseAdmin.rpc("review_vendor_account_with_reason", { _application_id: data.id, _status: data.status, _reason: data.reason });
@@ -42,7 +42,7 @@ export const reviewAccountApplication = createServerFn({ method: "POST" }).middl
     return true;
   });
 export const listMemberAccounts = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
-  const allowed = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+  const allowed = await context.supabase.rpc("has_task", { _user_id: context.userId, _task: "accounts" });
   if (allowed.error || !allowed.data) throw new Error("Administrator access required.");
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const users: { id: string; email?: string; created_at: string; last_sign_in_at?: string | null }[] = [];

@@ -14,3 +14,4 @@
 - Welcome sign-in is a dismissible nonmodal side prompt using the managed Google broker; never infer device emails or display an invented account identity.
 - Chat auto-replies are derived at render time from the buyer message and current product listing (chat-auto-reply.ts), never stored, so answers always match live product data and sellers can still reply.
 - Product videos are seller uploads in a private bucket served through /api/public/product-video so they play inline; listing text and new video links are guarded by a database trigger mirrored in listing-text.ts.
+- Admin helpers get task rows in staff_permissions checked by public.has_task (admin implies all); money/withdrawal sections stay admin-only and helpers never receive app roles.
