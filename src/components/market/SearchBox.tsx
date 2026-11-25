@@ -8,6 +8,8 @@ interface Suggestion {
   kind: "product" | "category" | "vendor";
   label: string;
   id: string;
+  image?: string | undefined;
+  detail?: string | undefined;
 }
 
 export function SearchBox() {
@@ -17,20 +19,25 @@ export function SearchBox() {
   const [open, setOpen] = useState(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const toProduct = (p: (typeof products)[number]): Suggestion => ({
+    kind: "product", label: p.title, id: p.id, image: p.images[0],
+    detail: `${p.price.toLocaleString("en-US")} RWF · ${vendors.find((v) => v.id === p.vendorId)?.name ?? ""}`,
+  });
+
   const suggestions = useMemo<Suggestion[]>(() => {
     const query = q.trim().toLowerCase();
     if (!query) {
       // Popular starting points when nothing is typed yet.
       return [
         ...categories.slice(0, 3).map((c): Suggestion => ({ kind: "category", label: c, id: c })),
-        ...products.slice(0, 3).map((p): Suggestion => ({ kind: "product", label: p.title, id: p.id })),
+        ...products.slice(0, 3).map(toProduct),
       ];
     }
     const matches = (text: string) => text.toLowerCase().includes(query);
     return [
-      ...products.filter((p) => matches(p.title) || matches(p.description)).slice(0, 4).map((p): Suggestion => ({ kind: "product", label: p.title, id: p.id })),
+      ...products.filter((p) => matches(p.title) || matches(p.category) || matches(p.description)).sort((a, b) => Number(matches(b.title)) - Number(matches(a.title))).slice(0, 5).map(toProduct),
       ...categories.filter(matches).slice(0, 2).map((c): Suggestion => ({ kind: "category", label: c, id: c })),
-      ...vendors.filter((v) => matches(v.name)).slice(0, 2).map((v): Suggestion => ({ kind: "vendor", label: v.name, id: v.id })),
+      ...vendors.filter((v) => matches(v.name) || matches(v.location)).slice(0, 3).map((v): Suggestion => ({ kind: "vendor", label: v.name, id: v.id, image: v.logo, detail: v.location })),
     ];
   }, [q, products, vendors, categories]);
 
@@ -44,7 +51,7 @@ export function SearchBox() {
     close();
     if (s.kind === "vendor") nav({ to: "/vendors/$id", params: { id: s.id } });
     else if (s.kind === "category") nav({ to: "/shop", search: { q: undefined, category: s.label, vendor: undefined } });
-    else search(s.label);
+    else nav({ to: "/products/$id", params: { id: s.id } });
   };
 
   const icon = (kind: Suggestion["kind"]) =>
@@ -81,8 +88,11 @@ export function SearchBox() {
               onMouseDown={(e) => { e.preventDefault(); if (blurTimer.current) clearTimeout(blurTimer.current); pick(s); }}
               className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm hover:bg-accent"
             >
-              {icon(s.kind)}
-              <span className="min-w-0 flex-1 truncate">{s.label}</span>
+              {s.image ? <img src={s.image} alt="" className={`size-9 shrink-0 object-cover ${s.kind === "vendor" ? "rounded-full" : "rounded-md"}`} /> : icon(s.kind)}
+              <span className="min-w-0 flex-1">
+                <span className="block truncate">{s.label}</span>
+                {s.detail && <span className="block truncate text-[11px] text-muted-foreground">{s.detail}</span>}
+              </span>
               <span className="shrink-0 text-[11px] text-muted-foreground">{s.kind === "vendor" ? "Store" : s.kind === "category" ? "Category" : "Product"}</span>
             </button>
           ))}
