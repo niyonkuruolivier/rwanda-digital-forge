@@ -211,6 +211,13 @@
       "when": 1795440012949,
       "tag": "0029_admin_helper_tasks",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1795605056439,
+      "tag": "0030_admin_order_delivery_control",
+      "breakpoints": true
     }
   ]
 }
