@@ -85,7 +85,7 @@ function Dashboard() {
       <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-3">
         {metrics.map((m) => <div key={m.label} className="rounded-xl border bg-card p-5 shadow-sm"><div className="flex items-center justify-between text-sm text-muted-foreground">{m.label}<m.icon className="h-4 w-4 text-primary" /></div><p className="mt-2 text-2xl font-bold text-heading">{m.value}</p></div>)}
         <div className="col-span-2 rounded-xl border bg-card p-5 shadow-sm lg:col-span-1">
-          <div className="flex items-center justify-between text-sm text-muted-foreground">Demo balance (87%)<Banknote className="h-4 w-4 text-primary" /></div>
+          <div className="flex items-center justify-between text-sm text-muted-foreground">Demo balance (90%)<Banknote className="h-4 w-4 text-primary" /></div>
           <p className="mt-2 text-2xl font-bold text-heading">{money(bal.available)}</p>
           <p className="mt-1 text-xs text-muted-foreground">Pending payment: <b>{money(bal.pending + bal.disputed)}</b>{bal.disputed > 0 && <> · of which complaint: <b className="text-destructive">{money(bal.disputed)}</b></>}</p>
           <Button size="sm" className="mt-3 w-full" disabled onClick={() => setWithdrawOpen(true)}>

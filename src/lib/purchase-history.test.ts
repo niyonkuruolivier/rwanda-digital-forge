@@ -26,7 +26,7 @@ describe("purchase history", () => {
     expect(target.claim?.message).toBe("Wrong size");
     expect(itemFunds(saved, target, time + HOLD_MS * 2)).toBe("disputed");
     expect(sibling.claim).toBeUndefined();
-    expect(vendorBalance([saved], [], "v", time + HOLD_MS * 2)).toMatchObject({ disputed: 8700, available: 8700 });
+    expect(vendorBalance([saved], [], "v", time + HOLD_MS * 2)).toMatchObject({ disputed: 9000, available: 9000 });
   });
   it("does not reopen already released payments or another buyer's purchases", () => {
     expect(submitPurchaseComplaint(order, "p", { Size: "M" }, "other", "Broken", photo, time + 1)).toBe(order);
