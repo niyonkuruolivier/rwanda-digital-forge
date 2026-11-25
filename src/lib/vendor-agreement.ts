@@ -1,5 +1,5 @@
 import { AGREEMENT_COMPANY } from "./agreement-company";
-export const AGREEMENT_VERSION = "2026-11-18.1";
+export const AGREEMENT_VERSION = "2026-11-25.1";
 export const VENDOR_TERMS = [
   { id: "qualification", title: "Business qualification", text: "I provide my business registration number, TIN and RDB certificate, confirm that the information is accurate, and understand that admin must review and approve my application before my store opens." },
   { id: "commission", title: "Platform share · 10%", text: "I accept that Murandasi Market retains 10% of each completed payment. The buyer pays the item subtotal without an extra platform fee." },
@@ -8,6 +8,13 @@ export const VENDOR_TERMS = [
   { id: "complaints", title: "Complaints stop the money", text: "If the buyer submits a complaint with a photo and written explanation during the hold, the affected purchase's funds stay held and cannot be withdrawn until admin resolves the complaint by releasing funds to the vendor or recording a refund to the buyer. Both vendor and admin can see the complaint." },
   { id: "service", title: "Store and customer responsibilities", text: "I will keep my shop name, location and contact details accurate, list available product sizes, colours and stock truthfully, fulfil purchases and cooperate with complaints. Purchase records retain shop details. Admin may block new purchases and publishing without deleting past purchases or money records." },
   { id: "delivery", title: "Delivery is the vendor’s responsibility", text: "I understand and accept that all delivery is my responsibility as the vendor, not Murandasi Market’s. I must arrange delivery of my products and coordinate delivery details directly with the buyer. Murandasi Market does not provide or manage delivery." },
+  { id: "products", title: "Genuine and allowed products", text: "I will sell only genuine, legal products that I have the right to sell. I will not list counterfeit or copied brands, stolen goods, weapons, drugs, medicines without authorisation, adult content or any item banned by Rwandan law. Admin may remove such listings and suspend my store." },
+  { id: "onplatform", title: "Payments stay on Murandasi", text: "All purchases must be paid through the website. I will not share phone numbers, payment codes or outside links with buyers, or ask them to pay outside the platform. Doing so may lead to suspension and loss of selling rights." },
+  { id: "pricing", title: "Fair prices and honest listings", text: "My prices, discounts, photos and descriptions will be truthful. I will not show fake discounts, misleading photos, fake reviews or ratings, or change the price after a buyer has paid." },
+  { id: "returns", title: "Returns and refunds", text: "I will accept a return or refund when an item arrives damaged, wrong, fake or different from its listing, as decided through the complaint process. Approved refunds are taken from my held share for that purchase." },
+  { id: "taxes", title: "Taxes and legal duties", text: "I am responsible for my own taxes, licences and legal duties as a business in Rwanda, including RRA obligations and any receipts the law requires." },
+  { id: "privacy", title: "Buyer information", text: "I will use buyer names, phones and addresses only to deliver their orders, and never share, sell or use them for other purposes." },
+  { id: "termination", title: "Suspension and closing", text: "Admin may suspend or close my store for breaking these terms. I may stop selling at any time; orders already paid must still be delivered or refunded, and my records are kept." },
   { id: "retention", title: "Signed agreement record", text: "I accept that my submitted name, date, business documents and this agreement are retained for the vendor and admin. The saved agreement can be printed and downloaded as a Word document, with no edit or delete control. This demo does not perform real verification, payments, escrow, refunds or withdrawals." },
 ] as const;
 export type TermId = typeof VENDOR_TERMS[number]["id"];

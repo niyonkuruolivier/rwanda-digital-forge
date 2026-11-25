@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -57,6 +58,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WishlistRoute = WishlistRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
+  '/terms': typeof TermsRoute
   '/wishlist': typeof WishlistRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
+  '/terms': typeof TermsRoute
   '/wishlist': typeof WishlistRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
+  '/terms': typeof TermsRoute
   '/wishlist': typeof WishlistRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/privacy'
     | '/shop'
+    | '/terms'
     | '/wishlist'
     | '/account'
     | '/admin'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/privacy'
     | '/shop'
+    | '/terms'
     | '/wishlist'
     | '/account'
     | '/admin'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/privacy'
     | '/shop'
+    | '/terms'
     | '/wishlist'
     | '/_authenticated/account'
     | '/_authenticated/admin'
@@ -271,6 +283,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   PrivacyRoute: typeof PrivacyRoute
   ShopRoute: typeof ShopRoute
+  TermsRoute: typeof TermsRoute
   WishlistRoute: typeof WishlistRoute
   ApiChatRoute: typeof ApiChatRoute
   ProductsIdRoute: typeof ProductsIdRoute
@@ -322,6 +335,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wishlist': {
@@ -455,6 +475,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   PrivacyRoute: PrivacyRoute,
   ShopRoute: ShopRoute,
+  TermsRoute: TermsRoute,
   WishlistRoute: WishlistRoute,
   ApiChatRoute: ApiChatRoute,
   ProductsIdRoute: ProductsIdRoute,

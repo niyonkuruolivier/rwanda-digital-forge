@@ -53,9 +53,30 @@ function PrivacyPage() {
       <section className="mt-6 space-y-2">
         <h2 className="text-lg font-bold text-heading">Other services</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          Sign-in is provided by our secure authentication service, including optional Google sign-in. Product videos are
-          embedded from YouTube, Instagram or TikTok — when you play a video, that service may set its own cookies under
-          its own privacy policy. Fonts are loaded from Google Fonts.
+          Sign-in is provided by our secure authentication service, including optional Google sign-in. Some older product videos are embedded from YouTube, Instagram or TikTok; when you play one, that service may set its own cookies. Fonts are loaded from Google Fonts.
+        </p>
+      </section>
+
+      <section className="mt-6 space-y-2">
+        <h2 className="text-lg font-bold text-heading">Who can see your details</h2>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          A seller sees only the name, phone and delivery address needed for the order you placed with them. Our team sees
+          account details only to run the platform and resolve complaints. We share data with authorities only when Rwandan law requires it.
+        </p>
+      </section>
+
+      <section className="mt-6 space-y-2">
+        <h2 className="text-lg font-bold text-heading">How long we keep it and your rights</h2>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Order and payment records are kept as long as needed for buyer protection, accounting and the law. You can ask to see,
+          correct or delete your personal data, in line with Rwanda's law on the protection of personal data and privacy.
+        </p>
+      </section>
+
+      <section className="mt-6 space-y-2">
+        <h2 className="text-lg font-bold text-heading">Security and children</h2>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Your data is protected with secure sign-in and access rules. Murandasi Market is not meant for children under 16.
         </p>
       </section>
 
