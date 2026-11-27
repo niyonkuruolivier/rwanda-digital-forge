@@ -30,12 +30,12 @@ export function ProductVideo({ url, title, gallery = false }: { url: string; tit
     return () => observer.disconnect();
   }, [url]);
   if (isUploadedVideo(url)) return <section aria-label="Product video" className={gallery ? "flex h-full flex-col p-3" : "mt-4"}>
-    <h2 className="mb-3 text-lg font-bold text-heading">Product video</h2>
+    {!gallery && <h2 className="mb-3 text-lg font-bold text-heading">Product video</h2>}
     <video src={url} controls playsInline autoPlay muted controlsList="nodownload noremoteplayback" disablePictureInPicture onContextMenu={(e) => e.preventDefault()} className={`w-full rounded-lg bg-muted ${gallery ? "min-h-0 flex-1 object-contain" : "max-h-[70vh]"}`} />
   </section>;
   if (!video) return null;
   return <section aria-label="Product video" className={gallery ? "flex h-full flex-col p-3" : "mt-4"}>
-    <h2 className="mb-3 text-lg font-bold text-heading">Product video</h2>
+    {!gallery && <h2 className="mb-3 text-lg font-bold text-heading">Product video</h2>}
     <div ref={container} className={`w-full overflow-hidden rounded-lg bg-muted ${gallery ? "min-h-0 flex-1" : video.platform === "YouTube" ? "aspect-video" : "mx-auto aspect-[9/16] max-w-[400px]"}`}>
       {started && origin && <iframe ref={frame} className="h-full w-full" title={`${title} — ${video.platform} video`} src={productVideoEmbed(video, origin)} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" onLoad={() => command(visible.current)} />}
     </div>

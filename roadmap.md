@@ -1,4 +1,5 @@
 # Launch audit
+- [x] Restore the seller video-link field and supported provider validation; temporary seller saved/reloaded a YouTube link, separate visitor saw the real thumbnail last and official inline player; Vimeo thumbnail returns an image, phone/laptop have no overflow, and 17 regression tests pass. Provider restrictions can prevent third-party playback.
 - [x] Put approved sellers’ publishing controls and product list before dashboard summaries; verified phone/laptop posting buttons, actual product publication, reload persistence, separate visitor visibility and story-form opening; listing/ownership checks pass.
 - [x] Fix the marked approved-store access conflict for owners who also have administrator access; verified dual-role seller posting, retained administrator menu and approved-owner redirect away from applying; 20 access/auth/catalog tests pass.
 - [x] Speed up vendor agreement preparation and submission; verified a signed-in application preview in 0.42 seconds, submission and prominent pending message retained after reload; 17 agreement checks pass.

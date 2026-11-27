@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { detectProductVideo, productVideoThumbnail } from "@/lib/product-media";
 
-const THUMBNAIL_HOSTS = /^(scontent[a-z0-9.-]*\.cdninstagram\.com|([a-z0-9-]+\.)?fbcdn\.net|([a-z0-9-]+\.)?tiktokcdn[a-z0-9.-]*\.com|i\.ytimg\.com|img\.youtube\.com)$/;
+const THUMBNAIL_HOSTS = /^(scontent[a-z0-9.-]*\.cdninstagram\.com|([a-z0-9-]+\.)?fbcdn\.net|([a-z0-9-]+\.)?tiktokcdn[a-z0-9.-]*\.com|i\.ytimg\.com|img\.youtube\.com|i\.vimeocdn\.com)$/;
 
 async function oembedThumbnail(endpoint: string): Promise<string | undefined> {
   try {
@@ -32,6 +32,9 @@ export const Route = createFileRoute("/api/public/video-thumbnail")({
         }
         if (!thumbnail && video.platform === "TikTok") {
           thumbnail = await oembedThumbnail(`https://www.tiktok.com/oembed?url=${encodeURIComponent(video.url)}`);
+        }
+        if (!thumbnail && video.platform === "Vimeo") {
+          thumbnail = await oembedThumbnail(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(video.url)}`);
         }
         if (!thumbnail) return Response.json({ error: "No thumbnail available" }, { status: 404 });
 

@@ -13,7 +13,7 @@ export function youtubeVideoId(value: string): string | undefined {
   } catch { return; }
 }
 
-export interface ProductVideoLink { platform: "YouTube" | "Instagram" | "TikTok"; id: string; url: string }
+export interface ProductVideoLink { platform: "YouTube" | "Instagram" | "TikTok" | "Vimeo"; id: string; url: string }
 export function detectProductVideo(value: string): ProductVideoLink | undefined {
   const youtube = youtubeVideoId(value);
   if (youtube) return { platform: "YouTube", id: youtube, url: `https://www.youtube.com/watch?v=${youtube}` };
@@ -21,6 +21,8 @@ export function detectProductVideo(value: string): ProductVideoLink | undefined 
     const url = new URL(value.trim());
     if (url.protocol !== "https:" || url.username || url.password || url.port) return;
     const host = url.hostname.toLowerCase();
+    const vimeo = /^\/(?:video\/)?([0-9]{6,12})\/?$/.exec(url.pathname);
+    if (["vimeo.com", "www.vimeo.com", "player.vimeo.com"].includes(host) && vimeo?.[1]) return { platform: "Vimeo", id: vimeo[1], url: `https://vimeo.com/${vimeo[1]}` };
     const instagram = /^\/(reel|reels|p)\/([A-Za-z0-9_-]+)\/?$/.exec(url.pathname);
     if (["instagram.com", "www.instagram.com"].includes(host) && instagram?.[2]) {
       return { platform: "Instagram", id: instagram[2], url: `https://www.instagram.com/${instagram[1] === "p" ? "p" : "reel"}/${instagram[2]}/` };
@@ -37,9 +39,10 @@ export function productVideoThumbnail(video: ProductVideoLink): string | undefin
 export function productVideoEmbed(video: ProductVideoLink, origin: string): string {
   if (video.platform === "YouTube") return `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&mute=1&playsinline=1&enablejsapi=1&rel=0&origin=${encodeURIComponent(origin)}`;
   if (video.platform === "TikTok") return `https://www.tiktok.com/player/v1/${video.id}?autoplay=1&muted=1&loop=0`;
+  if (video.platform === "Vimeo") return `https://player.vimeo.com/video/${video.id}?autoplay=1&muted=1&playsinline=1`;
   return `${video.url}embed/`;
 }
-export const productVideoSchema = z.string().trim().max(2048).refine((value) => /^\/api\/public\/product-video\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+\.(mp4|webm|mov)$/.test(value) || Boolean(detectProductVideo(value)), "Upload a product video file.");
+export const productVideoSchema = z.string().trim().max(2048).refine((value) => /^\/api\/public\/product-video\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+\.(mp4|webm|mov)$/.test(value) || Boolean(detectProductVideo(value)), "Choose a valid YouTube, Instagram, TikTok or Vimeo video link.");
 export const catalogPhotoSchema = z.string().max(100_000).refine((value) => {
   if (!value) return true;
   if (value.startsWith("https://")) return true;

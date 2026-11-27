@@ -9,9 +9,8 @@ import { useStore } from "@/lib/store";
 import { requireProductCategory } from "@/lib/categories";
 import { PhotoUpload } from "./PhotoUpload";
 import { ArrowLeft, ArrowRight, ImageIcon, Trash2 } from "lucide-react";
-import { isUploadedVideo, moveProductPhoto } from "@/lib/product-media";
+import { isUploadedVideo, moveProductPhoto, productVideoSchema } from "@/lib/product-media";
 import { listingTextBlocked, LISTING_RULE } from "@/lib/listing-text";
-import { supabase } from "@/integrations/supabase/client";
 
 export function ProductForm({ open, onOpenChange, initial, vendorId, onSave }: { open: boolean; onOpenChange: (o: boolean) => void; initial?: Product | undefined; vendorId: string; onSave: (p: Product) => Promise<void> }) {
   const { categories } = useStore();
@@ -25,27 +24,14 @@ export function ProductForm({ open, onOpenChange, initial, vendorId, onSave }: {
   const regularNum = Number(regular) || 0;
   const discountNum = Math.min(90, Math.max(0, Math.round(Number(discount) || 0)));
   const finalPrice = Math.round(regularNum * (1 - discountNum / 100));
-  const [videoBusy, setVideoBusy] = useState(false);
-  const uploadVideo = async (file: File | undefined) => {
-    if (!file) return;
-    if (!/^video\/(mp4|webm|quicktime)$/.test(file.type)) { setError("Choose an MP4, WebM or MOV video."); return; }
-    if (file.size > 50 * 1024 * 1024) { setError("Choose a video smaller than 50 MB."); return; }
-    setVideoBusy(true); setError("");
-    const ext = file.type === "video/webm" ? "webm" : file.type === "video/quicktime" ? "mov" : "mp4";
-    const path = `${vendorId}/${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error: upErr } = await supabase.storage.from("product-videos").upload(path, file, { contentType: file.type });
-    setVideoBusy(false);
-    if (upErr) { setError("Could not upload the video. Try again."); return; }
-    setVideoLinkValue(`/api/public/product-video/${path}`);
-  };
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     if (loading || saving) return;
     if (!images.length) { setError("Choose a product photo."); return; }
-    if (videoBusy) { setError("Wait for the video to finish uploading."); return; }
     if (listingTextBlocked(String(f.get("title") ?? "")) || listingTextBlocked(String(f.get("description") ?? ""))) { setError(LISTING_RULE); return; }
-    const keepVideo = videoLinkValue && (isUploadedVideo(videoLinkValue) || videoLinkValue === initial?.videoUrl) ? videoLinkValue : "";
+    const keepVideo = videoLinkValue.trim();
+    if (keepVideo && !productVideoSchema.safeParse(keepVideo).success) { setError("Choose a valid YouTube, Instagram, TikTok or Vimeo video link."); return; }
     let category: string;
     try { category = requireProductCategory(f.get("category"), categories); } catch { setError("Choose one category for this product."); return; }
     const list = (key: string) => String(f.get(key) ?? "").split(",").map((x) => x.trim()).filter(Boolean);
@@ -104,9 +90,9 @@ export function ProductForm({ open, onOpenChange, initial, vendorId, onSave }: {
               <div><Label htmlFor="colors">Available colors</Label><Input id="colors" name="colors" placeholder="Black, White" defaultValue={initial?.options?.find((o) => o.name === "Color")?.values.join(", ")} /></div>
             </div>
           </div>
-          <div className="space-y-1"><Label htmlFor="videoFile">Product video (optional)</Label>
-            <Input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime" disabled={videoBusy} onChange={(e) => void uploadVideo(e.target.files?.[0])} />
-            {videoBusy ? <p role="status" className="text-xs text-muted-foreground">Uploading video…</p> : videoLinkValue ? <div className="flex items-center justify-between gap-2"><p role="status" className="text-xs font-medium text-primary">{isUploadedVideo(videoLinkValue) ? "Video ready" : "Current video"}</p><Button type="button" size="sm" variant="ghost" onClick={() => setVideoLinkValue("")}>Remove video</Button></div> : <p className="text-xs text-muted-foreground">MP4, WebM or MOV up to 50 MB. Plays on your product page.</p>}
+          <div className="space-y-1"><Label htmlFor="videoLink">Video link (optional)</Label>
+            <Input id="videoLink" type={isUploadedVideo(videoLinkValue) ? "text" : "url"} maxLength={2048} placeholder="https://…" value={videoLinkValue} onChange={(e) => setVideoLinkValue(e.target.value)} />
+            {videoLinkValue && <Button type="button" size="sm" variant="ghost" onClick={() => setVideoLinkValue("")}>Remove video</Button>}
             <p className="text-xs text-muted-foreground">{LISTING_RULE}</p></div>
           {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
           <Button type="submit" disabled={loading || saving} className="w-full">{saving ? "Publishing…" : initial ? "Save changes" : "Publish product"}</Button>

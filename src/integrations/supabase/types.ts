@@ -559,6 +559,7 @@ export type Database = {
       }
       has_task: { Args: { _task: string; _user_id: string }; Returns: boolean }
       listing_text_blocked: { Args: { _t: string }; Returns: boolean }
+      product_video_link_allowed: { Args: { v: string }; Returns: boolean }
       public_customer_feedback: {
         Args: { _target_id: string; _target_type: string }
         Returns: {

@@ -13,7 +13,7 @@
 - Inventory reservations lock catalog rows and decrement stock transactionally on new order items; private inventory history records adjustments, and cart limits sum all variations of a product.
 - Welcome sign-in is a dismissible nonmodal side prompt using the managed Google broker; never infer device emails or display an invented account identity.
 - Chat auto-replies are derived at render time from the buyer message and current product listing (chat-auto-reply.ts), never stored, so answers always match live product data and sellers can still reply.
-- Product videos are seller uploads in a private bucket served through /api/public/product-video so they play inline; listing text and new video links are guarded by a database trigger mirrored in listing-text.ts.
+- Product video links use allowlisted provider detection and official embeds with thumbnail lookup; existing private uploads remain playable. Database validation permits supported video links only in videoUrl while keeping listing-text restrictions intact.
 - Admin helpers get task rows in staff_permissions checked by public.has_task (admin implies all); money/withdrawal sections stay admin-only and helpers never receive app roles.
 - Admin and Orders helpers may update any seller's delivery through update_shared_delivery; seller ownership is checked otherwise.
 - Seller entry points use hasSellerAccess with the protected vendor assignment, allowing dual admin/vendor owners without downgrading their admin role; approved-but-stale access refreshes rather than asking applicants to reapply.

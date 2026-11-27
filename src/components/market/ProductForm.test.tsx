@@ -34,7 +34,7 @@ it("retains all existing photos when editing and allows the video to be removed"
   expect(save.mock.calls[0]?.[0]).not.toHaveProperty("videoUrl");
 });
 
-it.each(["https://www.instagram.com/reel/CxYz9hTsW-E/", "https://www.tiktok.com/@scout2015/video/6718335390845095173"])("saves a detected social video from the single link field: %s", async (videoUrl) => {
+it.each(["https://www.instagram.com/reel/CxYz9hTsW-E/", "https://www.tiktok.com/@scout2015/video/6718335390845095173", "https://vimeo.com/76979871"])("saves a detected social video from the single link field: %s", async (videoUrl) => {
   const save = vi.fn(async (_product: unknown) => {});
   render(<ProductForm open onOpenChange={() => {}} vendorId="seller" onSave={save} initial={{ id: "test", vendorId: "seller", title: "Camera", category: "Electronics", price: 25000, stock: 2, description: "Camera", images: ["https://example.com/one.jpg", "https://example.com/two.jpg"], rating: 0, reviews: [] }} />);
   fireEvent.change(screen.getByLabelText("Video link (optional)"), { target: { value: videoUrl } });

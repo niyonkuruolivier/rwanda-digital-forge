@@ -39,4 +39,10 @@ describe("product media", () => {
     expect(video?.platform).toBe("TikTok");
     expect(video && productVideoEmbed(video, "https://market.test")).toBe("https://www.tiktok.com/player/v1/6718335390845095173?autoplay=1&muted=1&loop=0");
   });
+  it("accepts Vimeo links and embeds their official player", () => {
+    const video = detectProductVideo("https://vimeo.com/76979871");
+    expect(productVideoSchema.safeParse("https://vimeo.com/76979871").success).toBe(true);
+    expect(video && productVideoEmbed(video, "https://market.test")).toBe("https://player.vimeo.com/video/76979871?autoplay=1&muted=1&playsinline=1");
+    expect(productVideoSchema.safeParse("https://vimeo.com.evil.test/76979871").success).toBe(false);
+  });
 });
