@@ -8,6 +8,7 @@ export const Route = createFileRoute("/privacy")({
       { property: "og:title", content: "Privacy policy — Murandasi Market" },
       { property: "og:description", content: "What Murandasi Market collects, how it is used, and how visitor analytics works." },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: PrivacyPage,
