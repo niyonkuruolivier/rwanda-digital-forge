@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 import { SEED_PRODUCTS, type Order } from "./data";
-import { homeProducts } from "./home-products";
+import { homeProducts, newestProducts } from "./home-products";
 
 const selected = SEED_PRODUCTS[0];
 if (!selected) throw new Error("A sample product is required");
@@ -24,4 +24,13 @@ it("uses new posts only as a tie-breaker and preserves the input list", () => {
   expect(homeProducts(products, []).map((product) => product.id)).toEqual(["p1794624073627", "p1794622643441", sample.id]);
   expect(products.map((product) => product.id)).toEqual([sample.id, older.id, newest.id]);
   expect(homeProducts([newest, { ...older, title: "Edited older product" }], [])[0]?.id).toBe(newest.id);
+});
+it("puts newly posted seller products first in new arrivals without replacing best-seller ranking", () => {
+  const products = [sample, older, newest];
+  expect(newestProducts(products).map(p => p.id)).toEqual([newest.id, older.id]);
+  expect(homeProducts(products, [sale(older.id, 10)])[0]?.id).toBe(older.id);
+  expect(products.map(p => p.id)).toEqual([sample.id, older.id, newest.id]);
+});
+it("does not promote an older product after its details are edited", () => {
+  expect(newestProducts([newest, { ...older, title: "Updated listing", price: 900 }])[0]?.id).toBe(newest.id);
 });

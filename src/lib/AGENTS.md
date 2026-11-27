@@ -4,7 +4,7 @@
 - New checkout orders and delivery updates use private participant-scoped Cloud order/item rows; server-derived catalog snapshots and transactional RPCs prevent buyer price edits and seller access to other sellers’ items. Payments and withdrawals remain demonstrations; legacy browser orders are not imported.
 - Discount browsing derives from catalog price/compareAt; quick discount edits preserve the whole product and original price, using the existing owner-verified catalog save path.
 - Store ratings use owner-scoped Cloud rows and anonymous aggregate-only reads; shared store scores ignore catalog defaults, and homepage ranking uses average/count then paid units and last-30-day paid units (sales remain browser-demo data).
-- Homepage product ordering sums completed-payment item quantities, excludes refunds, and uses posting date only for sales ties; shop rating never drives product order.
+- Homepage main product ordering sums completed-payment item quantities, excludes refunds, and uses posting date for ties; a separate new-arrivals row sorts seller posting IDs newest-first without counting edits as new posts.
 - Agreement Word exports preload/cache company PNG conversions in parallel because delivery may return WebP; preview opens immediately, but confirmation waits for the retained Word copy and locks duplicate submission.
 - Admin account lists come from an admin-verified server function reading auth users with roles/profiles, so emails never reach non-admins.
 - Story viewed state is per-device browser history; statusGroups orders new sellers first, plays each seller oldest-to-newest from the first unviewed update, and row order freezes while the viewer is open.

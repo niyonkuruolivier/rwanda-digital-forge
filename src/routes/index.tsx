@@ -6,7 +6,7 @@ import { useStore } from "@/lib/store";
 import { hasSellerAccess } from "@/lib/account-access";
 import { DealStories } from "@/components/market/DealStories";
 import { HorizontalBrowse } from "@/components/market/HorizontalBrowse";
-import { homeProducts } from "@/lib/home-products";
+import { homeProducts, newestProducts } from "@/lib/home-products";
 import { rankStores } from "@/lib/store-ratings";
 import { Stars } from "@/components/market/Stars";
 import { SHARE_PREVIEW_IMAGE } from "@/lib/share";
@@ -23,6 +23,7 @@ function Home() {
   const seller = hasSellerAccess(role, myVendorId);
   const rankedVendors = rankStores(vendors, orders);
   const picks = homeProducts(products, orders).slice(0, 8);
+  const arrivals = newestProducts(products).slice(0, 8);
   const discounts = homeProducts(products.filter(isDiscounted), orders).slice(0, 8);
   return (
     <div className="mx-auto max-w-7xl px-4 pb-4 pt-2 md:pt-10">
@@ -33,6 +34,12 @@ function Home() {
           {categories.map((category) => <Button key={category} asChild variant="ghost" className="h-auto w-[88px] shrink-0 flex-col gap-2 whitespace-normal p-0 hover:bg-transparent md:w-[140px]"><Link to="/shop" search={{ category }}><div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-muted">{categoryImages[category] ? <img src={categoryImages[category]} alt="" className="h-full w-full object-cover transition-transform duration-300 motion-safe:hover:scale-105" /> : <Shapes className="size-9 text-primary" />}</div><span className="text-center text-xs font-semibold md:text-sm">{category}</span></Link></Button>)}
         </HorizontalBrowse>
       </section>
+      {arrivals.length > 0 && <section className="pt-4 md:pt-7" aria-labelledby="arrivals-title">
+        <h2 id="arrivals-title" className="text-lg font-bold md:text-xl">New arrivals</h2>
+        <HorizontalBrowse label="new arrivals" className="mt-2">
+          {arrivals.map((p) => <div key={p.id} className="w-[180px] shrink-0 snap-start md:w-[240px]"><ProductCard product={p} /></div>)}
+        </HorizontalBrowse>
+      </section>}
       <section className="pt-4 md:pt-7" aria-labelledby="stores-title">
         <div className="flex items-center justify-between"><h2 id="stores-title" className="text-lg font-bold md:text-xl">Explore stores</h2><span className="text-xs text-muted-foreground">{vendors.length} independent stores</span></div>
         <HorizontalBrowse label="stores" className="mt-2">

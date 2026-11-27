@@ -6,6 +6,11 @@ function postedAt(product: Product): number {
   return /^p\d{13}$/.test(product.id) ? Number(product.id.slice(1)) : 0;
 }
 
+export function newestProducts(products: Product[]): Product[] {
+  return products.filter((product) => postedAt(product) > 0)
+    .sort((a, b) => postedAt(b) - postedAt(a) || a.id.localeCompare(b.id));
+}
+
 export function homeProducts(products: Product[], orders: Order[]): Product[] {
   const sales = new Map<string, number>();
   for (const order of orders.filter(hasCompletedPayment)) {
