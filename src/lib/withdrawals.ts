@@ -3,6 +3,10 @@ import type { Order, OrderItem } from "./data";
 import { hasCompletedPayment } from "./orders";
 import { splitPayment } from "./pricing";
 
+/** Fixed fee (RWF) taken from every withdrawal; the vendor receives amount minus this fee. */
+export const WITHDRAWAL_FEE = 300;
+export const withdrawalPayout = (amount: number) => Math.max(0, amount - WITHDRAWAL_FEE);
+
 export const HOLD_MS = 2 * 24 * 60 * 60 * 1000;
 
 export type FundsState = "pending" | "disputed" | "available" | "refunded";
@@ -25,6 +29,7 @@ export function prepareWithdrawal(amount: number, available: number, recipient: 
   const error = validateWithdrawalRecipient(recipient);
   if (error) throw new Error(error);
   if (!Number.isSafeInteger(amount) || amount <= 0 || amount > available) throw new Error("Choose an amount within your available balance.");
+  if (amount <= WITHDRAWAL_FEE) throw new Error(`Your balance must be more than the ${WITHDRAWAL_FEE} RWF withdrawal fee.`);
   return { method: recipient.method, provider: recipient.provider.trim(), accountNumber: recipient.accountNumber.trim(), accountName: recipient.accountName.trim() };
 }
 

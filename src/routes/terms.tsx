@@ -25,7 +25,7 @@ const SECTIONS: [string, string][] = [
   ["Returns and refunds", "You can get a refund or return when an item is damaged, wrong, fake or very different from its listing. Items that were used, broken by the buyer or reported after the protection time may not qualify."],
   ["Prohibited items", "Counterfeit or copied brands, stolen goods, weapons, drugs, unauthorised medicines, adult content and anything banned by Rwandan law are not allowed. We remove such listings and may close the shop."],
   ["Respectful conduct", "No fake reviews, fake ratings, harassment, scams, or sharing phone numbers and outside links in chat. Accounts that break these rules can be blocked."],
-  ["Fees for sellers", "Murandasi Market keeps 10% of each completed payment and the seller receives 90%, as set out in the seller agreement."],
+  ["Fees for sellers", "Murandasi Market keeps 13% of each completed payment and the seller receives 87%. A 300 RWF fee is deducted from every withdrawal. Sellers issue their own invoices and handle their own delivery, as set out in the seller agreement."],
   ["Liability", "We work to keep the marketplace safe, but each seller is responsible for their products and delivery. Our responsibility is limited to the help described in these terms."],
   ["Law and changes", "These terms follow the laws of the Republic of Rwanda. We may update them; the date below shows the latest version."],
 ];

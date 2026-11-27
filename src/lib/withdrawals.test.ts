@@ -42,9 +42,17 @@ describe("payment hold", () => {
     const o = order({ claim: { message: "bad", createdAt: paidAt, status: "open" } });
     expect(itemFunds(o, o.items[0]!, T + 5 * HOLD_MS)).toBe("disputed");
   });
-  it("vendor balance is 90% share minus withdrawals", () => {
+  it("vendor balance is 87% share minus withdrawals", () => {
     const b = vendorBalance([order()], [{ id: "w", vendorId: "v", amount: 4000, requestedAt: "", status: "Requested" }], "v", T + HOLD_MS);
-    expect(b.earned).toBe(9000);
-    expect(b.available).toBe(5000);
+    expect(b.earned).toBe(8700);
+    expect(b.available).toBe(4700);
+  });
+});
+
+import { WITHDRAWAL_FEE, withdrawalPayout } from "./withdrawals";
+describe("withdrawal fee", () => {
+  it("deducts 300 RWF from every withdrawal", () => {
+    expect(WITHDRAWAL_FEE).toBe(300);
+    expect(withdrawalPayout(10000)).toBe(9700);
   });
 });

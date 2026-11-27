@@ -5,6 +5,6 @@ describe("pricing", () => {
     expect(cartTotals([{ price: 100, qty: 2 }])).toEqual({ subtotal: 200, total: 200 });
   });
   it("platform keeps 10% and vendor receives 90%", () => {
-    expect(splitPayment(50000)).toEqual({ commission: 5000, vendorShare: 45000 });
+    expect(splitPayment(50000)).toEqual({ commission: 6500, vendorShare: 43500 });
   });
 });
