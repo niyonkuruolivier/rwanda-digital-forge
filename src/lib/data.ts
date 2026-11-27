@@ -4,6 +4,7 @@ export const CATEGORIES: Category[] = ["Electronics", "Fashion", "Home Decor", "
 
 export interface Vendor {
   verified?: boolean;
+  createdAt?: string;
   id: string; name: string; bio: string; logo: string; banner: string; rating: number; location: string; joined: string; phone?: string | undefined;
   status?: "Active" | "Blocked" | "Suspended"; blockedReason?: string; suspendedUntil?: string | undefined;
 }

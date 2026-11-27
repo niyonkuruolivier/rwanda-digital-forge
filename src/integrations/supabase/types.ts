@@ -186,6 +186,7 @@ export type Database = {
       marketplace_content: {
         Row: {
           admin_removed: boolean
+          created_at: string
           deleted: boolean
           id: string
           kind: string
@@ -195,6 +196,7 @@ export type Database = {
         }
         Insert: {
           admin_removed?: boolean
+          created_at?: string
           deleted?: boolean
           id: string
           kind: string
@@ -204,6 +206,7 @@ export type Database = {
         }
         Update: {
           admin_removed?: boolean
+          created_at?: string
           deleted?: boolean
           id?: string
           kind?: string

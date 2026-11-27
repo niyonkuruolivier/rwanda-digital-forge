@@ -3,7 +3,7 @@
 - Home-screen installation uses a manifest and official logo icons only, with no service worker, offline cache, or in-app install UI; visitors install through the browser's own address-bar/menu option.
 - New checkout orders and delivery updates use private participant-scoped Cloud order/item rows; server-derived catalog snapshots and transactional RPCs prevent buyer price edits and seller access to other sellers’ items. Payments and withdrawals remain demonstrations; legacy browser orders are not imported.
 - Discount browsing derives from catalog price/compareAt; quick discount edits preserve the whole product and original price, using the existing owner-verified catalog save path.
-- Store ratings use owner-scoped Cloud rows and anonymous aggregate-only reads; shared store scores ignore catalog defaults, and homepage ranking uses average/count then paid units and last-30-day paid units (sales remain browser-demo data).
+- Store stars use owner-scoped Cloud rows and anonymous aggregates. Explore stores promotes the newest database-created shop first, then sorts by paid units, recent paid units and rating ties; record edits cannot reset creation time.
 - Homepage main product ordering sums completed-payment item quantities, excludes refunds, and uses posting date for ties; a separate new-arrivals row sorts seller posting IDs newest-first without counting edits as new posts.
 - Agreement Word exports preload/cache company PNG conversions in parallel because delivery may return WebP; preview opens immediately, but confirmation waits for the retained Word copy and locks duplicate submission.
 - Admin account lists come from an admin-verified server function reading auth users with roles/profiles, so emails never reach non-admins.

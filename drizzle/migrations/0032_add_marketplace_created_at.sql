@@ -1,0 +1,3 @@
+ALTER TABLE public.marketplace_content ADD COLUMN created_at timestamptz NOT NULL DEFAULT now();
+UPDATE public.marketplace_content m SET created_at = coalesce((SELECT max((a.record->>'reviewedAt')::timestamptz) FROM public.vendor_applications a WHERE a.status='Approved' AND a.record->'vendor'->>'id'=m.id AND a.record->>'reviewedAt' IS NOT NULL), m.updated_at) WHERE m.kind='store';
+UPDATE public.marketplace_content SET created_at = updated_at WHERE kind <> 'store';

@@ -105,7 +105,7 @@ function useStoreValue() {
   useEffect(() => {
     let active = true;
     const load = async () => {
-      const { data, error } = await supabase.from("marketplace_content").select("kind,id,vendor_id,record,deleted").order("updated_at");
+      const { data, error } = await supabase.from("marketplace_content").select("kind,id,vendor_id,record,deleted,created_at").order("updated_at");
       if (!active || error || !data) return;
       setS((previous) => ({ ...previous, ...sharedCatalog(data, initial) }));
     };

@@ -34,18 +34,18 @@ function Home() {
           {categories.map((category) => <Button key={category} asChild variant="ghost" className="h-auto w-[88px] shrink-0 flex-col gap-2 whitespace-normal p-0 hover:bg-transparent md:w-[140px]"><Link to="/shop" search={{ category }}><div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-muted">{categoryImages[category] ? <img src={categoryImages[category]} alt="" className="h-full w-full object-cover transition-transform duration-300 motion-safe:hover:scale-105" /> : <Shapes className="size-9 text-primary" />}</div><span className="text-center text-xs font-semibold md:text-sm">{category}</span></Link></Button>)}
         </HorizontalBrowse>
       </section>
-      {arrivals.length > 0 && <section className="pt-4 md:pt-7" aria-labelledby="arrivals-title">
-        <h2 id="arrivals-title" className="text-lg font-bold md:text-xl">New arrivals</h2>
-        <HorizontalBrowse label="new arrivals" className="mt-2">
-          {arrivals.map((p) => <div key={p.id} className="w-[180px] shrink-0 snap-start md:w-[240px]"><ProductCard product={p} /></div>)}
-        </HorizontalBrowse>
-      </section>}
       <section className="pt-4 md:pt-7" aria-labelledby="stores-title">
         <div className="flex items-center justify-between"><h2 id="stores-title" className="text-lg font-bold md:text-xl">Explore stores</h2><span className="text-xs text-muted-foreground">{vendors.length} independent stores</span></div>
         <HorizontalBrowse label="stores" className="mt-2">
           {rankedVendors.map((v) => <Link key={v.id} to="/vendors/$id" params={{ id: v.id }} className="w-[240px] shrink-0 snap-start overflow-hidden rounded-lg border bg-card transition hover:border-primary/40 md:w-[280px]"><div className="relative h-32 overflow-hidden md:h-40"><img src={v.banner} alt={v.name} className="h-full w-full object-cover" /><span className="absolute bottom-2 left-2 rounded-md bg-card px-2 py-1 text-[11px] font-medium text-heading">{products.filter((p) => p.vendorId === v.id).length} products</span></div><div className="p-3"><div className="flex items-center gap-1"><h3 className="truncate text-sm font-bold">{v.name}</h3><VerifiedBadge verified={v.verified} compact /></div><p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><Stars value={v.rating} />{ratingsPending ? "…" : ratingsError ? "Unavailable" : v.ratingCount ? `${v.rating.toFixed(1)} (${v.ratingCount})` : "No ratings yet"}</p><p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="size-3" />{v.location}</p></div></Link>)}
         </HorizontalBrowse>
       </section>
+      {arrivals.length > 0 && <section className="pt-4 md:pt-7" aria-labelledby="arrivals-title">
+        <h2 id="arrivals-title" className="text-lg font-bold md:text-xl">New arrivals</h2>
+        <HorizontalBrowse label="new arrivals" className="mt-2">
+          {arrivals.map((p) => <div key={p.id} className="w-[180px] shrink-0 snap-start md:w-[240px]"><ProductCard product={p} /></div>)}
+        </HorizontalBrowse>
+      </section>}
       {discounts.length > 0 && <section className="pt-4 md:pt-7" aria-labelledby="discounts-title">
         <div className="flex items-center justify-between gap-3"><h2 id="discounts-title" className="text-lg font-bold md:text-xl">Products on discount</h2><Button asChild variant="link" size="sm"><Link to="/shop" search={{ discount: true }}>See all<ArrowRight /></Link></Button></div>
         <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-5">{discounts.map((p) => <ProductCard key={p.id} product={p} />)}</div>

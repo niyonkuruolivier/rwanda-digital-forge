@@ -14,5 +14,11 @@ export function rankStores(vendors: (Vendor & { ratingCount: number })[], orders
     const recent = lines.filter(({ order }) => { const paid = Date.parse(order.paidAt ?? ""); return paid <= now && paid >= now - 30 * 86400000; }).reduce((sum, { item }) => sum + item.qty, 0);
     return [vendor.id, { total, recent }];
   }));
-  return [...vendors].sort((a, b) => b.rating - a.rating || b.ratingCount - a.ratingCount || (metrics.get(b.id)?.total ?? 0) - (metrics.get(a.id)?.total ?? 0) || (metrics.get(b.id)?.recent ?? 0) - (metrics.get(a.id)?.recent ?? 0) || a.id.localeCompare(b.id));
+  const creationTime = (vendor: Vendor) => {
+    const time = Date.parse(vendor.createdAt ?? "");
+    return Number.isFinite(time) && time <= now ? time : 0;
+  };
+  const newest = [...vendors].filter(v => creationTime(v) > 0).sort((a, b) => creationTime(b) - creationTime(a) || a.id.localeCompare(b.id))[0];
+  const ranked = vendors.filter(v => v.id !== newest?.id).sort((a, b) => (metrics.get(b.id)?.total ?? 0) - (metrics.get(a.id)?.total ?? 0) || (metrics.get(b.id)?.recent ?? 0) - (metrics.get(a.id)?.recent ?? 0) || b.rating - a.rating || b.ratingCount - a.ratingCount || a.id.localeCompare(b.id));
+  return newest ? [newest, ...ranked] : ranked;
 }
