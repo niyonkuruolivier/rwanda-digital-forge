@@ -69,36 +69,24 @@ function Dashboard() {
   ];
   return (
     <div className="pb-10">
+      <section aria-label="Seller publishing" className="border-b bg-background">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0"><p className="text-sm font-semibold text-primary">Vendor dashboard</p><h2 className="mt-1 break-words text-xl font-bold">My content</h2></div>
+          <div className="grid grid-cols-2 gap-2 sm:flex">
+            <Button disabled={blocked} className="h-11" onClick={() => { setEditing(undefined); setOpen(true); }}><Plus className="size-4 shrink-0" />Post product</Button>
+            <Button disabled={blocked} className="h-11" variant="outline" onClick={() => setStoryOpen(true)}><Sparkles className="size-4 shrink-0" />Post story</Button>
+          </div>
+        </div>
+      </section>
       {v && <StoreProfile vendor={v} actions={<>
         <Button variant="outline" onClick={() => setProfileOpen(true)}><Pencil />Edit store profile</Button>
         <Button asChild variant="outline"><Link to="/vendors/$id" params={{ id: v.id }}><ExternalLink />View store</Link></Button>
       </>} />}
       <div className="mx-auto max-w-7xl px-4 pt-6">
       {blocked && <p className="mb-4 rounded-lg border border-destructive bg-destructive/10 p-4 text-sm text-destructive">Store {v?.status === "Suspended" ? "suspended" : "blocked"}: {v?.blockedReason || "Contact the administrator."} {v?.status === "Suspended" && v.suspendedUntil && <>Suspended until {new Date(v.suspendedUntil).toLocaleString("en-GB", { timeZone: "Africa/Kigali" })} (Kigali). </>}New purchases and publishing are paused; your orders and money records remain available.</p>}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-xl font-bold">Vendor dashboard</h2>
-        <div className="flex max-w-full flex-wrap gap-2">
-          <Button disabled={blocked} onClick={() => { setEditing(undefined); setOpen(true); }}><Plus className="h-4 w-4" /> Add New Product</Button>
-          <Button disabled={blocked} variant="secondary" onClick={() => setStoryOpen(true)}><Sparkles className="h-4 w-4" /> Add Story</Button>
-        </div>
-      </div>
-      <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-3">
-        {metrics.map((m) => <div key={m.label} className="rounded-xl border bg-card p-5 shadow-sm"><div className="flex items-center justify-between text-sm text-muted-foreground">{m.label}<m.icon className="h-4 w-4 text-primary" /></div><p className="mt-2 text-2xl font-bold text-heading">{m.value}</p></div>)}
-        <div className="col-span-2 rounded-xl border bg-card p-5 shadow-sm lg:col-span-1">
-          <div className="flex items-center justify-between text-sm text-muted-foreground">Demo balance (87%)<Banknote className="h-4 w-4 text-primary" /></div>
-          <p className="mt-2 text-2xl font-bold text-heading">{money(bal.available)}</p>
-          <p className="mt-1 text-xs text-muted-foreground">Pending payment: <b>{money(bal.pending + bal.disputed)}</b>{bal.disputed > 0 && <> · of which complaint: <b className="text-destructive">{money(bal.disputed)}</b></>}</p>
-          <Button size="sm" className="mt-3 w-full" disabled onClick={() => setWithdrawOpen(true)}>
-            <Wallet className="h-4 w-4" /> Payouts not connected
-          </Button>
-        </div>
-      </div>
-      <p className="mt-4 text-sm text-muted-foreground">Payments are demonstrations, not received money. Withdrawals are unavailable.</p>
       {s.ordersError && <p role="alert" className="mt-3 text-sm text-destructive">Could not load orders. Refresh to try again.</p>}
       {lowStock.length > 0 && <p role="status" className="mt-3 text-sm text-destructive">Low stock: {lowStock.map(p => `${p.title} (${p.stock === 0 ? "out of stock" : `${p.stock} left`})`).join(" · ")}</p>}
-      <HeldPayments vendorId={s.myVendorId} />
-      <SellerChatsCard vendorId={s.myVendorId} />
-      <Tabs defaultValue="products" className="mt-8">
+      <Tabs defaultValue="products" className="mt-2">
         <div className="market-scroll max-w-full overflow-x-auto"><TabsList><TabsTrigger value="products">Products ({mine.length})</TabsTrigger><TabsTrigger value="orders">Orders ({counts.total})</TabsTrigger><TabsTrigger value="inventory">Inventory history</TabsTrigger><TabsTrigger value="withdrawals">Withdrawals</TabsTrigger><TabsTrigger value="stories">Stories</TabsTrigger><TabsTrigger value="agreement">Agreement</TabsTrigger></TabsList></div>
         <TabsContent value="agreement" className="mt-5"><h3 className="text-lg font-bold">Signed vendor agreement</h3>{s.applications.filter((a) => a.vendor.id === s.myVendorId).map((a) => <article key={a.id} className="border-b py-4"><p className="font-semibold">{a.vendor.name} · {a.status}</p><VendorAgreementRecord application={a} /></article>)}{!s.applications.some((a) => a.vendor.id === s.myVendorId) && <p className="mt-3 text-sm text-muted-foreground">This existing demo store has no signed application agreement.</p>}</TabsContent>
         <TabsContent value="inventory" className="mt-4"><InventoryHistory vendorId={s.myVendorId} /></TabsContent>
@@ -128,7 +116,7 @@ function Dashboard() {
                   </TableCell>
                 </TableRow>
               ))}
-              {mine.length === 0 && <TableRow><TableCell colSpan={5} className="py-10 text-center text-muted-foreground">No products yet — add your first one.</TableCell></TableRow>}
+              {mine.length === 0 && <TableRow><TableCell colSpan={5} className="py-8 text-center"><Package className="mx-auto size-8 text-muted-foreground" /><p className="mt-3 font-semibold">No products yet</p><Button className="mt-4" disabled={blocked} onClick={() => { setEditing(undefined); setOpen(true); }}><Plus className="size-4" />Post your first product</Button></TableCell></TableRow>}
             </TableBody>
           </Table>
         </TabsContent>
@@ -154,6 +142,21 @@ function Dashboard() {
           </Table>
         </TabsContent>
       </Tabs>
+      <SellerChatsCard vendorId={s.myVendorId} />
+      <section aria-label="Sales and balance" className="mt-8 border-t pt-6">
+        <h2 className="text-lg font-bold">Sales &amp; balance</h2>
+        <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-3">
+          {metrics.map((m) => <div key={m.label} className="rounded-xl border bg-card p-5 shadow-sm"><div className="flex items-center justify-between text-sm text-muted-foreground">{m.label}<m.icon className="h-4 w-4 text-primary" /></div><p className="mt-2 text-2xl font-bold text-heading">{m.value}</p></div>)}
+          <div className="col-span-2 rounded-xl border bg-card p-5 shadow-sm lg:col-span-1">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">Demo balance (87%)<Banknote className="h-4 w-4 text-primary" /></div>
+            <p className="mt-2 text-2xl font-bold text-heading">{money(bal.available)}</p>
+            <p className="mt-1 text-xs text-muted-foreground">Pending payment: <b>{money(bal.pending + bal.disputed)}</b>{bal.disputed > 0 && <> · of which complaint: <b className="text-destructive">{money(bal.disputed)}</b></>}</p>
+            <Button size="sm" className="mt-3 w-full" disabled onClick={() => setWithdrawOpen(true)}><Wallet className="size-4" />Payouts not connected</Button>
+          </div>
+        </div>
+        <p className="mt-4 text-sm text-muted-foreground">Payments are demonstrations, not received money. Withdrawals are unavailable.</p>
+        <HeldPayments vendorId={s.myVendorId} />
+      </section>
       <WithdrawalDialog key={String(withdrawOpen)} open={withdrawOpen} onOpenChange={setWithdrawOpen} available={bal.available} onSubmit={s.requestWithdrawal} />
       <ProductForm key={editing?.id ?? "new" + open} open={open} onOpenChange={setOpen} initial={editing} vendorId={s.myVendorId} onSave={async (p) => { await s.upsertProduct(p); toast.success(editing ? "Product updated" : "Product published to the marketplace"); }} />
       {discounting && <ProductDiscountDialog key={discounting.id} product={discounting} onClose={() => setDiscounting(undefined)} onSave={async (p) => { await s.upsertProduct(p); toast.success(isDiscounted(p) ? "Discount saved" : "Discount removed"); }} />}
