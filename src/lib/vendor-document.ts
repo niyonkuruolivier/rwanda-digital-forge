@@ -1,12 +1,11 @@
 import type { VendorAgreement } from "./vendor-agreement";
-export async function agreementDocument(agreement: VendorAgreement, store: { name: string; location: string; phone?: string }, reference: string) {
-  const { Document, Packer, Paragraph, TextRun, HeadingLevel, Footer, PageNumber, ImageRun } = await import("docx");
-  const paragraph = (text: string) => new Paragraph({ spacing: { after: 100 }, children: [new TextRun(text)] });
-  const company = agreement.company;
-  const image = async (url: string, width: number, height: number, description: string) => {
+const companyImages = new Map<string, Promise<Uint8Array>>();
+function companyImage(url: string) {
+  const cached = companyImages.get(url);
+  if (cached) return cached;
+  const task = (async () => {
     const response = await fetch(url);
     if (!response.ok) throw new Error("Could not load the company signature or stamp. Try again.");
-    // Asset delivery may optimize PNG uploads to WebP; Word needs actual PNG bytes.
     const bitmap = await createImageBitmap(await response.blob());
     const canvas = document.createElement("canvas");
     canvas.width = bitmap.width;
@@ -16,8 +15,23 @@ export async function agreementDocument(agreement: VendorAgreement, store: { nam
     context.drawImage(bitmap, 0, 0);
     bitmap.close();
     const png = await new Promise<Blob>((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("Could not prepare the agreement images. Try again.")), "image/png"));
-    return new Paragraph({ children: [new ImageRun({ type: "png", data: new Uint8Array(await png.arrayBuffer()), transformation: { width, height }, altText: { title: description, description, name: description } })] });
+    return new Uint8Array(await png.arrayBuffer());
+  })();
+  companyImages.set(url, task);
+  void task.catch(() => companyImages.delete(url));
+  return task;
+}
+export async function preloadAgreementImages(company: NonNullable<VendorAgreement["company"]>) {
+  await Promise.all([company.logo, company.signature, company.stamp].map(companyImage));
+}
+export async function agreementDocument(agreement: VendorAgreement, store: { name: string; location: string; phone?: string }, reference: string) {
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel, Footer, PageNumber, ImageRun } = await import("docx");
+  const paragraph = (text: string) => new Paragraph({ spacing: { after: 100 }, children: [new TextRun(text)] });
+  const company = agreement.company;
+  const image = async (url: string, width: number, height: number, description: string) => {
+    return new Paragraph({ children: [new ImageRun({ type: "png", data: await companyImage(url), transformation: { width, height }, altText: { title: description, description, name: description } })] });
   };
+  if (company) await preloadAgreementImages(company);
   const logo = company ? [await image(company.logo, 240, 80, "Murandasi company logo")] : [];
   const companySignature = company ? [new Paragraph({ heading: HeadingLevel.HEADING_2, text: "For Murandasi Market" }), await image(company.signature, 150, 84, "Signature of Niyonkuru Olivier"), paragraph(`${company.director} | ${company.title}`), paragraph(`Company contact: ${company.phone} | TIN: ${company.tin}`), await image(company.stamp, 100, 107, "Murandasi company stamp")] : [];
   const doc = new Document({

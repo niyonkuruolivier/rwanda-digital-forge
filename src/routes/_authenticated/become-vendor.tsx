@@ -14,7 +14,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CertificateUpload } from "@/components/market/CertificateUpload";
 import { VendorAgreementRecord } from "@/components/market/VendorAgreementRecord";
 import { VENDOR_TERMS, kigaliDate, snapshotAgreement, validateAgreement, type Certificate, type TermId, type VendorAgreement } from "@/lib/vendor-agreement";
-import { agreementDocument, bytesBase64, downloadRecord, printAgreement } from "@/lib/vendor-document";
+import { agreementDocument, bytesBase64, downloadRecord, printAgreement, preloadAgreementImages } from "@/lib/vendor-document";
+import { AGREEMENT_COMPANY } from "@/lib/agreement-company";
 import type { Vendor } from "@/lib/data";
 import { AgreementContent } from "@/components/market/AgreementContent";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -40,8 +41,15 @@ function Become() {
   const [certificateBusy, setCertificateBusy] = useState(false);
   const [accepted, setAccepted] = useState<Partial<Record<TermId, boolean>>>({});
   const [saving, setSaving] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const submissionLock = useRef(false);
+  const [documentError, setDocumentError] = useState("");
   const [prepared, setPrepared] = useState<{ reference: string; agreement: VendorAgreement; vendor: Vendor }>();
   const printable = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    void preloadAgreementImages(AGREEMENT_COMPANY).catch(() => undefined);
+    void import("docx").catch(() => undefined);
+  }, []);
   useEffect(() => {
     if (!rejected) return;
     setLogo(rejected.vendor.logo);
@@ -64,17 +72,25 @@ function Become() {
     try {
       const reference = `APP-${crypto.randomUUID()}`;
       const agreement = snapshotAgreement(draft, new Date().toISOString());
-      agreement.documentBase64 = bytesBase64(await agreementDocument(agreement, vendor, reference));
       setPrepared({ reference, agreement, vendor });
-    } catch (err) { toast.error(err instanceof Error ? err.message : "Could not prepare your agreement. Try again."); }
+      setDocumentError("");
+      const documentBase64 = bytesBase64(await agreementDocument(agreement, vendor, reference));
+      setPrepared((current) => current?.reference === reference ? { ...current, agreement: { ...current.agreement, documentBase64 } } : current);
+    } catch (err) { const message = err instanceof Error ? err.message : "Could not prepare your agreement. Try again."; setDocumentError(message); toast.error(message); }
     finally { setSaving(false); }
   };
   const confirmSubmission = async () => {
-    if (!prepared) return;
-    const result = await registerVendor(prepared.vendor, prepared.agreement, prepared.reference);
-    if (result) { toast.error(result); return; }
-    setPrepared(undefined);
-    toast.success("Application and signed agreement saved for admin review.");
+    if (!prepared?.agreement.documentBase64 || submissionLock.current) return;
+    submissionLock.current = true;
+    setSubmitting(true);
+    try {
+      const result = await registerVendor(prepared.vendor, prepared.agreement, prepared.reference);
+      if (result) { toast.error(result); return; }
+      setPrepared(undefined);
+      toast.success("Thank you! Your application has been received.");
+      await nav({ to: "/account", replace: true });
+    } catch { toast.error("Could not submit your application. Please try again."); }
+    finally { submissionLock.current = false; setSubmitting(false); }
   };
   if (auth.role === "vendor") return <Navigate to="/dashboard" replace />;
   return (
@@ -100,11 +116,11 @@ function Become() {
         <div className="grid gap-4 sm:grid-cols-2"><div><Label htmlFor="registrationNumber">RDB Registered Name</Label><Input id="registrationNumber" name="registrationNumber" defaultValue={rejected?.agreement?.registrationNumber ?? ""} required /></div><div><Label htmlFor="tin">TIN number</Label><Input id="tin" name="tin" defaultValue={rejected?.agreement?.tin ?? ""} required /></div></div>
         <CertificateUpload value={certificate} onChange={setCertificate} onBusyChange={setCertificateBusy} />
         <section className="space-y-4 border-t pt-6"><h2 className="text-lg font-bold">Vendor agreement</h2>{VENDOR_TERMS.map((term) => <div key={term.id} className="flex items-start gap-3"><Checkbox id={`term-${term.id}`} required checked={accepted[term.id] === true} onCheckedChange={(checked) => setAccepted((old) => ({ ...old, [term.id]: checked === true }))} className="mt-1" /><Label htmlFor={`term-${term.id}`} className="min-w-0 cursor-pointer text-sm leading-relaxed"><span className="block font-bold">{term.title}</span><span className="font-normal text-muted-foreground">{term.text}</span></Label></div>)}</section>
-        <div className="grid gap-4 border-t pt-5 sm:grid-cols-2"><div><Label htmlFor="signedName">Full name (signature)</Label><Input id="signedName" name="signedName" defaultValue={rejected?.agreement?.signedName ?? ""} required autoComplete="name" /></div><div><Label htmlFor="signedDate">Signing date</Label><Input id="signedDate" name="signedDate" type="date" required max={kigaliDate()} /></div></div>
+        <div className="grid gap-4 border-t pt-5 sm:grid-cols-2"><div><Label htmlFor="signedName">Full name (signature)</Label><Input id="signedName" name="signedName" defaultValue={rejected?.agreement?.signedName ?? buyer.name} required autoComplete="name" /></div><div><Label htmlFor="signedDate">Signing date</Label><Input id="signedDate" name="signedDate" type="date" required defaultValue={kigaliDate()} max={kigaliDate()} /></div></div>
         <Button type="submit" size="lg" disabled={logoBusy || bannerBusy || certificateBusy || saving || Boolean(pending)} className="w-full">{saving ? "Preparing your agreement…" : pending ? "Application pending" : "Prepare & preview agreement"}</Button>
         </fieldset>
       </form>}
-      <Dialog open={Boolean(prepared)} onOpenChange={(open) => { if (!open) setPrepared(undefined); }}><DialogContent className="max-h-[90dvh] max-w-4xl overflow-y-auto"><DialogHeader><DialogTitle>Preview your vendor agreement</DialogTitle><DialogDescription>Review the completed agreement before submitting for admin approval.</DialogDescription></DialogHeader>{prepared && <><div ref={printable}><AgreementContent agreement={prepared.agreement} store={prepared.vendor} reference={prepared.reference} preview /></div><div className="flex flex-wrap gap-2 border-t pt-4"><Button variant="outline" onClick={() => setPrepared(undefined)}>Back to edit</Button><Button variant="outline" onClick={() => printAgreement(printable.current)}>Print</Button><Button variant="outline" onClick={() => downloadRecord(prepared.agreement.documentBase64, `${prepared.reference}-vendor-agreement.docx`, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", true)}>Download Word</Button><Button onClick={confirmSubmission}>Confirm &amp; submit application</Button></div></>}</DialogContent></Dialog>
+      <Dialog open={Boolean(prepared)} onOpenChange={(open) => { if (!open && !submitting) setPrepared(undefined); }}><DialogContent className="max-h-[90dvh] max-w-4xl overflow-y-auto"><DialogHeader><DialogTitle>Preview your vendor agreement</DialogTitle><DialogDescription>Review the completed agreement before submitting for admin approval.</DialogDescription></DialogHeader>{prepared && <><div ref={printable}><AgreementContent agreement={prepared.agreement} store={prepared.vendor} reference={prepared.reference} preview /></div>{documentError && <p role="alert" className="text-sm text-destructive">{documentError} Close this preview and try again.</p>}<div className="sticky bottom-0 flex flex-wrap gap-2 border-t bg-background py-4"><Button variant="outline" disabled={submitting} onClick={() => setPrepared(undefined)}>Back to edit</Button><Button variant="outline" onClick={() => printAgreement(printable.current)}>Print</Button><Button variant="outline" disabled={!prepared.agreement.documentBase64 || submitting} onClick={() => downloadRecord(prepared.agreement.documentBase64, `${prepared.reference}-vendor-agreement.docx`, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", true)}>Download Word</Button><Button disabled={saving || submitting || !prepared.agreement.documentBase64} onClick={confirmSubmission}>{submitting ? "Submitting application…" : saving ? "Preparing saved copy…" : "Confirm & submit application"}</Button></div></>}</DialogContent></Dialog>
     </div>
   );
 }
