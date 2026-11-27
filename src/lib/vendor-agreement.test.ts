@@ -4,7 +4,7 @@ import { reviewApplication, type VendorApplication } from "./admin";
 import { VENDORS } from "./data";
 const draft: AgreementDraft = { registrationNumber: "REG-123", tin: "TIN-456", certificate: { name: "rdb.pdf", data: "data:application/pdf;base64,JVBERi0=", mime: "application/pdf" }, signedName: "Olivier", signedDate: "2026-11-14", accepted: Object.fromEntries(VENDOR_TERMS.map((t) => [t.id, true])) };
 describe("vendor agreement requirements", () => {
-  it("requires a business registration number", () => { expect(validateAgreement({ ...draft, registrationNumber: "" }, "2026-11-14")).toBeTruthy(); });
+  it("requires an RDB registered name", () => { expect(validateAgreement({ ...draft, registrationNumber: "" }, "2026-11-14")).toBeTruthy(); });
   it("requires a TIN", () => { expect(validateAgreement({ ...draft, tin: "" }, "2026-11-14")).toBeTruthy(); });
   it("requires an RDB certificate", () => { expect(validateAgreement({ ...draft, certificate: undefined }, "2026-11-14")).toBeTruthy(); });
   it("requires the vendor to accept responsibility for all delivery", () => {

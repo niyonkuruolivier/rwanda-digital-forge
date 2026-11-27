@@ -30,7 +30,7 @@ export async function agreementDocument(agreement: VendorAgreement, store: { nam
       children: [...logo, new Paragraph({ heading: HeadingLevel.HEADING_1, text: "Vendor Partnership Agreement" }), paragraph("Murandasi Market · Rwanda"),
         ...(company ? [paragraph(`Company representative: ${company.director}, ${company.title}`), paragraph(`Company contact: ${company.phone} | TIN: ${company.tin}`)] : []),
         paragraph(`Reference: ${reference} | Policy version: ${agreement.version}`), paragraph(`Store: ${store.name} | Location: ${store.location}`), paragraph(`Shop contact: ${store.phone || "Not provided"}`),
-        paragraph(`Business registration number: ${agreement.registrationNumber} | TIN: ${agreement.tin}`), paragraph(`RDB certificate on record: ${agreement.certificate.name}`),
+        paragraph(`RDB registered name: ${agreement.registrationNumber} | TIN: ${agreement.tin}`), paragraph(`RDB certificate on record: ${agreement.certificate.name}`),
         ...agreement.terms.flatMap((term) => [new Paragraph({ heading: HeadingLevel.HEADING_2, text: term.title }), paragraph(`Accepted: ${term.text}`)]),
         new Paragraph({ heading: HeadingLevel.HEADING_2, text: "Applicant declaration" }), paragraph("I have individually accepted every condition above. My typed name and date record my acceptance; submission is not admin approval or independent verification of my business."),
         paragraph(`Signed name: ${agreement.signedName}`), paragraph(`Signing date: ${agreement.signedDate}`), paragraph(`Submitted at (UTC): ${agreement.submittedAt}`),

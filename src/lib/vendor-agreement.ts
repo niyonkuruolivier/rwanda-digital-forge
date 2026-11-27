@@ -1,7 +1,7 @@
 import { AGREEMENT_COMPANY } from "./agreement-company";
 export const AGREEMENT_VERSION = "2026-11-27.1";
 export const VENDOR_TERMS = [
-  { id: "qualification", title: "Business qualification", text: "I provide my business registration number, TIN and RDB certificate, confirm that the information is accurate, and understand that admin must review and approve my application before my store opens." },
+  { id: "qualification", title: "Business qualification", text: "I provide my RDB registered name, TIN and RDB certificate, confirm that the information is accurate, and understand that admin must review and approve my application before my store opens." },
   { id: "commission", title: "Platform share · 13%", text: "I accept that Murandasi Market retains 13% of each completed payment. The buyer pays the item subtotal without an extra platform fee." },
   { id: "earnings", title: "Vendor share · 87%", text: "I accept that my vendor earnings are 87% of each completed payment, subject to holds, complaint decisions and recorded refunds." },
   { id: "hold", title: "Two-day payment hold", text: "My 87% share is held for two days (48 hours) after completed payment. It becomes available earlier if the buyer confirms satisfaction, or automatically after two days if there is no complaint. Only available funds may be requested for withdrawal; requests and successful withdrawals remain in history." },
@@ -25,7 +25,7 @@ export interface AgreementDraft { registrationNumber: string; tin: string; certi
 export interface VendorAgreement extends AgreementDraft { certificate: Certificate; version: string; terms: { id: string; title: string; text: string }[]; submittedAt: string; documentBase64: string; company?: typeof AGREEMENT_COMPANY }
 export function kigaliDate(now = new Date()) { return new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Kigali", year: "numeric", month: "2-digit", day: "2-digit" }).format(now); }
 export function validateAgreement(draft: AgreementDraft, today = kigaliDate()) {
-  if (!draft.registrationNumber.trim()) return "Provide your business registration number.";
+  if (!draft.registrationNumber.trim()) return "Provide your RDB registered name.";
   if (!draft.tin.trim()) return "Provide your TIN number.";
   if (!draft.certificate?.data || !draft.certificate.name) return "Upload your RDB certificate.";
   if (VENDOR_TERMS.some((term) => draft.accepted[term.id] !== true)) return "Tick every agreement condition before submitting.";
