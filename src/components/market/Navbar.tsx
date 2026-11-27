@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useStore } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
+import { hasSellerAccess } from "@/lib/account-access";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import logo from "@/assets/murandasi-logo.png.asset.json";
@@ -15,6 +16,7 @@ const badgeClass = "absolute -right-1 -top-1 grid min-w-4 place-items-center rou
 export function Navbar() {
   const { cartCount, wishlist, setCartOpen, buyer } = useStore();
   const auth = useAuth(); const queryClient = useQueryClient();
+  const seller = hasSellerAccess(auth.role, auth.vendorId);
   const nav = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const accountPage = ["/auth", "/account", "/dashboard", "/admin", "/orders", "/messages", "/become-vendor"].includes(pathname) || pathname.startsWith("/vendors/");
@@ -25,8 +27,8 @@ export function Navbar() {
         <DropdownMenuItem asChild><Link to="/account"><UserRound />My account</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
         <DropdownMenuItem asChild><Link to="/messages"><MessageCircle />My chats</Link></DropdownMenuItem>
-        {auth.role !== "vendor" && <DropdownMenuItem asChild><Link to="/become-vendor"><Store />Start selling</Link></DropdownMenuItem>}
-        {auth.role === "vendor" && <DropdownMenuItem asChild><Link to="/dashboard">Seller dashboard</Link></DropdownMenuItem>}
+        {!seller && <DropdownMenuItem asChild><Link to="/become-vendor"><Store />Start selling</Link></DropdownMenuItem>}
+        {seller && <DropdownMenuItem asChild><Link to="/dashboard">Seller dashboard</Link></DropdownMenuItem>}
         {auth.role === "admin" && <DropdownMenuItem asChild><Link to="/admin">Administrator dashboard</Link></DropdownMenuItem>}
         {auth.role !== "admin" && auth.tasks.length > 0 && <DropdownMenuItem asChild><Link to="/admin">Helper tasks</Link></DropdownMenuItem>}
         <DropdownMenuSeparator />
@@ -43,7 +45,7 @@ export function Navbar() {
   const mobileClass = "h-14 flex-col gap-1 px-3 text-[11px]";
   const avatar = (mobile = false) => auth.user ? (
     <Button asChild variant={mobile ? "outline" : "ghost"} size="icon" className="shrink-0" title="My account">
-      <Link to={auth.role === "vendor" ? "/dashboard" : "/account"} aria-label="My account">{buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover object-[center_35%]" /> : <UserRound />}</Link>
+      <Link to={seller ? "/dashboard" : "/account"} aria-label="My account">{buyer.photo ? <img src={buyer.photo} alt="" width={32} height={32} className="size-8 rounded-full border border-primary/30 object-cover object-[center_35%]" /> : <UserRound />}</Link>
     </Button>
   ) : <Button asChild variant={mobile ? "outline" : "ghost"} size="sm" className={mobile ? "h-9 px-4 text-sm" : ""}><Link to="/auth" search={{ next: "/account" }}>Sign in</Link></Button>;
   return (

@@ -8,6 +8,7 @@ import { retainPurchaseShops, samePurchase, submitPurchaseComplaint } from "./pu
 import { canVendorTrade, vendorAccountRestricted, moderateVendor, reviewApplication, type VendorApplication, type AdminEvent } from "./admin";
 import { validateAgreement, type VendorAgreement } from "./vendor-agreement";
 import { useAuth } from "./auth";
+import { hasSellerAccess } from "./account-access";
 import { supabase } from "@/integrations/supabase/client";
 import { moderateVendorAccount, reviewAccountApplication } from "./account.functions";
 import { publishCatalog, removeCatalogPost, updateCategoryPicture } from "./catalog.functions";
@@ -242,7 +243,7 @@ function useStoreValue() {
       markNotificationsRead: (ids: string[]) => mutate((p) => ({ ...p, readNotificationIds: [...new Set([...p.readNotificationIds, ...ids])] })),
       saveStory: async (story: DealStory) => {
         if (denyActivity) return "Your account is blocked or suspended.";
-        if (s.role !== "vendor") return "Switch to your seller view first.";
+        if (!hasSellerAccess(auth.role, auth.vendorId)) return "Approved seller access required.";
         if (!canVendorTrade(vendor(s.myVendorId))) return "Your store is blocked or suspended. Contact the administrator.";
         const error = validateStory(story, s.myVendorId, s.products);
         if (error) return error;

@@ -8,6 +8,7 @@ import { useStore } from "@/lib/store";
 import { toast } from "sonner";
 import { useRef, useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
+import { hasSellerAccess } from "@/lib/account-access";
 import { VendorApplicationStatus } from "@/components/market/VendorApplicationStatus";
 import { PhotoUpload } from "@/components/market/PhotoUpload";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,7 +33,7 @@ function Become() {
   const rejected = latest?.status === "Rejected" ? latest : undefined;
   const pending = applications.find((a) => a.buyerId === buyer.id && a.status === "Pending");
   const nav = useNavigate();
-  useEffect(() => { if (auth.role === "vendor") void nav({ to: "/dashboard", replace: true }); }, [auth.role, nav]);
+  useEffect(() => { if (hasSellerAccess(auth.role, auth.vendorId)) void nav({ to: "/dashboard", replace: true }); }, [auth.role, auth.vendorId, nav]);
   const [logo, setLogo] = useState("");
   const [banner, setBanner] = useState("");
   const [logoBusy, setLogoBusy] = useState(false);
@@ -92,7 +93,7 @@ function Become() {
     } catch { toast.error("Could not submit your application. Please try again."); }
     finally { submissionLock.current = false; setSubmitting(false); }
   };
-  if (auth.role === "vendor") return <Navigate to="/dashboard" replace />;
+  if (hasSellerAccess(auth.role, auth.vendorId)) return <Navigate to="/dashboard" replace />;
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div>

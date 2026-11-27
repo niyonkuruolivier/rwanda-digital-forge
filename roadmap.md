@@ -1,5 +1,6 @@
 # Launch audit
-- [ ] Put approved sellers’ publishing controls and product list before dashboard summaries; verify signed-in posting while preserving listing rules.
+- [x] Put approved sellers’ publishing controls and product list before dashboard summaries; verified phone/laptop posting buttons, actual product publication, reload persistence, separate visitor visibility and story-form opening; listing/ownership checks pass.
+- [x] Fix the marked approved-store access conflict for owners who also have administrator access; verified dual-role seller posting, retained administrator menu and approved-owner redirect away from applying; 20 access/auth/catalog tests pass.
 - [x] Speed up vendor agreement preparation and submission; verified a signed-in application preview in 0.42 seconds, submission and prominent pending message retained after reload; 17 agreement checks pass.
 - [x] Verify that approval automatically opens the seller dashboard, not an administrator account; checked the open temporary applicant account switching to /dashboard after approval-state changes, with no reload or new login.
 - [x] Add trigger-created account activity alerts and live unread counts; verified actual seller publishing, private recipient isolation, denied forged alerts, read persistence after reload, order link navigation, guest exclusion and phone layout.

@@ -16,3 +16,4 @@
 - Product videos are seller uploads in a private bucket served through /api/public/product-video so they play inline; listing text and new video links are guarded by a database trigger mirrored in listing-text.ts.
 - Admin helpers get task rows in staff_permissions checked by public.has_task (admin implies all); money/withdrawal sections stay admin-only and helpers never receive app roles.
 - Admin and Orders helpers may update any seller's delivery through update_shared_delivery; seller ownership is checked otherwise.
+- Seller entry points use hasSellerAccess with the protected vendor assignment, allowing dual admin/vendor owners without downgrading their admin role; approved-but-stale access refreshes rather than asking applicants to reapply.

@@ -1,9 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { accountAccess, safeAccountReturn } from "./account-access";
+import { accountAccess, hasSellerAccess, safeAccountReturn } from "./account-access";
 describe("Separate account access", () => {
   it("never grants admin to a customer", () => expect(accountAccess([{ role: "buyer", vendor_id: null }])).toEqual({ role: "buyer", vendorId: "" }));
   it("grants admin only for an assigned admin role", () => expect(accountAccess([{ role: "admin", vendor_id: null }]).role).toBe("admin"));
   it("binds a seller to their assigned store", () => expect(accountAccess([{ role: "vendor", vendor_id: "own-store" }])).toEqual({ role: "vendor", vendorId: "own-store" }));
+  it("lets an administrator with an approved vendor role post without losing administrator access", () => {
+    const access = accountAccess([{ role: "admin", vendor_id: null }, { role: "vendor", vendor_id: "approved-store" }]);
+    expect(access.role).toBe("admin");
+    expect(access.vendorId).toBe("approved-store");
+    expect(hasSellerAccess(access.role, access.vendorId)).toBe(true);
+  });
+  it("does not let administrators without a seller assignment or buyers post as sellers", () => {
+    expect(hasSellerAccess("admin", "")).toBe(false);
+    expect(hasSellerAccess("buyer", "untrusted-store")).toBe(false);
+  });
   it("activates the same customer account when approval adds its vendor role", () => {
     const roles: Parameters<typeof accountAccess>[0] = [{ role: "buyer", vendor_id: null }];
     expect(accountAccess(roles).role).toBe("buyer");

@@ -3,6 +3,7 @@ import { ArrowRight, MapPin, Shapes } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/market/ProductCard";
 import { useStore } from "@/lib/store";
+import { hasSellerAccess } from "@/lib/account-access";
 import { DealStories } from "@/components/market/DealStories";
 import { HorizontalBrowse } from "@/components/market/HorizontalBrowse";
 import { homeProducts } from "@/lib/home-products";
@@ -18,7 +19,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { products, vendors, orders, categories, categoryImages, ratingsPending, ratingsError, role } = useStore();
+  const { products, vendors, orders, categories, categoryImages, ratingsPending, ratingsError, role, myVendorId } = useStore();
+  const seller = hasSellerAccess(role, myVendorId);
   const rankedVendors = rankStores(vendors, orders);
   const picks = homeProducts(products, orders).slice(0, 8);
   const discounts = homeProducts(products.filter(isDiscounted), orders).slice(0, 8);
@@ -45,7 +47,7 @@ function Home() {
         <div className="flex items-center justify-between gap-3"><h2 id="picks-title" className="text-lg font-bold md:text-xl">Picked for you</h2><Button asChild variant="link" size="sm"><Link to="/shop" search={{}}>See all<ArrowRight /></Link></Button></div>
         <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-5">{picks.map((p) => <ProductCard key={p.id} product={p} />)}</div>
       </section>
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t pt-4"><div><h2 className="text-lg font-bold">Your store belongs here.</h2><p className="mt-1 text-sm text-muted-foreground">Bring your products to Murandasi Market.</p></div><Button asChild variant="outline"><Link to={role === "vendor" ? "/dashboard" : "/become-vendor"}>{role === "vendor" ? "Open my dashboard" : "Start selling"}<ArrowRight /></Link></Button></div>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t pt-4"><div><h2 className="text-lg font-bold">Your store belongs here.</h2><p className="mt-1 text-sm text-muted-foreground">Bring your products to Murandasi Market.</p></div><Button asChild variant="outline"><Link to={seller ? "/dashboard" : "/become-vendor"}>{seller ? "Open my dashboard" : "Start selling"}<ArrowRight /></Link></Button></div>
     </div>
   );
 }

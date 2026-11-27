@@ -2,6 +2,7 @@ import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowRight, Heart, MapPin, Package, Pencil, ShoppingCart, Store, AlertTriangle, Mail, Phone, UserRound } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { hasSellerAccess } from "@/lib/account-access";
 import { VendorApplicationStatus } from "@/components/market/VendorApplicationStatus";
 import { BackButton } from "@/components/market/BackButton";
 import { toast } from "sonner";
@@ -36,7 +37,7 @@ function ClientAccount() {
   const orders = buyerOrders(s.orders, s.buyer.id);
   const complaints = orders.reduce((sum, order) => sum + order.items.filter((item) => item.claim?.status === "open").length, 0);
   const saved = s.products.filter((product) => s.wishlist.includes(product.id));
-  if (auth.role === "vendor") return <Navigate to="/dashboard" replace />;
+  if (hasSellerAccess(auth.role, auth.vendorId)) return <Navigate to="/dashboard" replace />;
   if (!auth.profile) return <p className="px-4 py-12 text-center text-muted-foreground">{auth.error || "Loading your account…"}</p>;
   return <div className="pb-8">
     <section aria-label="Client profile" className="relative overflow-hidden bg-card">

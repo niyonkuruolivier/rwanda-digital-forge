@@ -1,4 +1,5 @@
 import { SellerChatsCard } from "@/components/market/SellerChatsCard";
+import { hasSellerAccess } from "@/lib/account-access";
 import { InventoryHistory } from "@/components/market/InventoryHistory";
 import { vendorOrderCounts, lowStockProducts } from "@/lib/inventory";
 import { HeldPayments } from "@/components/market/HeldPayments";
@@ -44,12 +45,11 @@ function Dashboard() {
   const [storyOpen, setStoryOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  if (s.role !== "vendor") return (
+  if (!hasSellerAccess(s.role, s.myVendorId)) return (
     <div className="mx-auto max-w-md px-4 py-24 text-center">
-      <h1 className="text-2xl font-bold">Vendor access only</h1>
+      <h1 className="text-2xl font-bold">Seller dashboard</h1>
       <VendorApplicationStatus />
-      <p className="mt-2 text-muted-foreground">Apply for a store. Your seller dashboard opens after administrator approval.</p>
-      <div className="mt-6 flex justify-center gap-3"><Button asChild variant="outline"><Link to="/become-vendor">Apply for a store</Link></Button></div>
+      {!s.applications.some((a) => a.buyerId === s.buyer.id && a.status !== "Rejected") && <><p className="mt-2 text-muted-foreground">Your seller dashboard opens after administrator approval.</p><div className="mt-6 flex justify-center gap-3"><Button asChild variant="outline"><Link to="/become-vendor">Apply for a store</Link></Button></div></>}
     </div>
   );
   const v = s.vendor(s.myVendorId);
