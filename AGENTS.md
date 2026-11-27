@@ -60,4 +60,4 @@ use the editor.
 - Story playback uses useStoryPlayback for per-story timers and progress; changing or closing a story cancels its timer to prevent stale advances.
 - Categories share admin-owned names/covers; server/RLS restrict edits. Admin post deletion uses protected tombstones that sellers cannot reverse, preserving purchases.
 - ProductGallery puts video last; provider allowlists keep embeds safe.
-- Newest shop leads; sales rank others; creation time is fixed.
+- Fixed shop dates; product inserts auto-post linked stories.
